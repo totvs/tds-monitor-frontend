@@ -16,5 +16,5 @@ npm-debug.log
 /.tmp/
 
 ## build output
-dist
+target
 build-stats.json

@@ -9,6 +9,12 @@ import './monitor-drawer';
 import './monitor-add-server-dialog'
 import './monitor-text-input'
 
+/*
+import { TdsServer } from '@totvs/tds-languageclient';
+
+var x = new TdsServer();
+console.log(x);
+*/
 
 const app = document.querySelector('monitor-app'),
 	settings = window.localStorage.getItem('settings');
@@ -32,3 +38,4 @@ else {
 		]
 	}
 }
+
