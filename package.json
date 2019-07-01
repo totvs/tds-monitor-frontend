@@ -1,0 +1,58 @@
+{
+  "name": "@totvs/tds-monitor-frontend",
+  "version": "0.0.1",
+  "description": "",
+  "license": "MIT",
+  "scripts": {
+    "build": "gulp build",
+    "watch": "gulp build --watch",
+    "build-tsc": "tsc -p .",
+    "watch-tsc": "tsc -w -p .",
+    "clean": "gulp clean",
+    "lint": "eslint ./src/**",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.4.4",
+    "@material/mwc-ripple": "^0.6.0",
+    "@totvs/tds-languageclient": "0.0.1",
+    "@webcomponents/webcomponentsjs": "^2.2.10",
+    "lit-element": "^2.2.0",
+    "lit-html": "^1.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/plugin-proposal-class-properties": "^7.4.4",
+    "@babel/plugin-proposal-decorators": "^7.4.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/plugin-transform-arrow-functions": "^7.2.0",
+    "@babel/plugin-transform-block-scoping": "^7.4.4",
+    "@babel/plugin-transform-classes": "^7.4.4",
+    "@babel/plugin-transform-template-literals": "^7.4.4",
+    "@babel/plugin-transform-typescript": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "babelify": "^10.0.0",
+    "browserify": "^16.2.3",
+    "eslint-plugin-lit": "^1.0.0",
+    "exorcist": "^1.0.1",
+    "gulp": "^4.0.2",
+    "pump-promise": "^1.0.0",
+    "q": "^1.5.1",
+    "shelljs": "^0.8.3",
+    "tfilter": "^1.0.1",
+    "typescript": "^3.5.2",
+    "typescript-lit-html-plugin": "^0.9.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0",
+    "watchify": "^3.11.1",
+    "yargs": "^13.2.4"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
+  }
+}

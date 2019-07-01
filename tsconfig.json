@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+        "target": "esnext",
+        "module": "esnext",
+        "moduleResolution": "node",
+
+
+        "esModuleInterop": true,
+        "alwaysStrict": true,
+        "downlevelIteration": true,
+        "noImplicitAny": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noImplicitThis": true,
+        "noFallthroughCasesInSwitch": true,
+        "allowSyntheticDefaultImports": true,
+
+        "removeComments": true,
+        "experimentalDecorators": true,
+
+        "lib": [
+            "dom",
+            "es2015"
+        ],
+
+        "rootDir": "./src/main/ts",
+        "outDir": "./target"
+    }
+}
