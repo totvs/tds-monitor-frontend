@@ -4,10 +4,14 @@
   "description": "",
   "license": "MIT",
   "main": "target/index.html",
+  "files": [
+    "target"
+  ],
   "scripts": {
     "build": "gulp build",
     "watch": "gulp build --watch",
     "clean": "gulp clean",
+    "prepublish": "npm run clean && npm run build",
     "lint": "eslint ./src/**",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
