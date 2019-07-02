@@ -3,11 +3,10 @@
   "version": "0.0.1",
   "description": "",
   "license": "MIT",
+  "main": "target/index.html",
   "scripts": {
     "build": "gulp build",
     "watch": "gulp build --watch",
-    "build-tsc": "tsc -p .",
-    "watch-tsc": "tsc -w -p .",
     "clean": "gulp clean",
     "lint": "eslint ./src/**",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -15,7 +14,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.4.4",
     "@material/mwc-ripple": "^0.6.0",
-    "@totvs/tds-languageclient": "0.0.3",
+    "@totvs/tds-languageclient": "0.0.4",
     "@webcomponents/webcomponentsjs": "^2.2.10",
     "lit-element": "^2.2.0",
     "lit-html": "^1.1.0"
@@ -47,12 +46,5 @@
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.1",
     "yargs": "^13.2.4"
-  },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "prettier --write",
-      "git add"
-    ]
   }
 }

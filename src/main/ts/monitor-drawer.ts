@@ -32,7 +32,7 @@ export class MonitorDrawer extends LitElement {
 
             .add-server {
                 margin: 0;
-                padding: 20px 15px;
+				padding: 20px 15px 15px 15px;
                 user-select: none;
                 border-bottom: 1px solid silver;
             }
@@ -44,7 +44,7 @@ export class MonitorDrawer extends LitElement {
             }
         `;
 	}
-	// id="qa-CREATE_NOTE" class="_2DGk1iVSOWveBbohTTVv7c" data-event-off="click"
+
 	render() {
 		return html`
 			<aside>

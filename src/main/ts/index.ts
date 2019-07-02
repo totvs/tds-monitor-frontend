@@ -8,13 +8,11 @@ import './monitor-body';
 import './monitor-drawer';
 import './monitor-add-server-dialog'
 import './monitor-text-input'
+import { TdsLanguageClient } from '@totvs/tds-languageclient';
 
-/*
-import { TdsServer } from '@totvs/tds-languageclient';
-
-var x = new TdsServer();
-console.log(x);
-*/
+declare global {
+	let languageClient: TdsLanguageClient;
+}
 
 const app = document.querySelector('monitor-app'),
 	settings = window.localStorage.getItem('settings');
