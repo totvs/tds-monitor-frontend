@@ -11,7 +11,7 @@
     "build": "gulp build",
     "watch": "gulp build --watch",
     "clean": "gulp clean",
-    "prepublish": "npm run clean && npm run build",
+    "prepublishOnly": "npm run clean && npm run build",
     "lint": "eslint ./src/**",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

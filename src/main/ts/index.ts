@@ -6,8 +6,10 @@ import './monitor-app';
 import './monitor-app-bar';
 import './monitor-body';
 import './monitor-drawer';
-import './monitor-add-server-dialog'
-import './monitor-text-input'
+import './monitor-add-server-dialog';
+import './monitor-text-input';
+import './monitor-user-list';
+
 import { TdsLanguageClient } from '@totvs/tds-languageclient';
 
 declare global {

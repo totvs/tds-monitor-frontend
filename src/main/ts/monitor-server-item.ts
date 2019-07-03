@@ -1,5 +1,7 @@
 import { LitElement, html, customElement, property, CSSResult, css } from 'lit-element';
 import { TdsMonitorServer } from '@totvs/tds-languageclient';
+import { monitorIcon } from './icon-monitor-svg';
+import { MonitorUser } from '@totvs/tds-languageclient/target/TdsMonitorServer';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -7,18 +9,23 @@ declare global {
 	}
 }
 
+declare type ServerStatus = 'disconnected' | 'connecting' | 'connected';
+
 /*extends Drawer*/
 @customElement('monitor-server-item')
 export class MonitorServerItem extends LitElement {
 
-	@property({type: String})
+	@property({ type: String })
 	name: string;
 
-	@property({type: String})
+	@property({ type: String })
 	address: string;
 
-	@property({type: Number})
+	@property({ type: Number })
 	port: number;
+
+	@property({ type: String })
+	status: ServerStatus = 'disconnected';
 
 	server: TdsMonitorServer = null;
 
@@ -37,6 +44,34 @@ export class MonitorServerItem extends LitElement {
 				margin: 2px 0;
 			}
 
+			@keyframes colorChange {
+				0% {fill: #FFFFFF }
+				50% {fill: #FFFF00 }
+				100% {fill: #FFFFFF }
+			}
+
+			.connecting svg .server {
+				animation: colorChange 1s infinite;
+			}
+
+			.connected svg .server {
+				fill: #009900;
+			}
+
+			.error svg .server {
+				fill: #FF0000;
+			}
+
+			.strokes {
+				stroke: #808080;
+				fill: #808080;
+			}
+
+			.connected .strokes {
+				stroke: #000000;
+				fill: #000000;
+			}
+
 			* {
 				user-select: none;
 			}
@@ -47,7 +82,7 @@ export class MonitorServerItem extends LitElement {
 				flex-direction: row;
 			}
 
- 			img {
+ 			svg {
 				vertical-align: middle;
 				margin: 8px;
 			}
@@ -72,7 +107,7 @@ export class MonitorServerItem extends LitElement {
 				color: gray;
 			}
 		`;
-    }
+	}
 
 
 
@@ -80,7 +115,7 @@ export class MonitorServerItem extends LitElement {
 		return html`
 			<section @click="${this.onClicked}">
 				<mwc-ripple></mwc-ripple>
-				<img src='./monitor.svg' height="30" width="30">
+				${monitorIcon}
 				<label>
 					<h1>${this.name}</h1>
 					<span>${this.address}:${this.port}</span>
@@ -90,7 +125,16 @@ export class MonitorServerItem extends LitElement {
 	}
 
 	async onClicked(event: Event) {
+		let section = this.renderRoot.querySelector('section');
+
 		if (!this.server) {
+			this.dispatchEvent(new CustomEvent<string>('server-init', {
+				detail: this.name,
+				bubbles: true,
+				composed: true
+			}));
+
+			section.classList.add('connecting');
 
 			this.server = await languageClient.getMonitorServer({
 				connType: 1,
@@ -98,20 +142,36 @@ export class MonitorServerItem extends LitElement {
 				server: this.address,
 				port: this.port,
 				buildVersion: '7.00.170117A',
-				environment:  'LOBO-GUARA',
+				environment: 'LOBO-GUARA',
 				user: 'admin',
 				password: '',
 				autoReconnect: true
-			})
-
-			if (this.server) {
-				let users = await this.server.getUsers();
-
-				console.log(users);
-			}
-
+			});
 		}
 
+		if (!this.server) {
+			section.classList.remove('connecting');
+			section.classList.add('error');
+
+			this.dispatchEvent(new CustomEvent<string>('server-error', {
+				detail: 'Nao foi possivel conectar ao servidor!',
+				bubbles: true,
+				composed: true
+			}));
+
+			return;
+		}
+
+		section.classList.remove('connecting');
+		section.classList.add('connected');
+
+		let users = await this.server.getUsers();
+
+		this.dispatchEvent(new CustomEvent<MonitorUser[]>('server-connected', {
+			detail: users,
+			bubbles: true,
+			composed: true
+		}));
 	}
 
 }

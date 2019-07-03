@@ -22,6 +22,10 @@ var uglifyOptions = {
 };
 */
 
+const extraImports = {
+	'lit-html/directives/class-map.js': 'lit-html/directives/class-map'
+};
+
 module.exports = function(gulp, plugins, basedir, argv) {
 	let pkg = require(path.join(basedir, 'package.json')),
 		jsSrcDir = path.join(basedir, 'src', 'main', 'ts'),
@@ -50,6 +54,10 @@ module.exports = function(gulp, plugins, basedir, argv) {
 
 		Object.keys(pkg.dependencies).forEach(key => {
 			bundler.external(key);
+		});
+
+		Object.keys(extraImports).forEach(key => {
+			bundler.external(extraImports[key]);
 		});
 
 		bundler.add('index.ts');
@@ -148,6 +156,11 @@ module.exports = function(gulp, plugins, basedir, argv) {
 		dependencies.forEach(key => {
 			bundler.require(require.resolve(key), { expose: key });
 		});
+
+		Object.keys(extraImports).forEach(key => {
+			bundler.require(require.resolve(key), { expose: extraImports[key] });
+		});
+
 
 		shelljs.mkdir('-p', destFolder);
 
