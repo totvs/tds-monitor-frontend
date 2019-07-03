@@ -1,5 +1,4 @@
 import { LitElement, html, css, customElement, CSSResult, property } from 'lit-element';
-import { classMap } from 'lit-html/directives/class-map';
 import { MonitorUser } from '@totvs/tds-languageclient';
 
 declare global {
@@ -84,12 +83,8 @@ export class MonitorUserList extends LitElement {
 	}
 
 	render() {
-		let classes = {
-			[this.status]: true,
-		};
-
 		return html`
-			<div class="${classMap(classes)}">
+			<div class="${this.status}">
 				<span class='connecting-message'>Connectando ao servidor ${this.name}</span>
 				<span class='error-message'>${this.error}</span>
 				<table>

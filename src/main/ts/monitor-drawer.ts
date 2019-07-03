@@ -8,7 +8,6 @@ declare global {
 	}
 }
 
-/*extends Drawer*/
 @customElement('monitor-drawer')
 export class MonitorDrawer extends LitElement {
 

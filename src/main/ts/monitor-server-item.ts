@@ -113,7 +113,7 @@ export class MonitorServerItem extends LitElement {
 
 	render() {
 		return html`
-			<section @click="${this.onClicked}">
+			<section @click="${this.onLeftClick}" @contextmenu="${this.onRightClick}">
 				<mwc-ripple></mwc-ripple>
 				${monitorIcon}
 				<label>
@@ -124,7 +124,7 @@ export class MonitorServerItem extends LitElement {
 		`;
 	}
 
-	async onClicked(event: Event) {
+	async onLeftClick(event: MouseEvent) {
 		let section = this.renderRoot.querySelector('section');
 
 		if (!this.server) {
@@ -173,6 +173,11 @@ export class MonitorServerItem extends LitElement {
 			composed: true
 		}));
 	}
+
+	async onRightClick(event: MouseEvent) {
+
+	}
+
 
 }
 

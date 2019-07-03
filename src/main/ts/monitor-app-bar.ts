@@ -15,9 +15,11 @@ export class MonitorAppBar extends LitElement {
         return css`
             :host {
                 height: 64px;
-                z-index: 1000;
+				z-index: 1000;
             }
 			header {
+				-webkit-app-region: drag;
+				-webkit-user-select: none;
 				z-index: 1000;
 				min-height: 56px;
 				box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
