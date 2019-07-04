@@ -85,7 +85,7 @@ export class MonitorUserList extends LitElement {
 	render() {
 		return html`
 			<div class="${this.status}">
-				<span class='connecting-message'>Connectando ao servidor ${this.name}</span>
+				<span class='connecting-message'>Conectando ao servidor ${this.name}</span>
 				<span class='error-message'>${this.error}</span>
 				<table>
 					<thead>

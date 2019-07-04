@@ -5,7 +5,7 @@ import { css, html, CSSResult, property, customElement, LitElement } from 'lit-e
 export class MonitorAppBar extends LitElement {
 
     @property({type: String})
-    public text: string = '';
+    public text: string = 'TOTVS Monitor';
 
     constructor() {
         super();
@@ -29,6 +29,17 @@ export class MonitorAppBar extends LitElement {
 				padding: 6px 12px;
 				display: flex;
 				align-items: center;
+				height: 100%;
+				box-sizing: border-box;
+			}
+
+			h1 {
+				margin: 0;
+				font-size: 26px;
+			}
+
+			img {
+				margin: 12px;
 			}
 		`;
     }
@@ -36,6 +47,7 @@ export class MonitorAppBar extends LitElement {
     render() {
 		return html`
 			<header>
+				<img src='./totvs_h_neg_pb_optimized.svg' height="36" width="36" />
 				<h1>${this.text}</h1>
 			</header>
         `;

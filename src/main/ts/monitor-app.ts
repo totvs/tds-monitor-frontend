@@ -41,7 +41,6 @@ class MonitorApp extends LitElement {
 					display: flex;
 					flex-direction: column;
 					align-items: stretch;
-					font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
 					top: 0;
 					bottom: 0;
 					left: 0;

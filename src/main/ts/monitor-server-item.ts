@@ -2,6 +2,7 @@ import { LitElement, html, customElement, property, CSSResult, css } from 'lit-e
 import { TdsMonitorServer } from '@totvs/tds-languageclient';
 import { monitorIcon } from './icon-monitor-svg';
 import { MonitorUser } from '@totvs/tds-languageclient/target/TdsMonitorServer';
+import { MonitorMenu, MenuOptions } from './monitor-menu';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -9,7 +10,7 @@ declare global {
 	}
 }
 
-declare type ServerStatus = 'disconnected' | 'connecting' | 'connected';
+declare type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | "error";
 
 /*extends Drawer*/
 @customElement('monitor-server-item')
@@ -25,7 +26,10 @@ export class MonitorServerItem extends LitElement {
 	port: number;
 
 	@property({ type: String })
-	status: ServerStatus = 'disconnected';
+	status: ConnectionStatus = 'disconnected';
+
+	@property({ type: Boolean })
+	enableNewConnections: boolean = true;
 
 	server: TdsMonitorServer = null;
 
@@ -109,11 +113,69 @@ export class MonitorServerItem extends LitElement {
 		`;
 	}
 
+	async disconnectServer(): Promise<boolean> {
+		//this.server.disconnect();
+		this.server = null;
+		this.status = 'disconnected';
+
+		return true;
+	}
+
+	async connectServer(dispatchEvents?: boolean): Promise<boolean> {
+		this.status = 'connecting';
+
+		if (dispatchEvents) {
+			this.dispatchEvent(new CustomEvent<string>('server-init', {
+				detail: this.name,
+				bubbles: true,
+				composed: true
+			}));
+		}
+
+		this.server = await languageClient.getMonitorServer({
+			connType: 1,
+			identification: '',
+			server: this.address,
+			port: this.port,
+			buildVersion: '7.00.170117A',
+			environment: 'LOBO-GUARA',
+			user: 'admin',
+			password: '',
+			autoReconnect: true
+		});
+
+		if (this.server) {
+			this.status = 'connected';
+		}
+		else {
+			this.status = 'error';
+
+			if (dispatchEvents) {
+				this.dispatchEvent(new CustomEvent<string>('server-error', {
+					detail: 'Nao foi possivel conectar ao servidor!',
+					bubbles: true,
+					composed: true
+				}));
+			}
+		}
+
+		return (this.status === 'connected');
+	}
+
+	async getUsers() {
+		let users = await this.server.getUsers();
+
+		this.dispatchEvent(new CustomEvent<MonitorUser[]>('server-connected', {
+			detail: users,
+			bubbles: true,
+			composed: true
+		}));
+	}
 
 
 	render() {
 		return html`
-			<section @click="${this.onLeftClick}" @contextmenu="${this.onRightClick}">
+			<section class="${this.status}" @click="${this.onLeftClick}" @contextmenu="${this.onRightClick}">
 				<mwc-ripple></mwc-ripple>
 				${monitorIcon}
 				<label>
@@ -125,7 +187,34 @@ export class MonitorServerItem extends LitElement {
 	}
 
 	async onLeftClick(event: MouseEvent) {
-		let section = this.renderRoot.querySelector('section');
+		switch (this.status) {
+			case 'disconnected':
+			case 'error':
+				let sucess = await this.connectServer(true);
+
+				if (sucess)
+					await this.getUsers();
+
+				break;
+			case 'connecting':
+				//Do nothing
+
+				break;
+			case 'connected':
+				await this.getUsers();
+
+				break;
+			default:
+				break;
+		}
+
+		/*
+
+		//let section = this.renderRoot.querySelector('section');
+
+		//section.classList.remove('error', 'connecting', 'connected');
+
+		this.status = 'connecting';
 
 		if (!this.server) {
 			this.dispatchEvent(new CustomEvent<string>('server-init', {
@@ -134,7 +223,8 @@ export class MonitorServerItem extends LitElement {
 				composed: true
 			}));
 
-			section.classList.add('connecting');
+			this.status = 'connecting';
+			//section.classList.add('connecting');
 
 			this.server = await languageClient.getMonitorServer({
 				connType: 1,
@@ -150,8 +240,7 @@ export class MonitorServerItem extends LitElement {
 		}
 
 		if (!this.server) {
-			section.classList.remove('connecting');
-			section.classList.add('error');
+			this.status = 'error';
 
 			this.dispatchEvent(new CustomEvent<string>('server-error', {
 				detail: 'Nao foi possivel conectar ao servidor!',
@@ -162,8 +251,7 @@ export class MonitorServerItem extends LitElement {
 			return;
 		}
 
-		section.classList.remove('connecting');
-		section.classList.add('connected');
+		this.status = 'connected';
 
 		let users = await this.server.getUsers();
 
@@ -172,9 +260,66 @@ export class MonitorServerItem extends LitElement {
 			bubbles: true,
 			composed: true
 		}));
+		*/
 	}
 
 	async onRightClick(event: MouseEvent) {
+		let menu: MonitorMenu,
+			options: MenuOptions = {
+				parent: this,
+				position: {
+					x: event.pageX,
+					y: event.pageY,
+				},
+				items: [
+					{
+						text: 'Editar Dados do Servidor',
+						separator: true
+					}
+
+				]
+			};
+
+		if (this.status === 'disconnected') {
+			options.items.push({
+				text: 'Conectar',
+				separator: true,
+				callback: () => { this.connectServer(false) }
+			});
+		}
+		else {
+			if (this.status !== 'error') {
+				options.items.push({
+					text: 'Desconectar',
+					separator: true,
+					callback: () => { this.disconnectServer() }
+				});
+			}
+
+			if (this.status === 'connected') {
+				if (this.enableNewConnections) {
+					options.items.push({
+						text: 'Desabilitar novas conexões'
+					});
+				}
+				else {
+					options.items.push({
+						text: 'Habilitar novas conexões'
+					});
+				}
+
+				options.items.push({
+					text: 'Parar o servidor'
+				});
+			}
+		}
+
+		if (options.items[options.items.length - 1].separator)
+			options.items[options.items.length - 1].separator = false;
+
+		menu = new MonitorMenu(options);
+
+		menu.open = true;
 
 	}
 
