@@ -1,4 +1,5 @@
-import { LitElement, html, customElement, property, css } from 'lit-element';
+import { LitElement, html, customElement, property } from 'lit-element';
+import { style } from '../css/monitor-menu-item.css';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -37,8 +38,13 @@ export class MonitorMenuItem extends LitElement {
 			this.separator = options.separator;
 		}
 
-		if (options.items) {
-			this.items = options.items.map(item => new MonitorMenuItem(item));
+		if ((options.items) && (options.items.length > 0)) {
+			const items = options.items;
+
+			if (items[items.length - 1].separator)
+				items[items.length - 1].separator = false;
+
+			this.items = items.map(item => new MonitorMenuItem(item));
 		}
 
 		if (options.callback) {
@@ -47,29 +53,9 @@ export class MonitorMenuItem extends LitElement {
 	}
 
 	static get styles() {
-		return css`
-			li {
-				cursor: pointer;
-				user-select: none;
-				display: flex;
-				position: relative;
-				align-items: center;
-				justify-content: flex-start;
-				height: 48px;
-				padding: 0 16px;
-				overflow: hidden;
-				list-style-type: none;
-			}
-
-			li:hover {
-				background-color: #e1e1e1;
-			}
-
-			li.separator {
-				border-bottom: 1px solid rgba(0,0,0,.12);
-			}
-		`;
+		return style;
 	}
+
 	//#e1e1e1 ou f2f2f2
 	render() {
 		let classes = this.separator ? 'separator' : '';

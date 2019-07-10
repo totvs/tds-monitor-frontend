@@ -1,8 +1,9 @@
-import { LitElement, html, customElement, property, css } from 'lit-element';
+import { LitElement, html, customElement, property } from 'lit-element';
 import { MonitorMenuItem, MenuItemOptions } from './monitor-menu-item';
+import { style } from '../css/monitor-menu.css';
 
 export interface MenuOptions {
-	position: MenuOptionsPosition
+	position?: MenuOptionsPosition
 	parent: HTMLElement;
 	items?: MenuItemOptions[]
 }
@@ -47,8 +48,13 @@ export class MonitorMenu extends LitElement {
 
 		this.options = options;
 
-		if (options.items) {
-			this.items = options.items.map(item => new MonitorMenuItem(item));
+		if ((options.items) && (options.items.length > 0)) {
+			const items = options.items;
+
+			if (items[items.length - 1].separator)
+				items[items.length - 1].separator = false;
+
+			this.items = items.map(item => new MonitorMenuItem(item));
 		}
 	}
 
@@ -60,10 +66,14 @@ export class MonitorMenu extends LitElement {
 			this.style.left = `${position.x}px`;
 		}
 		else {
-			const parent = this.options.parent;
+			const parent = this.options.parent,
+				rect = parent.getBoundingClientRect();
 
-			this.style.top = (parent.offsetTop + parent.offsetHeight) + 'px';
-			this.style.left = (parent.offsetLeft + parent.offsetWidth - this.clientWidth) + 'px';
+			let top = (rect.top + rect.height),
+				left = (rect.left + rect.width - this.clientWidth);
+
+			this.style.top = `${top}px`;
+			this.style.left = `${left}px`;
 		}
 	}
 
@@ -80,31 +90,7 @@ export class MonitorMenu extends LitElement {
 	}
 
 	static get styles() {
-		return css`
-			:host {
-				z-index: 99999;
-				position: absolute;
-				background-color: white;
-				box-shadow: 0 5px 5px -3px rgba(0,0,0,.2), 0 8px 10px 1px rgba(0,0,0,.14), 0 3px 14px 2px rgba(0,0,0,.12);
-				transition: opacity .03s linear,transform .12s cubic-bezier(0,0,.2,1),-webkit-transform .12s cubic-bezier(0,0,.2,1);
-				will-change: transform,opacity;
-				transform-origin: top left;
-				opacity: 0.01;
-				margin: 0;
-				padding: 0;
-			}
-
-			:host([open]) {
-				display: inline-block;
-				transform: scale(1);
-				opacity: 1;
-			}
-
-			ul {
-				padding: 8px 0;
-				margin: 0;
-			}
-		`;
+		return style;
 	}
 
 	render() {
@@ -112,7 +98,6 @@ export class MonitorMenu extends LitElement {
 			<ul>
 				${this.items}
 			</ul>
-
 		`;
 	}
 }

@@ -1,11 +1,14 @@
-import { LitElement, html, css, customElement, CSSResult, property } from 'lit-element';
+import { LitElement, html, customElement, CSSResult, property } from 'lit-element';
 import { MonitorUser } from '@totvs/tds-languageclient';
+import { style } from '../css/monitor-user-list.css';
 
 declare global {
 	interface HTMLElementTagNameMap {
 		'monitor-user-list': MonitorUserList;
 	}
 }
+
+declare type MonitorUserListStatus = 'iddle' | 'connecting' | 'connected' | 'error';
 
 @customElement('monitor-user-list')
 export class MonitorUserList extends LitElement {
@@ -19,67 +22,11 @@ export class MonitorUserList extends LitElement {
 	@property({ type: String })
 	error: string = '';
 
-	@property({ type: Boolean })
-	status: 'iddle' | 'connecting' | 'connected' | 'error' = 'iddle';
+	@property({ type: String })
+	status: MonitorUserListStatus = 'iddle';
 
 	static get styles(): CSSResult {
-		return css`
-            :host {
-				overflow: hidden;
-                flex-grow: 1;
-                display: flex;
-			}
-
-			div {
-				overflow: auto;
-				padding: 30px;
-				height: 100%;
-				width: 100%;
-			}
-
-			.iddle .error-message, .iddle .connecting-message, .iddle table  {
-				display: none;
-			}
-
-
-			.connecting .error-message, .connecting table  {
-				display: none;
-			}
-
-			.connected .error-message, .connected .connecting-message  {
-				display: none;
-			}
-
-			.error .connecting-message, .error table {
-				display: none;
-			}
-
-			table {
-				border-collapse: collapse;
-				border-spacing: 0;
-			}
-
-			thead {
-				color: rgba(0,0,0,0.6);
-			}
-
-			th, td {
-				white-space: nowrap;
-				padding: 15px 10px;
-			}
-
-			td.center {
-				text-align: center;
-			}
-
-			td.right {
-				text-align: right;
-			}
-
-			tr {
-				border-bottom: 1px solid rgba(0,0,0,0.12);
-			}
-        `;
+		return style;
 	}
 
 	render() {

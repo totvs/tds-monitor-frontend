@@ -1,11 +1,5 @@
-import { LitElement, html, css, customElement } from 'lit-element';
-
-
-declare global {
-	interface HTMLElementTagNameMap {
-		'monitor-app': MonitorApp;
-	}
-}
+import { LitElement, html, customElement } from 'lit-element';
+import { style } from '../css/monitor-app.css';
 
 @customElement('monitor-app')
 class MonitorApp extends LitElement {
@@ -29,33 +23,19 @@ class MonitorApp extends LitElement {
 		drawer.servers = settings.servers;
 	}
 
-
-
 	static get styles() {
-		super.styles;
-
-		return [
-			css`
-				:host {
-					position: absolute;
-					display: flex;
-					flex-direction: column;
-					align-items: stretch;
-					top: 0;
-					bottom: 0;
-					left: 0;
-					right: 0;
-					border: 0;
-					padding: 0;
-					margin: 0;
-				}
-			`,
-		];
+		return style;
 	}
 
 	render() {
 		return html`
 			<slot></slot>
     	`;
+	}
+}
+
+declare global {
+	interface HTMLElementTagNameMap {
+		'monitor-app': MonitorApp;
 	}
 }

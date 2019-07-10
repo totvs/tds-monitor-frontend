@@ -1,8 +1,9 @@
-import { LitElement, html, customElement, property, CSSResult, css } from 'lit-element';
+import { LitElement, html, customElement, property, CSSResult } from 'lit-element';
 import { TdsMonitorServer } from '@totvs/tds-languageclient';
 import { monitorIcon } from './icon-monitor-svg';
 import { MonitorUser } from '@totvs/tds-languageclient/target/TdsMonitorServer';
 import { MonitorMenu, MenuOptions } from './monitor-menu';
+import { style } from '../css/monitor-server-item.css';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -12,7 +13,6 @@ declare global {
 
 declare type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | "error";
 
-/*extends Drawer*/
 @customElement('monitor-server-item')
 export class MonitorServerItem extends LitElement {
 
@@ -41,76 +41,8 @@ export class MonitorServerItem extends LitElement {
 		this.port = server.port;
 	}
 
-
 	static get styles(): CSSResult {
-		return css`
-			:host {
-				margin: 2px 0;
-			}
-
-			@keyframes colorChange {
-				0% {fill: #FFFFFF }
-				50% {fill: #FFFF00 }
-				100% {fill: #FFFFFF }
-			}
-
-			.connecting svg .server {
-				animation: colorChange 1s infinite;
-			}
-
-			.connected svg .server {
-				fill: #009900;
-			}
-
-			.error svg .server {
-				fill: #FF0000;
-			}
-
-			.strokes {
-				stroke: #808080;
-				fill: #808080;
-			}
-
-			.connected .strokes {
-				stroke: #000000;
-				fill: #000000;
-			}
-
-			* {
-				user-select: none;
-			}
-
-			section {
-				padding: 10px 15px;
-				display: flex;
-				flex-direction: row;
-			}
-
- 			svg {
-				vertical-align: middle;
-				margin: 8px;
-			}
-
-			label {
-				flex-grow: 1;
-				display: flex;
-				flex-direction: column;
-				margin: auto;
-			}
-
-			label h1 {
-				display: inline;
-				vertical-align: middle;
-				font-size: 14px;
-				margin: 5px 0;
-				flex-grow: 1;
-			}
-
-			label span {
-				font-size: 10px;
-				color: gray;
-			}
-		`;
+		return style;
 	}
 
 	async disconnectServer(): Promise<boolean> {
@@ -143,6 +75,8 @@ export class MonitorServerItem extends LitElement {
 			password: '',
 			autoReconnect: true
 		});
+
+		console.log('server', this.server);
 
 		if (this.server) {
 			this.status = 'connected';
@@ -314,11 +248,7 @@ export class MonitorServerItem extends LitElement {
 			}
 		}
 
-		if (options.items[options.items.length - 1].separator)
-			options.items[options.items.length - 1].separator = false;
-
 		menu = new MonitorMenu(options);
-
 		menu.open = true;
 
 	}

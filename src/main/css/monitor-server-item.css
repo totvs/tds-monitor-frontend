@@ -1,0 +1,74 @@
+@import './reset.css';
+
+* {
+	user-select: none;
+}
+
+:host {
+	margin: 2px 0;
+}
+
+@keyframes colorChange {
+	0% {fill: #FFFFFF }
+	50% {fill: #FFFF00 }
+	100% {fill: #FFFFFF }
+}
+
+.connecting svg .server {
+	animation: colorChange 1s infinite;
+}
+
+.connected svg .server {
+	fill: #009900;
+}
+
+.error svg .server {
+	fill: #FF0000;
+}
+
+.strokes {
+	stroke: #808080;
+	fill: #808080;
+}
+
+.connected .strokes {
+	stroke: #000000;
+	fill: #000000;
+}
+
+section {
+	padding: 10px 15px;
+	display: flex;
+	flex-direction: row;
+	will-change: background-color;
+	transition: background-color .2s cubic-bezier(.4,0,.2,1);
+}
+
+section:hover {
+	background-color: rgba(158,158,158,.2);
+}
+
+svg {
+	vertical-align: middle;
+	margin: 8px;
+}
+
+label {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	margin: auto;
+}
+
+label h1 {
+	display: inline;
+	vertical-align: middle;
+	font-size: 14px;
+	margin: 5px 0;
+	flex-grow: 1;
+}
+
+label span {
+	font-size: 10px;
+	color: gray;
+}

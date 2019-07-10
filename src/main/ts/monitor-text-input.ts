@@ -1,15 +1,11 @@
-import { LitElement, html, css, customElement, CSSResult } from 'lit-element';
+import { LitElement, html, customElement, CSSResult } from 'lit-element';
+import { style } from '../css/monitor-text-input.css';
 
 @customElement('monitor-text-input')
 export class MonitorTextInput extends LitElement {
 
 	static get styles(): CSSResult {
-		return css`
-            :host {
-                flex-grow: 1;
-                display: flex;
-            }
-            `;
+		return style;
 	}
 
 	render() {
