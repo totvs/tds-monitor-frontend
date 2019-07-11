@@ -1,0 +1,93 @@
+@import './reset.css';
+
+:host {
+	z-index: 1000;
+	display: flex;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	position: fixed;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: transparent;
+	justify-content: center;
+	align-items: center;
+}
+
+dialog {
+	display: flex;
+	flex-direction: column;
+	flex-grow: 1;
+    align-items: center;
+	padding: 0;
+
+	color: black;
+	background-color: white;
+	border: none;
+	box-shadow: 0 9px 46px 8px rgba(0, 0, 0, 0.14), 0 11px 15px -7px rgba(0, 0, 0, 0.12), 0 24px 38px 3px rgba(0, 0, 0, 0.2);
+	transition: opacity .15s, transform .15s;
+	transform: scale(1);
+	opacity: 1;
+}
+
+
+dialog.maximized {
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	height: auto;
+	width: auto;
+}
+
+dialog::backdrop, dialog + .backdrop {
+	background-color: transparent;
+}
+
+dialog.hidden {
+	-webkit-transform: scale(0.7);
+	-moz-transform: scale(0.7);
+	-ms-transform: scale(0.7);
+	transform: scale(0.7);
+	opacity: 0;
+}
+
+
+dialog header {
+	color: white;
+	background-color: #3d3d3d;
+	background-image: linear-gradient(#000,#3d3d3d);
+    align-items: center;
+    padding: 6px 12px;
+}
+
+dialog footer {
+	flex-direction: row;
+	justify-content: flex-end;
+	align-items: center;
+	align-items: center;
+}
+
+dialog header, dialog footer  {
+	display: flex;
+	min-height: 56px;
+	width: 100%;
+	height: 100%;
+}
+
+footer monitor-button  {
+	margin-right: 12px;
+}
+
+dialog header h1 {
+	flex-grow: 1;
+	margin: 0;
+	font-size: 20px;
+}
+
+dialog main {
+	padding: 12px;
+}

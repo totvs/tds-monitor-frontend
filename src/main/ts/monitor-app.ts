@@ -4,7 +4,6 @@ import { style } from '../css/monitor-app.css';
 @customElement('monitor-app')
 class MonitorApp extends LitElement {
 
-
 	private _settings: MonitorSettings = {};
 
 	constructor() {
@@ -31,6 +30,14 @@ class MonitorApp extends LitElement {
 		return html`
 			<slot></slot>
     	`;
+	}
+
+	addServer(newServer: Server) {
+		this.settings.servers.push(newServer);
+
+		let drawer = this.querySelector('monitor-drawer');
+
+		drawer.servers = Array.from(this.settings.servers);
 	}
 }
 
