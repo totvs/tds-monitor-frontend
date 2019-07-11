@@ -5,6 +5,7 @@ let path = require('path'),
 	watchify = require('watchify'),
 	babelify = require('babelify'),
 	tfilter = require('tfilter'),
+	browserifyCss = require('browserify-css'),
 	//babelPresetEnv = require('@babel/preset-env'),
 
 	browserify = require('browserify'),
@@ -46,11 +47,22 @@ module.exports = function(gulp, plugins, basedir, argv) {
 				basedir: jsSrcDir,
 				browserField: false,
 				debug: true,
-				extensions: ['.js', '.ts']
+				extensions: ['.js', '.ts', '.css']
 			};
 
 		bundler = browserify(browserifyOptions)
-			.transform(babelify.configure({ extensions: ['.js', '.jsx', '.ts', '.tsx'] }));
+			.transform(browserifyCss, {
+				onFlush: function(options, done) {
+					done([
+						`var css = require('lit-element').css;`,
+						``,
+						`module.exports.style = css\`${options.data}\`;`
+					].join('\n'));
+				}
+			})
+			.transform(babelify.configure({
+				extensions: ['.js', '.jsx', '.ts', '.tsx', '.css']
+			}));
 
 		Object.keys(pkg.dependencies).forEach(key => {
 			bundler.external(key);

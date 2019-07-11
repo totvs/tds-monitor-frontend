@@ -9,6 +9,7 @@ import './monitor-drawer';
 import './monitor-add-server-dialog';
 import './monitor-text-input';
 import './monitor-user-list';
+import './monitor-ripple';
 
 import { TdsLanguageClient } from '@totvs/tds-languageclient';
 

@@ -1,5 +1,6 @@
-import { LitElement, html, css, customElement, CSSResult } from 'lit-element';
+import { LitElement, html, customElement, CSSResult, TemplateResult } from 'lit-element';
 import { MonitorUser } from '@totvs/tds-languageclient/target/TdsMonitorServer';
+import { style } from '../css/monitor-body.css';
 
 @customElement('monitor-body')
 export class MonitorBody extends LitElement {
@@ -13,22 +14,17 @@ export class MonitorBody extends LitElement {
 	}
 
 	static get styles(): CSSResult {
-		return css`
-            :host {
-                flex-grow: 1;
-				display: flex;
-				overflow: hidden;
-            }
-            `;
+		return style;
 	}
 
-	render() {
+	render(): TemplateResult {
 		return html`
 			<slot></slot>
         `;
 	}
 
-	onBeginServerConnection(event: CustomEvent<string>) {
+
+	onBeginServerConnection(event: CustomEvent<string>): boolean | void {
 		let userList = this.querySelector('monitor-user-list');
 
 		userList.users = [];
@@ -38,7 +34,7 @@ export class MonitorBody extends LitElement {
 		console.log('begin connnection to server ' + event.detail);
 	}
 
-	onServerConnected(event: CustomEvent<MonitorUser[]>) {
+	onServerConnected(event: CustomEvent<MonitorUser[]>): boolean | void {
 		let userList = this.querySelector('monitor-user-list');
 
 		userList.users = event.detail;
@@ -47,7 +43,7 @@ export class MonitorBody extends LitElement {
 		console.log('onConnected', event.detail);
 	}
 
-	onServerError(event: CustomEvent<string>) {
+	onServerError(event: CustomEvent<string>): boolean | void {
 		let userList = this.querySelector('monitor-user-list');
 
 		userList.users = [];
