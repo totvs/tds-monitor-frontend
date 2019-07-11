@@ -208,9 +208,12 @@ export class MonitorServerItem extends LitElement {
 				items: [
 					{
 						text: 'Editar Dados do Servidor',
+					},
+					{
+						text: 'Excluir Servidor',
+						callback: () => { this.deleteServer() },
 						separator: true
 					}
-
 				]
 			};
 
@@ -251,6 +254,11 @@ export class MonitorServerItem extends LitElement {
 		menu = new MonitorMenu(options);
 		menu.open = true;
 
+	}
+
+	deleteServer() {
+		const app = document.querySelector('monitor-app');
+		app.removeServer(this.name);
 	}
 
 

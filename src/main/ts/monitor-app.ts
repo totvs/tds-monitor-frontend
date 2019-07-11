@@ -38,7 +38,20 @@ class MonitorApp extends LitElement {
 		let drawer = this.querySelector('monitor-drawer');
 
 		drawer.servers = Array.from(this.settings.servers);
+
+		window.localStorage.setItem('settings', JSON.stringify(this.settings));
 	}
+
+	removeServer(serverName: string) {
+		this.settings.servers = this.settings.servers.filter((server => server.name !== serverName));
+
+		let drawer = this.querySelector('monitor-drawer');
+
+		drawer.servers = Array.from(this.settings.servers);
+
+		window.localStorage.setItem('settings', JSON.stringify(this.settings));
+	}
+
 }
 
 declare global {
