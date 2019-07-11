@@ -16,26 +16,25 @@ declare global {
 	let languageClient: TdsLanguageClient;
 }
 
-const app = document.querySelector('monitor-app'),
-	settings = window.localStorage.getItem('settings');
+const app = document.querySelector('monitor-app')
+//const settings = window.localStorage.getItem('settings')
 
-if (settings) {
-	app.settings = JSON.parse(settings);
-}
-else {
-	app.settings = {
+//if (settings) {
+	//app.settings = JSON.parse(settings);
+//}
+//else {
+	app.settings = JSON.parse(`{
 		"servers": [
 			{
-				name: "Production",
-				address: "LOCALHOST",
-				port: 5555
+				"name": "Production 2",
+				"address": "LOCALHOST",
+				"port": 41701
 			},
 			{
-				name: "LOBO-GUARA",
-				address: "192.168.168.1",
-				port: 6000
+				"name": "LOBO-GUARA",
+				"address": "192.168.168.1",
+				"port": 6000
 			}
 		]
-	}
-}
-
+	}`);
+//}
