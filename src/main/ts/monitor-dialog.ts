@@ -1,29 +1,53 @@
-import { LitElement, html, customElement, CSSResult, property } from 'lit-element';
+import { LitElement, html, property, customElement, CSSResult } from 'lit-element';
 import { style } from '../css/monitor-dialog.css';
-import { ButtonOptions, MonitorButton } from './monitor-buton';
+import { ButtonOptions, MonitorButton } from './monitor-button';
+
+declare type ProgressOption = 'hidden' | 'visible' | 'none'
 
 interface DialogOptions {
 	buttons?: Array<ButtonOptions>;
 	escClose?: boolean;
+	progress?: ProgressOption;
 }
+
 
 
 @customElement('monitor-dialog')
 export class MonitorDialog extends LitElement {
 
+	buttons: Array<MonitorButton> = null;
 	options: DialogOptions = null;
+
+	@property({ type: String, reflect: true, attribute: true })
+	get progress(): ProgressOption {
+		return this.options ? this.options.progress : null;
+	}
+	set progress(value: ProgressOption) {
+		const oldValue = this.options.progress;
+		this.options.progress = value;
+
+		this.requestUpdate('progress', oldValue);
+	}
 
 	constructor(options: DialogOptions) {
 		super();
 
-		this.options = Object.assign({}, options);
+		this.options = Object.assign({
+//			progress: 'none'
+			buttons: []
+		}, options);
 
-		this.title = 'Adicionar Novo Servidor';
+		this.buttons = this.options.buttons.map(button => new MonitorButton(button));
+
+//		this.progress = this.options.progress;
 	}
 
 	static get styles(): CSSResult {
 		return style;
 	}
+
+	//				${this.options.progress !== 'none' ? html`<monitor-linear-progress ${this.options.progress}></monitor-linear-progress>` : html``}
+
 
 	render() {
 		return html`
@@ -31,11 +55,12 @@ export class MonitorDialog extends LitElement {
 				<header>
 					<h1>${this.title}</h1>
 				</header>
+				<monitor-linear-progress></monitor-linear-progress>
 				<main>
 					<slot></slot>
 				</main>
 				<footer>
-					${this.options.buttons ? this.options.buttons.map(button => new MonitorButton(button)) : ''}
+					${this.buttons}
 				</footer>
 			</dialog>
         `;

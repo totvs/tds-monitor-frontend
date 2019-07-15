@@ -14,7 +14,7 @@ slot {
     margin: 10px;
 }
 
-::slotted(monitor-text-input#name) {
+::slotted(monitor-text-input#name), ::slotted(monitor-text-input#build) {
     flex: 1 100%;
 }
 

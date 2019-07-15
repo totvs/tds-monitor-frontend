@@ -62,7 +62,7 @@ export class MonitorMenuItem extends LitElement {
 
 		return html`
 			<li class="${classes}" @click="${this.onLeftClick}" @contextmenu="${this.onRightClick}">
-				<mwc-ripple @transitionend="${this.onAnimationEnd}"></mwc-ripple>
+				<monitor-ripple @transitionend="${this.onAnimationEnd}"></monitor-ripple>
 				<span>${this.text}</span>
 				<ul>
 					${this.items}

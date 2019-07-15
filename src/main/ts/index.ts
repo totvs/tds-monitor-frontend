@@ -1,6 +1,5 @@
 import '@babel/polyfill';
 import '@webcomponents/webcomponentsjs';
-import '@material/mwc-ripple';
 
 import './monitor-app';
 import './monitor-app-bar';
@@ -10,6 +9,7 @@ import './monitor-add-server-dialog';
 import './monitor-text-input';
 import './monitor-user-list';
 import './monitor-ripple';
+import './monitor-linear-progress';
 
 import { TdsLanguageClient } from '@totvs/tds-languageclient';
 

@@ -7,6 +7,10 @@
 	margin: .5em 0;
 }
 
+:host(:focus) {
+    outline: 0 none;
+}
+
 div {
 	width: 100%;
 	display: block;

@@ -11,7 +11,12 @@ declare global {
 	}
 }
 
-declare type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | "error";
+declare type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
+
+export interface MonitorServerItemOptions {
+	name: string;
+	server: TdsMonitorServer;
+}
 
 @customElement('monitor-server-item')
 export class MonitorServerItem extends LitElement {
@@ -33,12 +38,14 @@ export class MonitorServerItem extends LitElement {
 
 	server: TdsMonitorServer = null;
 
-	constructor(server: Server) {
+	constructor(options: MonitorServerItemOptions) {
 		super();
 
-		this.name = server.name;
-		this.address = server.address;
-		this.port = server.port;
+		this.server = options.server;
+
+		this.name = options.name;
+		this.address = this.server.address;
+		this.port = this.server.port;
 	}
 
 	static get styles(): CSSResult {
@@ -110,7 +117,7 @@ export class MonitorServerItem extends LitElement {
 	render() {
 		return html`
 			<section class="${this.status}" @click="${this.onLeftClick}" @contextmenu="${this.onRightClick}">
-				<mwc-ripple></mwc-ripple>
+				<monitor-ripple></monitor-ripple>
 				${monitorIcon}
 				<label>
 					<h1>${this.name}</h1>

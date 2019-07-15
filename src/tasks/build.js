@@ -176,9 +176,14 @@ module.exports = function(gulp, plugins, basedir, argv) {
 
 		shelljs.mkdir('-p', destFolder);
 
+
+		let vendorFile = `${finalName}-vendor.js`;//path.join(destFolder.replace(basedir + path.sep, ''), srcFile + '.map');
+
 		return pumpPromise([
 			bundler.bundle(),
-			source(`${finalName}-vendor.js`),
+			exorcist(`${destFolder}/${vendorFile}.map`),
+
+			source(vendorFile),
 			buffer(),
 
 			//plugins.sourcemaps.init({ loadMaps: true, largeFile: true }),
