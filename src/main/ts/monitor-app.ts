@@ -5,10 +5,12 @@ import { MonitorServerItemOptions } from './monitor-server-item';
 @customElement('monitor-app')
 class MonitorApp extends LitElement {
 
-	private _settings: MonitorSettings = {};
+	private _settings: MonitorSettings = null;
 
 	constructor() {
 		super();
+
+		this.settings = {};
 	}
 
 	get settings(): MonitorSettings {
@@ -16,11 +18,13 @@ class MonitorApp extends LitElement {
 	}
 
 	set settings(settings: MonitorSettings) {
-		this._settings = settings;
+		this._settings = Object.assign({
+			servers: []
+		}, settings);
 
 		let drawer = this.querySelector('monitor-drawer');
 
-		drawer.servers = settings.servers.map((data) => {
+		drawer.servers = this.settings.servers.map((data) => {
 			let server = languageClient.createMonitorServer();
 			server.address = data.address;
 			server.port = data.port;
