@@ -19,7 +19,7 @@ export class MonitorDrawer extends LitElement {
 	static get styles(): CSSResult {
 		return style;
 	}
-//azul 3B9DFF
+
 	render() {
 		return html`
 			<aside>

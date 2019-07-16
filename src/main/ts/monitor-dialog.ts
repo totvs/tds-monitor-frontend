@@ -33,13 +33,13 @@ export class MonitorDialog extends LitElement {
 		super();
 
 		this.options = Object.assign({
-//			progress: 'none'
+			//			progress: 'none'
 			buttons: []
 		}, options);
 
 		this.buttons = this.options.buttons.map(button => new MonitorButton(button));
 
-//		this.progress = this.options.progress;
+		//		this.progress = this.options.progress;
 	}
 
 	static get styles(): CSSResult {
@@ -66,29 +66,63 @@ export class MonitorDialog extends LitElement {
         `;
 	}
 
-	public show(): void {
+	public showForResult(): Promise<boolean> {
+		return this.show().then(() => this.result())
+	}
+
+	public show(): Promise<void> {
 		document.body.appendChild(this);
 
-		requestAnimationFrame(() => {
-			let d = this.renderRoot.querySelector('dialog');
+		return new Promise((resolve, reject) => {
+			requestAnimationFrame(() => {
+				let d = this.renderRoot.querySelector('dialog');
 
-			if (d)
-				d.show();
+				if (d) {
+					d.show();
+					resolve();
+				}
+				else {
+					reject();
+				}
+			});
+		});
+	}
+
+	public result(): Promise<boolean> {
+		return new Promise((resolve, reject) => {
+			let listener = (event: CustomEvent<boolean>) => {
+				resolve(event.detail);
+
+				this.removeEventListener('dialog-closed', listener);
+			}
+
+			this.addEventListener('dialog-closed', listener);
 		});
 	}
 
 	public close(): void {
-		//let dialog = this.renderRoot.querySelector('dialog');
+		this._close(true);
+	}
 
+	public cancel(): void {
+		this._close(false);
+	}
+
+	private _close(result: boolean): void {
 		requestAnimationFrame(() => {
 			if (this.parentElement)
 				this.parentElement.removeChild(this);
+
+			this.dispatchEvent(new CustomEvent<boolean>('dialog-closed', {
+				detail: result,
+				bubbles: false
+			}));
 		});
 	}
 
 	onCancel(event: Event) {
 		if (this.options.escClose)
-			this.close();
+			this.cancel();
 
 		return false;
 	}

@@ -10,6 +10,8 @@ import './monitor-text-input';
 import './monitor-user-list';
 import './monitor-ripple';
 import './monitor-linear-progress';
+import './monitor-button';
+import './monitor-checkbox';
 
 import { TdsLanguageClient } from '@totvs/tds-languageclient';
 

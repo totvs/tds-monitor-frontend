@@ -139,7 +139,7 @@ export class MonitorAddServerDialog extends MonitorDialog {
 	}
 
 	onCancelButtonClicked(event: Event) {
-		this.close();
+		this.cancel();
 	}
 
 }
