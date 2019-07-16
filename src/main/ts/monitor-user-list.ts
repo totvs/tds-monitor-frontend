@@ -54,7 +54,7 @@ export class MonitorUserList extends LitElement {
 								<th>Connected</th>
 								<th>Elapsed Time</th>
 								<th>Instructions</th>
-								<th>Instrctions/Seconds</th>
+								<th>Instructions/Seconds</th>
 								<th>Comments</th>
 								<th>Memory</th>
 								<th>SID</th>

@@ -1,0 +1,27 @@
+@import './monitor-dialog.css';
+
+dialog {
+	width: 400px;
+}
+
+slot {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+::slotted(monitor-text-input) {
+	display: flex;
+    margin: 10px;
+}
+
+::slotted(monitor-text-input#environment) {
+    flex: 1 100%;
+}
+
+::slotted(monitor-text-input#user) {
+    flex: 1 100%;
+}
+
+::slotted(monitor-text-input#password) {
+	flex: 1 100%;
+}

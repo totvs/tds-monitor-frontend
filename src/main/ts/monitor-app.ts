@@ -53,7 +53,8 @@ class MonitorApp extends LitElement {
 		this.settings.servers.push({
 			name: options.name,
 			address: options.server.address,
-			port: options.server.port
+			port: options.server.port,
+			build: options.server.build
 		});
 
 		let drawer = this.querySelector('monitor-drawer');

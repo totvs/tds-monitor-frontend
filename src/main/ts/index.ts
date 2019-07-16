@@ -31,12 +31,14 @@ else {
 			{
 				name: "Production",
 				address: "LOCALHOST",
-				port: 5555
+				port: 5555,
+				build: '7.00.170117A'
 			},
 			{
 				name: "LOBO-GUARA",
 				address: "192.168.168.1",
-				port: 6000
+				port: 6000,
+				build: '7.00.170117A'
 			}
 		]
 	}

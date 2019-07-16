@@ -4,6 +4,8 @@ import { monitorIcon } from './icon-monitor-svg';
 import { MonitorUser } from '@totvs/tds-languageclient/target/TdsMonitorServer';
 import { MonitorMenu, MenuOptions } from './monitor-menu';
 import { style } from '../css/monitor-server-item.css';
+import { MonitorAuthenticationDialog } from './monitor-authentication-dialog';
+import { BuildVersion } from "@totvs/tds-languageclient";
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -30,6 +32,14 @@ export class MonitorServerItem extends LitElement {
 	@property({ type: Number })
 	port: number;
 
+	build: BuildVersion;
+
+	environment: string;
+
+	user: string;
+
+	password: string;
+
 	@property({ type: String })
 	status: ConnectionStatus = 'disconnected';
 
@@ -46,6 +56,7 @@ export class MonitorServerItem extends LitElement {
 		this.name = options.name;
 		this.address = this.server.address;
 		this.port = this.server.port;
+		this.build = this.server.build;
 	}
 
 	static get styles(): CSSResult {
@@ -53,7 +64,7 @@ export class MonitorServerItem extends LitElement {
 	}
 
 	async disconnectServer(): Promise<boolean> {
-		//this.server.disconnect();
+		this.server.disconnect();
 		this.server = null;
 		this.status = 'disconnected';
 
@@ -76,10 +87,10 @@ export class MonitorServerItem extends LitElement {
 			identification: '',
 			server: this.address,
 			port: this.port,
-			buildVersion: '7.00.170117A',
-			environment: 'LOBO-GUARA',
-			user: 'admin',
-			password: '',
+			buildVersion: this.build,
+			environment: this.environment,
+			user: this.user,
+			password: this.password,
 			autoReconnect: true
 		});
 
@@ -131,10 +142,16 @@ export class MonitorServerItem extends LitElement {
 		switch (this.status) {
 			case 'disconnected':
 			case 'error':
-				let sucess = await this.connectServer(true);
+				let dialog = new MonitorAuthenticationDialog(this);
 
-				if (sucess)
-					await this.getUsers();
+				let result = await dialog.showForResult();
+
+				if (result) {
+					let sucess = await this.connectServer(true);
+
+					if (sucess)
+						await this.getUsers();
+				}
 
 				break;
 			case 'connecting':
