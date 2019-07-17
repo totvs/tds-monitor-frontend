@@ -1,0 +1,8 @@
+@import './reset.css';
+
+:host {
+	flex-grow: 1;
+	flex-direction: column;
+	display: flex;
+	overflow: hidden;
+}

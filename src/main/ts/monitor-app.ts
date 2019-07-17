@@ -1,6 +1,8 @@
 import { LitElement, html, customElement } from 'lit-element';
-import { style } from '../css/monitor-app.css';
 import { MonitorServerItemOptions } from './monitor-server-item';
+import { MonitorUser } from '@totvs/tds-languageclient';
+import { MonitorSettings } from './types';
+import { style } from '../css/monitor-app.css';
 
 @customElement('monitor-app')
 class MonitorApp extends LitElement {
@@ -11,6 +13,10 @@ class MonitorApp extends LitElement {
 
 	constructor() {
 		super();
+
+		this.addEventListener('server-connected', this.onServerConnected);
+		this.addEventListener('server-init', this.onBeginServerConnection);
+		this.addEventListener('server-error', this.onServerError);
 	}
 
 	get settings(): MonitorSettings {
@@ -26,13 +32,19 @@ class MonitorApp extends LitElement {
 
 		let s = this.settings.servers.map((data) => {
 			let server = languageClient.createMonitorServer();
+			server.id = data.name;
 			server.address = data.address;
 			server.port = data.port;
-			server.build = data.build;
 
-			//server.validate();
+			if (data.build) {
+				server.build = data.build;
+			}
 
-			return { ...data, server }
+			if (data.token) {
+				server.token = data.token;
+			}
+
+			return { name: data.name, server }
 		});
 
 		console.log('servers', s);
@@ -74,6 +86,36 @@ class MonitorApp extends LitElement {
 
 		window.localStorage.setItem('settings', JSON.stringify(this.settings));
 	}
+
+
+
+	onBeginServerConnection(event: CustomEvent<string>): boolean | void {
+		let serverView = this.querySelector('monitor-server-view');
+
+		serverView.users = [];
+		serverView.name = event.detail;
+		serverView.status = 'connecting';
+
+		console.log('begin connnection to server ' + event.detail);
+	}
+
+	onServerConnected(event: CustomEvent<MonitorUser[]>): boolean | void {
+		let serverView = this.querySelector('monitor-server-view');
+
+		serverView.users = event.detail;
+		serverView.status = 'connected';
+
+		console.log('onConnected', event.detail);
+	}
+
+	onServerError(event: CustomEvent<string>): boolean | void {
+		let serverView = this.querySelector('monitor-server-view');
+
+		serverView.users = [];
+		serverView.error = 'Não foi possivel conectar!';
+		serverView.status = 'error';
+	}
+
 
 }
 

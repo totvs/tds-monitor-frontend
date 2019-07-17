@@ -1,7 +1,6 @@
 import { LitElement, html, customElement, property, CSSResult } from 'lit-element';
-import { TdsMonitorServer } from '@totvs/tds-languageclient';
 import { monitorIcon } from './icon-monitor-svg';
-import { MonitorUser } from '@totvs/tds-languageclient/target/TdsMonitorServer';
+import { TdsMonitorServer, MonitorUser } from '@totvs/tds-languageclient';
 import { MonitorMenu, MenuOptions } from './monitor-menu';
 import { style } from '../css/monitor-server-item.css';
 import { MonitorAuthenticationDialog } from './monitor-authentication-dialog';
@@ -82,6 +81,19 @@ export class MonitorServerItem extends LitElement {
 			}));
 		}
 
+		if (this.server.token !== null) {
+			await this.server.reconnect();
+		}
+		else {
+			await this.server.connect({
+				username: this.user,
+				password: this.password,
+				environment: this.environment
+			});
+
+		}
+
+		/*
 		this.server = await languageClient.getMonitorServer({
 			connType: 1,
 			identification: '',
@@ -95,6 +107,7 @@ export class MonitorServerItem extends LitElement {
 		});
 
 		console.log('server', this.server);
+		*/
 
 		if (this.server) {
 			this.status = 'connected';
@@ -142,9 +155,14 @@ export class MonitorServerItem extends LitElement {
 		switch (this.status) {
 			case 'disconnected':
 			case 'error':
-				let dialog = new MonitorAuthenticationDialog(this);
+				let result = true;
 
-				let result = await dialog.showForResult();
+				if (this.server.token === null) {
+					let dialog = new MonitorAuthenticationDialog(this);
+
+					result = await dialog.showForResult();
+				}
+
 
 				if (result) {
 					let sucess = await this.connectServer(true);

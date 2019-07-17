@@ -16,6 +16,12 @@ export class MonitorTextInput extends LitElement {
 	@property({ type: Boolean, reflect: true, attribute: true })
 	disabled: boolean = false;
 
+	@property({ type: Boolean, reflect: true, attribute: true })
+	outlined: boolean = false;
+
+	@property({ type: String, reflect: true, attribute: true })
+	icon: string = '';
+
 	createRenderRoot() {
 		return this.attachShadow({ mode: 'open', delegatesFocus: true });
 	}
@@ -38,10 +44,11 @@ export class MonitorTextInput extends LitElement {
 	render() {
 		return html`
 			<div class="${this.value === '' ? ' is-empty' : ''}">
+				${this.icon !== '' ? html`<mwc-icon-button icon="${this.icon}"></mwc-icon-button>` : ''}
 				<input type="${this.type}" .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @keydown="${this.onInputKeyDown}"
 				 tabindex="0" />
 				<label>${this.label}</label>
-				<hr />
+				${this.outlined ? '' : html`<hr />`}
 			</div>
 		`;
 	}

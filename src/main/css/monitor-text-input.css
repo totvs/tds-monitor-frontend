@@ -4,7 +4,7 @@
 	display: block;
 	position: relative;
 	background: transparent;
-	margin: .5em 0;
+	margin: 0;
 }
 
 :host(:focus) {
@@ -34,6 +34,21 @@ input {
 	border-bottom: var(--material-input-line-height, 1px) solid var(--material-input-border-color, rgb(206,212,218));
 	box-shadow: none;
 }
+
+:host([outlined]) input {
+	will-change: border,margin;
+	transition: border .2s cubic-bezier(.4,0,.2,1), margin .2s cubic-bezier(.4,0,.2,1);
+
+	border: var(--material-input-line-height, 1px) solid var(--material-input-border-color, rgb(206,212,218));
+	border-radius: 4px;
+	margin: 1px;
+}
+
+:host([outlined]) input:focus {
+	border: var(--material-input-highlight-line-height, 2px) solid var(--material-input-highlight-color, rgb(54,79,199));
+	margin: 0px;
+}
+
 div.invalid input{
 	border-bottom-color: var(--material-input-invalid-color, rgb(224,49,49));
 }

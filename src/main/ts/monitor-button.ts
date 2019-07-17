@@ -1,5 +1,6 @@
 import { customElement, property, css } from "lit-element";
 import { Button } from '@material/mwc-button';
+import { style } from '../css/monitor-button.css';
 
 export interface ButtonOptions {
 	text: string;
@@ -32,10 +33,7 @@ export class MonitorButton extends Button {
 	static get styles() {
 		return css`
 			${super.styles}
-			:host([raised]) {
-				--mdc-theme-primary: #e8e8e8;
-				--mdc-theme-on-primary: #494440;
-			}
+			${style}
 		`;
 	}
 

@@ -3,7 +3,9 @@ import '@webcomponents/webcomponentsjs';
 
 import './monitor-app';
 import './monitor-app-bar';
+import './monitor-main';
 import './monitor-body';
+import './monitor-server-view';
 import './monitor-drawer';
 import './monitor-add-server-dialog';
 import './monitor-text-input';
@@ -12,6 +14,7 @@ import './monitor-ripple';
 import './monitor-linear-progress';
 import './monitor-button';
 import './monitor-checkbox';
+import '@material/mwc-icon-button';
 
 import { TdsLanguageClient } from '@totvs/tds-languageclient';
 

@@ -1,6 +1,7 @@
 import { BuildVersion } from '@totvs/tds-languageclient';
+import { CSSResult } from 'lit-element';
 
-interface MonitorSettings {
+export interface MonitorSettings {
 	servers?: Array<Server>;
 }
 
@@ -9,6 +10,7 @@ interface Server {
 	address: string;
 	port: number;
 	build: BuildVersion;
+	token?: string;
 }
 
 interface Window {
@@ -18,7 +20,5 @@ interface Window {
 
 
 declare module '*.css' {
-	import { CSSResult } from "lit-element";
-
 	export const style: CSSResult;
 }

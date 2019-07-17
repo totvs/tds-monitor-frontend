@@ -19,6 +19,8 @@
     "@babel/polyfill": "^7.4.4",
     "@material/mwc-button": "^0.6.0",
     "@material/mwc-checkbox": "^0.6.0",
+    "@material/mwc-icon": "^0.6.0",
+    "@material/mwc-icon-button": "^0.6.0",
     "@material/mwc-linear-progress": "^0.6.0",
     "@material/mwc-ripple": "^0.6.0",
     "@totvs/tds-languageclient": "0.0.4",

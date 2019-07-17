@@ -36,8 +36,15 @@ table {
 }
 
 thead {
+	/*
+	background-color: var(--mdc-theme-primary);
+	color: white;
+*/
+
 	color: rgba(0,0,0,0.6);
 }
+
+
 
 th, td {
 	white-space: nowrap;
@@ -63,4 +70,9 @@ tbody tr {
 
 tbody tr:hover {
 	background-color: rgba(158,158,158,.2);
+}
+
+header {
+	display: flex;
+	align-items: center;
 }
