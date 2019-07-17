@@ -28,6 +28,7 @@ class MonitorApp extends LitElement {
 			let server = languageClient.createMonitorServer();
 			server.address = data.address;
 			server.port = data.port;
+			server.build = data.build;
 
 			//server.validate();
 
