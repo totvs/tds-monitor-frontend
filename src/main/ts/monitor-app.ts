@@ -87,13 +87,22 @@ class MonitorApp extends LitElement {
 		window.localStorage.setItem('settings', JSON.stringify(this.settings));
 	}
 
+	storeConnectionToken(serverName: string, token: string) {
+		let server = this.settings.servers.find((server) => server.name === serverName);
 
+		if (server) {
+			server.token = token;
 
-	onBeginServerConnection(event: CustomEvent<string>): boolean | void {
+			window.localStorage.setItem('settings', JSON.stringify(this.settings));
+		}
+	}
+
+	onBeginServerConnection(event: CustomEvent<MonitorServerItemOptions>): boolean | void {
 		let serverView = this.querySelector('monitor-server-view');
 
 		serverView.users = [];
-		serverView.name = event.detail;
+		serverView.name = event.detail.name;
+		serverView.server = event.detail.server;
 		serverView.status = 'connecting';
 
 		console.log('begin connnection to server ' + event.detail);

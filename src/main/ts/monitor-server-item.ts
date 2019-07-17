@@ -74,8 +74,11 @@ export class MonitorServerItem extends LitElement {
 		this.status = 'connecting';
 
 		if (dispatchEvents) {
-			this.dispatchEvent(new CustomEvent<string>('server-init', {
-				detail: this.name,
+			this.dispatchEvent(new CustomEvent<MonitorServerItemOptions>('server-init', {
+				detail: {
+					name: this.name,
+					server: this.server
+				},
 				bubbles: true,
 				composed: true
 			}));
@@ -85,29 +88,31 @@ export class MonitorServerItem extends LitElement {
 			await this.server.reconnect();
 		}
 		else {
-			await this.server.connect({
-				username: this.user,
-				password: this.password,
-				environment: this.environment
-			});
+			let dialog = new MonitorAuthenticationDialog(this),
+				result = await dialog.showForResult();
 
+			if (result) {
+				await this.server.connect({
+					username: dialog.username,
+					password: dialog.password,
+					environment: dialog.environment
+				});
+
+				if (dialog.storeToken) {
+					const app = document.querySelector('monitor-app');
+					app.storeConnectionToken(this.name, this.server.token);
+				}
+			}
+			else {
+				if (dispatchEvents) {
+					this.dispatchEvent(new CustomEvent<string>('server-error', {
+						detail: 'Nao foi possivel conectar ao servidor!',
+						bubbles: true,
+						composed: true
+					}));
+				}
+			}
 		}
-
-		/*
-		this.server = await languageClient.getMonitorServer({
-			connType: 1,
-			identification: '',
-			server: this.address,
-			port: this.port,
-			buildVersion: this.build,
-			environment: this.environment,
-			user: this.user,
-			password: this.password,
-			autoReconnect: true
-		});
-
-		console.log('server', this.server);
-		*/
 
 		if (this.server) {
 			this.status = 'connected';
@@ -155,21 +160,10 @@ export class MonitorServerItem extends LitElement {
 		switch (this.status) {
 			case 'disconnected':
 			case 'error':
-				let result = true;
+				let sucess = await this.connectServer(true);
 
-				if (this.server.token === null) {
-					let dialog = new MonitorAuthenticationDialog(this);
-
-					result = await dialog.showForResult();
-				}
-
-
-				if (result) {
-					let sucess = await this.connectServer(true);
-
-					if (sucess)
-						await this.getUsers();
-				}
+				if (sucess)
+					await this.getUsers();
 
 				break;
 			case 'connecting':
@@ -183,60 +177,6 @@ export class MonitorServerItem extends LitElement {
 			default:
 				break;
 		}
-
-		/*
-
-		//let section = this.renderRoot.querySelector('section');
-
-		//section.classList.remove('error', 'connecting', 'connected');
-
-		this.status = 'connecting';
-
-		if (!this.server) {
-			this.dispatchEvent(new CustomEvent<string>('server-init', {
-				detail: this.name,
-				bubbles: true,
-				composed: true
-			}));
-
-			this.status = 'connecting';
-			//section.classList.add('connecting');
-
-			this.server = await languageClient.getMonitorServer({
-				connType: 1,
-				identification: '',
-				server: this.address,
-				port: this.port,
-				buildVersion: '7.00.170117A',
-				environment: 'LOBO-GUARA',
-				user: 'admin',
-				password: '',
-				autoReconnect: true
-			});
-		}
-
-		if (!this.server) {
-			this.status = 'error';
-
-			this.dispatchEvent(new CustomEvent<string>('server-error', {
-				detail: 'Nao foi possivel conectar ao servidor!',
-				bubbles: true,
-				composed: true
-			}));
-
-			return;
-		}
-
-		this.status = 'connected';
-
-		let users = await this.server.getUsers();
-
-		this.dispatchEvent(new CustomEvent<MonitorUser[]>('server-connected', {
-			detail: users,
-			bubbles: true,
-			composed: true
-		}));
-		*/
 	}
 
 	async onRightClick(event: MouseEvent) {

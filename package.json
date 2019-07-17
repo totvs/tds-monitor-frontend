@@ -16,7 +16,6 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.4.4",
     "@material/mwc-button": "^0.6.0",
     "@material/mwc-checkbox": "^0.6.0",
     "@material/mwc-icon": "^0.6.0",
@@ -25,8 +24,10 @@
     "@material/mwc-ripple": "^0.6.0",
     "@totvs/tds-languageclient": "0.0.4",
     "@webcomponents/webcomponentsjs": "^2.2.10",
+    "core-js": "^3.1.4",
     "lit-element": "^2.2.0",
-    "lit-html": "^1.1.1"
+    "lit-html": "^1.1.1",
+    "regenerator-runtime": "^0.13.2"
   },
   "devDependencies": {
     "@babel/core": "^7.5.4",
@@ -34,6 +35,7 @@
     "@babel/plugin-proposal-decorators": "^7.4.4",
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-arrow-functions": "^7.2.0",
+    "@babel/plugin-transform-async-to-generator": "^7.5.0",
     "@babel/plugin-transform-block-scoping": "^7.4.4",
     "@babel/plugin-transform-classes": "^7.4.4",
     "@babel/plugin-transform-template-literals": "^7.4.4",

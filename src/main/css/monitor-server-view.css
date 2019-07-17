@@ -5,4 +5,45 @@
 	flex-direction: column;
 	display: flex;
 	overflow: hidden;
+	padding: 30px;
+}
+
+:host([status=iddle]) .error-message, :host([status=iddle]) .connecting-message, :host([status=iddle]) monitor-user-list  {
+	display: none;
+}
+
+
+:host([status=connecting]) .error-message,
+:host([status=connecting]) monitor-user-list,
+:host([status=connecting]) header  {
+	display: none;
+}
+
+:host([status=connected]) .error-message,
+:host([status=connected]) .connecting-message,
+:host([status=connected]) .messages {
+	display: none;
+}
+
+:host([status=error]) .connecting-message,
+:host([status=error]) monitor-user-list,
+:host([status=error]) header {
+	display: none;
+}
+
+header h2 {
+    text-align: center;
+}
+
+div.messages {
+	display: flex;
+	flex: 1 1 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.connecting-message label {
+	display: flex;
+	margin: 10px;
 }

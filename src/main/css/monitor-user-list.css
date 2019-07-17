@@ -2,33 +2,16 @@
 
 :host {
 	overflow: hidden;
-	flex-grow: 1;
+	flex: 1 1 100%;
 	display: flex;
 }
 
 div {
 	overflow: auto;
-	padding: 30px;
 	height: 100%;
 	width: 100%;
 }
 
-.iddle .error-message, .iddle .connecting-message, .iddle table  {
-	display: none;
-}
-
-
-.connecting .error-message, .connecting table  {
-	display: none;
-}
-
-.connected .error-message, .connected .connecting-message  {
-	display: none;
-}
-
-.error .connecting-message, .error table {
-	display: none;
-}
 
 table {
 	border-collapse: collapse;

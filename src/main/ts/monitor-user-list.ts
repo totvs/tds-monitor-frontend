@@ -10,8 +10,6 @@ declare global {
 	}
 }
 
-export type MonitorUserListStatus = 'iddle' | 'connecting' | 'connected' | 'error';
-
 @customElement('monitor-user-list')
 export class MonitorUserList extends LitElement {
 
@@ -34,20 +32,10 @@ export class MonitorUserList extends LitElement {
 		});
 
 		this.requestUpdate('userSelected', oldValue);
-
 	}
 
 	_users: MonitorUser[];
 	_rows: MonitorUserListRow[];
-
-	@property({ type: String })
-	name: string = '';
-
-	@property({ type: String })
-	error: string = '';
-
-	@property({ type: String })
-	status: MonitorUserListStatus = 'iddle';
 
 	@property({ type: Boolean })
 	get userSelected(): boolean {
@@ -63,7 +51,7 @@ export class MonitorUserList extends LitElement {
 
 	render() {
 		return html`
-			<div class="${this.status}">
+			<div>
 				<header>
 					<monitor-button icon="check_box_outline_blank"></monitor-button>
 					<monitor-button @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem"

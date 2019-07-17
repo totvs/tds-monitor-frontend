@@ -4,11 +4,28 @@ import { MonitorTextInput } from './monitor-text-input';
 import { MonitorDialog } from './monitor-dialog';
 import { MonitorButton } from './monitor-button';
 import { MonitorServerItem } from './monitor-server-item';
+import { MonitorCheckbox } from './monitor-checkbox';
 
 @customElement('monitor-authentication-dialog')
 export class MonitorAuthenticationDialog extends MonitorDialog {
 
 	monitorServerItem: MonitorServerItem;
+
+	get username(): string {
+		return this.querySelector<MonitorTextInput>('#user').value;
+	}
+
+	get environment(): string {
+		return this.querySelector<MonitorTextInput>('#environment').value;
+	}
+
+	get password(): string {
+		return this.querySelector<MonitorTextInput>('#password').value;
+	}
+
+	get storeToken(): boolean {
+		return this.querySelector<MonitorCheckbox>('#store').checked;
+	}
 
 	constructor(monitorServerItem: MonitorServerItem) {
 		super({
@@ -28,12 +45,15 @@ export class MonitorAuthenticationDialog extends MonitorDialog {
 		this.monitorServerItem = monitorServerItem;
 
 		this.title = 'Autenticar Conexão';
-		this.progress = 'hidden';
 
 		this.innerHTML = html`
 			<monitor-text-input id="environment" tabindex="1" type="text" label="Ambiente"></monitor-text-input>
 			<monitor-text-input id="user" tabindex="2" type="text" label="Usuário"></monitor-text-input>
 			<monitor-text-input id="password" tabindex="3" type="password" label="Senha"></monitor-text-input>
+			<label>
+				<monitor-checkbox id="store" tabindex="4" title="Armazenar informacoes para reconexão automática"></monitor-checkbox>
+				<span>Armazenar informacoes para reconexão automática</span>
+			</label>
 		`.getHTML();
 	}
 
@@ -42,61 +62,23 @@ export class MonitorAuthenticationDialog extends MonitorDialog {
 	}
 
 	blockControls(block: boolean) {
-		this.querySelectorAll<MonitorTextInput>('monitor-text-input')
+		this.querySelectorAll<MonitorTextInput | MonitorCheckbox>('monitor-text-input, monitor-checkbox')
 			.forEach((element => {
 				element.disabled = block;
-				//element.requestUpdate();
 			}));
 
 		this.renderRoot.querySelectorAll<MonitorButton>('monitor-button')
 			.forEach((element => {
 				element.disabled = block;
-				//element.requestUpdate();
 			}));
-
-		//this.requestUpdate();
 	}
 
 	onOkButtonClicked(event: Event) {
-		console.log('onOkButtonClicked');
-
 		this.blockControls(true);
 
-		const environment = this.querySelector<MonitorTextInput>('#environment').value,
-		 	user = this.querySelector<MonitorTextInput>('#user').value,
-		 	password = this.querySelector<MonitorTextInput>('#password').value;
-		// 	monitorServer = languageClient.getMonitorServer();
+		//Validar inputs aqui
 
-		this.monitorServerItem.environment = environment;
-		this.monitorServerItem.user = user;
-		this.monitorServerItem.password = password;
-
-		this.progress = 'visible';
-
-		// newServer.validate()
-		// 	.then((valid: boolean) => {
-		// 		this.progress = 'hidden';
-		// 		this.blockControls(false);
-
-		// 		if (!valid) {
-		// 			throw new Error('server.validate failed!');
-		// 		}
-
-		// 		const app = document.querySelector('monitor-app');
-
-		// 		app.addServer({
-		// 			name: name,
-		// 			server: newServer
-		// 		});
-
-		 		this.close();
-		// 	})
-		// 	.catch((error: Error) => {
-		// 		console.error(error);
-
-		// 		this.progress = 'hidden';
-		// 		this.blockControls(false);
-		// 	});
+ 		this.close();
 	}
 
 	onCancelButtonClicked(event: Event) {

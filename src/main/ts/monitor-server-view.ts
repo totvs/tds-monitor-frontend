@@ -1,27 +1,27 @@
-import { LitElement, html, customElement, CSSResult, TemplateResult } from 'lit-element';
+import { LitElement, html, customElement, CSSResult, TemplateResult, property } from 'lit-element';
 import { style } from '../css/monitor-server-view.css';
-import { MonitorUser } from '@totvs/tds-languageclient';
-import { MonitorUserListStatus } from './monitor-user-list';
+import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
+
+export type ServerViewStatus = 'iddle' | 'connecting' | 'connected' | 'error';
 
 @customElement('monitor-server-view')
 export class MonitorServerView extends LitElement {
 
+	@property({ type: String })
+	name: string = '';
+
+	@property({ type: Object })
+	server: TdsMonitorServer = null;
+
+	@property({ type: String })
+	error: string = '';
+
+	@property({ type: String, reflect: true, attribute: true })
+	status: ServerViewStatus = 'iddle';
+
 	set users(value: MonitorUser[]) {
 		this.renderRoot.querySelector('monitor-user-list').users = value;
 	};
-
-	set name(value: string) {
-		this.renderRoot.querySelector('monitor-user-list').name = value;
-	};
-
-	set status(value: MonitorUserListStatus) {
-		this.renderRoot.querySelector('monitor-user-list').status = value;
-	};
-
-	set error(value: string) {
-		this.renderRoot.querySelector('monitor-user-list').error = value;
-	};
-
 
 	constructor() {
 		super();
@@ -40,12 +40,19 @@ export class MonitorServerView extends LitElement {
 			</header>
 		*/
 		return html`
-			<div>
-				<span class='connecting-message'>Conectando ao servidor ${this.name}</span>
+			${this.server ? html`
+			<header>
+				<h2>${this.name} (${this.server.address}:${this.server.port})</h2>
+			</header>
+			` : ''}
+			<monitor-user-list></monitor-user-list>
+			<div class='messages'>
+				<span class='connecting-message'>
+					<label>Conectando ao servidor ${this.name}</label>
+					<monitor-linear-progress></monitor-linear-progress>
+				</span>
 				<span class='error-message'>${this.error}</span>
 			</div>
-			<monitor-user-list></monitor-user-list>
-			<footer></footer>;
 		`;
 	}
 }
