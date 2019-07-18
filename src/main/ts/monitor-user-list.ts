@@ -74,13 +74,16 @@ export class MonitorUserList extends LitElement {
 					<monitor-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem">
 						Enviar Mensagem
 					</monitor-button>
-					<monitor-button icon="power_off" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Desconectar">
+					<monitor-button icon="power_off" @click="${this.onButtonAppKillUserClick}" ?disabled=${!this.userSelected} title="Desconectar">
 						Desconectar
 					</monitor-button>
+					<monitor-button icon="power_off" @click="${this.onButtonKillUserClick}" ?disabled=${!this.userSelected} title="Desconectar Imediatamente">
+						Desconectar Imediatamente
+					</monitor-button>
 					<!--
-																							<monitor-text-input outlined icon="search"></monitor-text-input>
-																							<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
-																			-->
+					<monitor-text-input outlined icon="search"></monitor-text-input>
+					<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
+					-->
 				</header>
 
 				<table>
@@ -126,6 +129,24 @@ export class MonitorUserList extends LitElement {
 
 		let dialog = new MonitorSendMessageDialog(this.server, users);
 		dialog.show();
+	}
+
+	onButtonKillUserClick(event: MouseEvent) {
+		this._rows
+			.filter((row) => row.checked)
+			.forEach((row) => {
+			//console.log(row.user.username + " :: " + row.user.computerName + " :: " + row.user.threadId + " :: " + row.user.server);
+			this.server.killUser(row.user.username, row.user.computerName, row.user.threadId, row.user.server);
+		})
+	}
+
+	onButtonAppKillUserClick(event: MouseEvent) {
+		this._rows
+			.filter((row) => row.checked)
+			.forEach((row) => {
+			//console.log(row.user.username + " :: " + row.user.computerName + " :: " + row.user.threadId + " :: " + row.user.server);
+			this.server.appKillUser(row.user.username, row.user.computerName, row.user.threadId, row.user.server);
+		})
 	}
 }
 

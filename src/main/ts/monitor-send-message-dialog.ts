@@ -86,12 +86,11 @@ export class MonitorSendMessageDialog extends MonitorDialog {
 		progressbar.progress = 0;
 
 		this.users.forEach((user) => {
-			//this.server.sendUserMessage();
-			console.log(user.username + " :: " + user.computerName + " :: " + user.threadId + " :: " + user.server + " :: " + this.message);
+			//console.log(user.username + " :: " + user.computerName + " :: " + user.threadId + " :: " + user.server + " :: " + this.message);
+			this.server.sendUserMessage(user.username, user.computerName, user.threadId, user.server, this.message);
 
 			progressbar.progress += step;
 		})
-
 
 		this.blockControls(false);
 		this.progress = 'hidden';
