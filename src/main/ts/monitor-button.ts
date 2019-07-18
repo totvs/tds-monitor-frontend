@@ -15,6 +15,10 @@ export class MonitorButton extends Button {
 	@property({type: Boolean, reflect: true, attribute: true})
 	disabled = false;
 
+
+	@property({type: Boolean, reflect: true, attribute: true})
+	small = false;
+
 	constructor(options: ButtonOptions) {
 		super();
 

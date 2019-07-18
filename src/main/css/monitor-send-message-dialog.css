@@ -1,7 +1,7 @@
 @import './monitor-dialog.css';
 
 dialog {
-	width: 800px;
+	width: 500px;
 }
 
 slot {
@@ -13,4 +13,5 @@ slot {
 	display: flex;
     margin: 10px;
 	flex: 1 100%;
+    height: 120px;
 }

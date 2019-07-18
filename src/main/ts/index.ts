@@ -2,6 +2,13 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 import '@webcomponents/webcomponentsjs';
 
+import"@material/mwc-button";
+import"@material/mwc-checkbox";
+import"@material/mwc-icon";
+import"@material/mwc-icon-button";
+import"@material/mwc-linear-progress";
+import"@material/mwc-ripple";
+
 import './monitor-app';
 import './monitor-app-bar';
 import './monitor-main';
@@ -15,7 +22,7 @@ import './monitor-ripple';
 import './monitor-linear-progress';
 import './monitor-button';
 import './monitor-checkbox';
-import '@material/mwc-icon-button';
+
 
 import { TdsLanguageClient } from '@totvs/tds-languageclient';
 

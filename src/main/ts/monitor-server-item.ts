@@ -1,10 +1,9 @@
-import { LitElement, html, customElement, property, CSSResult } from 'lit-element';
-import { monitorIcon } from './icon-monitor-svg';
-import { TdsMonitorServer, MonitorUser } from '@totvs/tds-languageclient';
-import { MonitorMenu, MenuOptions } from './monitor-menu';
+import { BuildVersion, MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
+import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
 import { style } from '../css/monitor-server-item.css';
+import { monitorIcon } from './icon-monitor-svg';
 import { MonitorAuthenticationDialog } from './monitor-authentication-dialog';
-import { BuildVersion } from "@totvs/tds-languageclient";
+import { MenuOptions, MonitorMenu } from './monitor-menu';
 
 declare global {
 	interface HTMLElementTagNameMap {

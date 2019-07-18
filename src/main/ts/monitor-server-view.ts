@@ -1,6 +1,6 @@
-import { LitElement, html, customElement, CSSResult, TemplateResult, property } from 'lit-element';
-import { style } from '../css/monitor-server-view.css';
 import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
+import { CSSResult, customElement, html, LitElement, property, TemplateResult } from 'lit-element';
+import { style } from '../css/monitor-server-view.css';
 
 export type ServerViewStatus = 'iddle' | 'connecting' | 'connected' | 'error';
 

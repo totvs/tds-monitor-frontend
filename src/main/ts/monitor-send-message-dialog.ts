@@ -16,11 +16,11 @@ export class MonitorSendMessageDialog extends MonitorDialog {
 			escClose: true,
 			buttons: [
 				{
-					text: 'Ok',
+					text: 'Enviar',
 					click: (event) => this.onOkButtonClicked(event)
 				},
 				{
-					text: 'Cancel',
+					text: 'Cancelar',
 					click: (event) => this.onCancelButtonClicked(event)
 				}
 			]
@@ -30,7 +30,7 @@ export class MonitorSendMessageDialog extends MonitorDialog {
 		this.progress = 'hidden';
 
 		this.innerHTML = html`
-			<monitor-text-input id="message" tabindex="1" type="text" label="Mensagem"></monitor-text-input>
+			<monitor-text-input id="message" tabindex="1" type="textarea"></monitor-text-input>
 		`.getHTML();
 	}
 

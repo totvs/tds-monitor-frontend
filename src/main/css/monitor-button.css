@@ -5,8 +5,15 @@
 	--mdc-theme-on-primary: #494440;
 }
 
-/*
-:host([icon]) button {
-	padding: 0px;
+:host([small]) button {
+    min-width: unset;
+    padding: 4px;
 }
-*/
+
+:host([small]) button span {
+    margin: 0;
+}
+
+:host([small]) button slot {
+    display: none;
+}

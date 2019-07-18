@@ -1,5 +1,5 @@
-import { LitElement, html, customElement, CSSResult, property, query } from 'lit-element';
 import { MonitorUser } from '@totvs/tds-languageclient';
+import { CSSResult, customElement, html, LitElement, property, query } from 'lit-element';
 import { style } from '../css/monitor-user-list.css';
 import { MonitorButton } from './monitor-button';
 import { MonitorUserListRow } from './monitor-user-list-row';
@@ -13,7 +13,6 @@ declare global {
 
 @customElement('monitor-user-list')
 export class MonitorUserList extends LitElement {
-
 
 	@query('monitor-button[icon="chat"]')
 	sendMessageButton: MonitorButton;
@@ -48,20 +47,33 @@ export class MonitorUserList extends LitElement {
 	}
 
 	//<mwc-icon-button icon="not_interested">
-
+	//<mwc-icon-button icon="check_box_outline_blank"></mwc-icon-button>
+	//<mwc-icon-button icon="arrow_drop_down"></mwc-icon-button>
 
 	render() {
 		return html`
 			<div>
 				<header>
-					<monitor-button icon="check_box_outline_blank"></monitor-button>
-					<monitor-button @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem"
-					 icon="chat">Enviar Mensagem</monitor-button>
-					<monitor-button ?disabled=${!this.userSelected} title="Desconectar" icon="power_off">Desconectar</monitor-button>
+					<monitor-button small icon="check_box_outline_blank"></monitor-button>
+					<monitor-button small icon="arrow_drop_down"></monitor-button>
+					<monitor-button
+						icon="chat"
+						@click="${this.onButtonSendMessageClick}"
+						?disabled=${!this.userSelected}
+						title="Enviar Mensagem">
+						Enviar Mensagem
+					</monitor-button>
+					<monitor-button
+						icon="power_off"
+						@click="${this.onButtonSendMessageClick}"
+						?disabled=${!this.userSelected}
+						title="Desconectar">
+						Desconectar
+					</monitor-button>
 					<!--
-								<monitor-text-input outlined icon="search"></monitor-text-input>
-								<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
-				-->
+														<monitor-text-input outlined icon="search"></monitor-text-input>
+														<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
+										-->
 				</header>
 
 				<table>

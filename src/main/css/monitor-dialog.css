@@ -90,6 +90,11 @@ dialog header h1 {
 
 dialog main {
 	padding: 12px;
+	width: 100%;
+}
+
+dialog main slot {
+	width: inherit;
 }
 
 :host([progress=visible]) monitor-linear-progress {

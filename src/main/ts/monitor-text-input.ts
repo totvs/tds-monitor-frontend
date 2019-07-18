@@ -1,4 +1,4 @@
-import { LitElement, html, customElement, CSSResult, property } from 'lit-element';
+import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
 import { style } from '../css/monitor-text-input.css';
 
 @customElement('monitor-text-input')
@@ -45,8 +45,13 @@ export class MonitorTextInput extends LitElement {
 		return html`
 			<div class="${this.value === '' ? ' is-empty' : ''}">
 				${this.icon !== '' ? html`<mwc-icon-button icon="${this.icon}"></mwc-icon-button>` : ''}
+				${this.type !== 'textarea' ? html`
 				<input type="${this.type}" .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @keydown="${this.onInputKeyDown}"
 				 tabindex="0" />
+				 ` : html`
+				 <textarea .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @keydown="${this.onInputKeyDown}"
+				 tabindex="0" />
+				`}
 				<label>${this.label}</label>
 				${this.outlined ? '' : html`<hr />`}
 			</div>
