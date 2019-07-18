@@ -11,7 +11,7 @@ export class MonitorTextInput extends LitElement {
 	value: string = '';
 
 	@property({ type: String, reflect: true, attribute: true })
-	label: string = '';
+	label: string = null;
 
 	@property({ type: Boolean, reflect: true, attribute: true })
 	disabled: boolean = false;
@@ -20,7 +20,7 @@ export class MonitorTextInput extends LitElement {
 	outlined: boolean = false;
 
 	@property({ type: String, reflect: true, attribute: true })
-	icon: string = '';
+	icon: string = null;
 
 	createRenderRoot() {
 		return this.attachShadow({ mode: 'open', delegatesFocus: true });
@@ -44,7 +44,7 @@ export class MonitorTextInput extends LitElement {
 	render() {
 		return html`
 			<div class="${this.value === '' ? ' is-empty' : ''}">
-				${this.icon !== '' ? html`<mwc-icon-button icon="${this.icon}"></mwc-icon-button>` : ''}
+				${this.icon ? html`<mwc-icon-button icon="${this.icon}"></mwc-icon-button>` : ''}
 				${this.type !== 'textarea' ? html`
 				<input type="${this.type}" .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @keydown="${this.onInputKeyDown}"
 				 tabindex="0" />

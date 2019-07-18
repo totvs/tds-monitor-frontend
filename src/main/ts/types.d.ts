@@ -3,6 +3,15 @@ import { CSSResult } from 'lit-element';
 
 export interface MonitorSettings {
 	servers?: Array<Server>;
+	config?: MonitorSettingsConfig
+}
+
+export interface MonitorSettingsConfig {
+	language?: 'portuguese' | 'english' | 'spanish';
+	updateInterval?: number;
+	alwaysOnTop?: boolean;
+	generateUpdateLog?: boolean;
+	generateExecutionLog?: boolean;
 }
 
 interface Server {

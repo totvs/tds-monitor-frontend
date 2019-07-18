@@ -1,5 +1,9 @@
 @import './reset.css';
 
+:host {
+	height: 36px;
+}
+
 :host([raised]) {
 	--mdc-theme-primary: #e8e8e8;
 	--mdc-theme-on-primary: #494440;
@@ -16,4 +20,8 @@
 
 :host([small]) button slot {
     display: none;
+}
+
+button.mdc-button {
+	height: 100%;
 }

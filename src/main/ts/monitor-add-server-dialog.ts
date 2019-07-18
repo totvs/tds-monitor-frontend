@@ -30,51 +30,6 @@ export class MonitorAddServerDialog extends MonitorDialog {
 			<monitor-text-input id="address" tabindex="2" type="text" label="Endereço"></monitor-text-input>
 			<monitor-text-input id="port" tabindex="3" type="number" label="Porta"></monitor-text-input>
 		`.getHTML();
-
-		/*
-
-
-		let inputName = new MonitorTextInput();
-		inputName.id = 'name'
-		inputName.label = 'Nome';
-		inputName.tabIndex = 1;
-
-		let inputAddress = new MonitorTextInput();
-		inputAddress.id = 'address';
-		inputAddress.label = 'Endereço';
-		inputAddress.tabIndex = 2;
-
-		new HTMLDivElement();
-
-		let inputPort = new MonitorTextInput();
-		inputPort.id = 'port';
-		inputPort.type = 'number';
-		inputPort.label = 'Porta';
-		inputPort.tabIndex = 3;
-		*/
-
-		/*
-		let inputEnv = new MonitorTextInput();
-		inputEnv.label = 'Ambiente';
-
-		let inputUsername = new MonitorTextInput();
-		inputUsername.label = 'Usuário';
-
-		let inputPassword = new MonitorTextInput();
-		inputPassword.label = 'Senha';
-		*/
-
-
-		/*
-		this.appendChild(inputName);
-		this.appendChild(inputAddress);
-		this.appendChild(inputPort);
-
-		this.appendChild(inputEnv);
-		this.appendChild(inputUsername);
-		this.appendChild(inputPassword);
-		*/
-
 	}
 
 	static get styles(): CSSResult {
@@ -85,21 +40,15 @@ export class MonitorAddServerDialog extends MonitorDialog {
 		this.querySelectorAll<MonitorTextInput>('monitor-text-input')
 			.forEach((element => {
 				element.disabled = block;
-				//element.requestUpdate();
 			}));
 
 		this.renderRoot.querySelectorAll<MonitorButton>('monitor-button')
 			.forEach((element => {
 				element.disabled = block;
-				//element.requestUpdate();
 			}));
-
-		//this.requestUpdate();
 	}
 
 	onOkButtonClicked(event: Event) {
-		console.log('onOkButtonClicked');
-
 		this.blockControls(true);
 
 		const name = this.querySelector<MonitorTextInput>('#name').value,

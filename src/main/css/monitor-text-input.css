@@ -21,6 +21,11 @@ div {
 	text-align: right;
 }
 
+:host([small]) input,
+:host([small]) textarea {
+	padding: 0;
+}
+
 input,
 textarea {
 	box-sizing: border-box;
