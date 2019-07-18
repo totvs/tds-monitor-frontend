@@ -1,16 +1,14 @@
-import { LitElement, html, property, customElement, CSSResult } from 'lit-element';
+import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
 import { style } from '../css/monitor-dialog.css';
 import { ButtonOptions, MonitorButton } from './monitor-button';
 
-declare type ProgressOption = 'hidden' | 'visible' | 'none'
+export type ProgressOption = 'hidden' | 'visible' | 'none'
 
-interface DialogOptions {
+export interface DialogOptions {
 	buttons?: Array<ButtonOptions>;
 	escClose?: boolean;
 	progress?: ProgressOption;
 }
-
-
 
 @customElement('monitor-dialog')
 export class MonitorDialog extends LitElement {
@@ -38,16 +36,11 @@ export class MonitorDialog extends LitElement {
 		}, options);
 
 		this.buttons = this.options.buttons.map(button => new MonitorButton(button));
-
-		//		this.progress = this.options.progress;
 	}
 
 	static get styles(): CSSResult {
 		return style;
 	}
-
-	//				${this.options.progress !== 'none' ? html`<monitor-linear-progress ${this.options.progress}></monitor-linear-progress>` : html``}
-
 
 	render() {
 		return html`

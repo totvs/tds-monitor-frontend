@@ -32,7 +32,7 @@ export class MonitorTextInput extends LitElement {
 		//this.setAttribute('tabindex', '0');
 
 		this.addEventListener('focus', (event: Event) => {
-			this.renderRoot.querySelector('input').focus();
+			this.renderRoot.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea').focus();
 		})
 
 	}

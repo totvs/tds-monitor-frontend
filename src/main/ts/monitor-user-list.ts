@@ -1,9 +1,9 @@
-import { MonitorUser } from '@totvs/tds-languageclient';
+import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
 import { CSSResult, customElement, html, LitElement, property, query } from 'lit-element';
 import { style } from '../css/monitor-user-list.css';
 import { MonitorButton } from './monitor-button';
-import { MonitorUserListRow } from './monitor-user-list-row';
 import { MonitorSendMessageDialog } from './monitor-send-message-dialog';
+import { MonitorUserListRow } from './monitor-user-list-row';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -16,6 +16,21 @@ export class MonitorUserList extends LitElement {
 
 	@query('monitor-button[icon="chat"]')
 	sendMessageButton: MonitorButton;
+
+	@property({ type: Object })
+	set server(value: TdsMonitorServer) {
+		let oldValue = this._server;
+		this._server = value;
+
+		this.server.getUsers()
+			.then((users) => this.users = users);
+
+		this.requestUpdate('server', oldValue);
+	}
+	get server(): TdsMonitorServer {
+		return this._server;
+	}
+	_server: TdsMonitorServer = null;
 
 	@property({ type: Array })
 	get users(): MonitorUser[] {
@@ -56,24 +71,16 @@ export class MonitorUserList extends LitElement {
 				<header>
 					<monitor-button small icon="check_box_outline_blank"></monitor-button>
 					<monitor-button small icon="arrow_drop_down"></monitor-button>
-					<monitor-button
-						icon="chat"
-						@click="${this.onButtonSendMessageClick}"
-						?disabled=${!this.userSelected}
-						title="Enviar Mensagem">
+					<monitor-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem">
 						Enviar Mensagem
 					</monitor-button>
-					<monitor-button
-						icon="power_off"
-						@click="${this.onButtonSendMessageClick}"
-						?disabled=${!this.userSelected}
-						title="Desconectar">
+					<monitor-button icon="power_off" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Desconectar">
 						Desconectar
 					</monitor-button>
 					<!--
-														<monitor-text-input outlined icon="search"></monitor-text-input>
-														<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
-										-->
+																							<monitor-text-input outlined icon="search"></monitor-text-input>
+																							<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
+																			-->
 				</header>
 
 				<table>
@@ -111,20 +118,14 @@ export class MonitorUserList extends LitElement {
 		this.requestUpdate('userSelected');
 	}
 
-	async onButtonSendMessageClick(event: MouseEvent) {
-		let dialog = new MonitorSendMessageDialog(),
-			result = await dialog.showForResult();
+	onButtonSendMessageClick(event: MouseEvent) {
+		let users = this._rows
+			.filter((row) => row.checked)
+			.map((row) => row.user);
 
-		if (result) {
-			let message = dialog.message;
 
-			// userName: string, computerName: string, threadId: number, serverName: string, message: string
-			this._rows
-			.filter((row_checked) => row_checked.checked)
-				.forEach((row_checked) => {
-				 console.log(row_checked.user.username + " :: " + row_checked.user.computerName + " :: " + row_checked.user.threadId + " :: " + row_checked.user.server + " :: " + message);
-			 });
-		}
+		let dialog = new MonitorSendMessageDialog(this.server, users);
+		dialog.show();
 	}
 }
 

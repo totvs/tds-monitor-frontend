@@ -11,7 +11,18 @@ export class MonitorServerView extends LitElement {
 	name: string = '';
 
 	@property({ type: Object })
-	server: TdsMonitorServer = null;
+	set server(value: TdsMonitorServer) {
+		let oldValue = this._server;
+		this._server = value;
+
+		this.renderRoot.querySelector('monitor-user-list').server = value;
+		this.requestUpdate('server', oldValue);
+	}
+	get server(): TdsMonitorServer {
+		return this._server;
+	}
+
+	_server: TdsMonitorServer = null;
 
 	@property({ type: String })
 	error: string = '';
