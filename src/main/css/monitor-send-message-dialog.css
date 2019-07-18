@@ -1,0 +1,16 @@
+@import './monitor-dialog.css';
+
+dialog {
+	width: 800px;
+}
+
+slot {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+::slotted(monitor-text-input) {
+	display: flex;
+    margin: 10px;
+	flex: 1 100%;
+}

@@ -3,6 +3,7 @@ import { MonitorUser } from '@totvs/tds-languageclient';
 import { style } from '../css/monitor-user-list.css';
 import { MonitorButton } from './monitor-button';
 import { MonitorUserListRow } from './monitor-user-list-row';
+import { MonitorSendMessageDialog } from './monitor-send-message-dialog';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -98,12 +99,20 @@ export class MonitorUserList extends LitElement {
 		this.requestUpdate('userSelected');
 	}
 
-	onButtonSendMessageClick(event: MouseEvent) {
-		/*
-		this.renderRoot.querySelectorAll('monitor-checkbox[checked]').forEach(() => {
-			this.server.
-		})
-		*/
+	async onButtonSendMessageClick(event: MouseEvent) {
+		let dialog = new MonitorSendMessageDialog(),
+			result = await dialog.showForResult();
+
+		if (result) {
+			let message = dialog.message;
+
+			// userName: string, computerName: string, threadId: number, serverName: string, message: string
+			this._rows
+			.filter((row_checked) => row_checked.checked)
+				.forEach((row_checked) => {
+				 console.log(row_checked.user.username + " :: " + row_checked.user.computerName + " :: " + row_checked.user.threadId + " :: " + row_checked.user.server + " :: " + message);
+			 });
+		}
 	}
 }
 
