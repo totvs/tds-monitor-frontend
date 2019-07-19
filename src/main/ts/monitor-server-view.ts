@@ -15,6 +15,8 @@ export class MonitorServerView extends LitElement {
 		let oldValue = this._server;
 		this._server = value;
 
+		this.setServerUpdateInterval();
+
 		this.renderRoot.querySelector('monitor-user-list').server = value;
 		this.requestUpdate('server', oldValue);
 	}
@@ -22,6 +24,7 @@ export class MonitorServerView extends LitElement {
 		return this._server;
 	}
 
+	_updateHandler: number = null;
 	_server: TdsMonitorServer = null;
 
 	@property({ type: String })
@@ -66,6 +69,20 @@ export class MonitorServerView extends LitElement {
 			</div>
 		`;
 	}
+
+	setServerUpdateInterval() {
+		const app = document.querySelector('monitor-app');
+
+		if (this._updateHandler !== null) {
+			window.clearInterval(this._updateHandler);
+		}
+
+		this._updateHandler = window.setInterval(() => {
+			this.server.getUsers()
+				.then(users => this.users = users);
+		}, (app.config.updateInterval * 1000));
+	}
+
 }
 
 declare global {
