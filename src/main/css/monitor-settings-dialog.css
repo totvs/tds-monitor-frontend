@@ -1,0 +1,29 @@
+@import './monitor-dialog.css';
+
+slot {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: column;
+}
+
+/*
+::slotted(section) monitor-text-input {
+	display: flex;
+    margin: 10px;
+	flex: 1 100%;
+    width: 80px;
+}
+
+
+::slotted(section) {
+	flex: 1 1 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	height: 60px;
+}
+
+::slotted(section label) {
+	flex: 1 1 100%;
+}
+*/

@@ -2,6 +2,7 @@ import { LitElement, html, customElement, property, CSSResult } from 'lit-elemen
 import { MonitorAddServerDialog } from './monitor-add-server-dialog';
 import { MonitorServerItem, MonitorServerItemOptions } from './monitor-server-item';
 import { style } from '../css/monitor-drawer.css';
+import { MonitorSettingsDialog } from './monitor-settings-dialog';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -12,8 +13,20 @@ declare global {
 @customElement('monitor-drawer')
 export class MonitorDrawer extends LitElement {
 
-	@property({ type: Array })
-	public servers: Array<MonitorServerItemOptions> = [];
+	//@property({ type: Array })
+	//public servers: Array<MonitorServerItemOptions> = [];
+
+	addServer(s: MonitorServerItemOptions) {
+		let item = new MonitorServerItem(s);
+
+		this.appendChild(item);
+	}
+
+	removeServer(serverName: string) {
+		this.querySelectorAll<MonitorServerItem>(`[name="${serverName}"]`).forEach(item => {
+			this.removeChild(item);
+		});
+	}
 
 
 	static get styles(): CSSResult {
@@ -23,7 +36,7 @@ export class MonitorDrawer extends LitElement {
 	render() {
 		return html`
 			<aside>
-				<div class='add-server' @click="${this.onClicked}">
+				<div class='add-server' @click="${this.onButtonAddServerClicked}">
 					<monitor-ripple></monitor-ripple>
 					<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 30 30">
 						<g fill="none" fill-rule="evenodd">
@@ -35,16 +48,26 @@ export class MonitorDrawer extends LitElement {
 					</svg>
 					<label>Novo Servidor</label>
 				</div>
-				${this.servers.map(s => new MonitorServerItem(s))}
+				<slot></slot>
+				<footer>
+					<monitor-button icon='settings' @click="${this.onButtonSettingsClicked}">Configurações</monitor-button>
+					<mwc-icon-button icon='more_vert'></mwc-icon-button>
+				</footer>
 			</aside>
         `;
 	}
 
-
-	onClicked(event: Event) {
+	onButtonAddServerClicked(event: Event) {
 		let dialog = new MonitorAddServerDialog();
 
 		dialog.show();
 	}
+
+	onButtonSettingsClicked(event: Event) {
+		let dialog = new MonitorSettingsDialog();
+
+		dialog.show();
+	}
+
 }
 

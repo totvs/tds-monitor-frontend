@@ -1,15 +1,24 @@
 import { LitElement, html, customElement } from 'lit-element';
 import { MonitorServerItemOptions } from './monitor-server-item';
 import { MonitorUser } from '@totvs/tds-languageclient';
-import { MonitorSettings } from './types';
+import { MonitorSettings, MonitorSettingsConfig, Server } from './types';
 import { style } from '../css/monitor-app.css';
+
+const DEFAULT_SETTINGS: MonitorSettings = {
+	servers: [],
+	config: {
+		updateInterval: 5,
+		language: "portuguese",
+		alwaysOnTop: false,
+		generateUpdateLog: false,
+		generateExecutionLog: false
+	}
+};
 
 @customElement('monitor-app')
 class MonitorApp extends LitElement {
 
-	private _settings: MonitorSettings = {
-		servers: []
-	};
+	private _settings: MonitorSettings = DEFAULT_SETTINGS;
 
 	constructor() {
 		super();
@@ -24,33 +33,17 @@ class MonitorApp extends LitElement {
 	}
 
 	set settings(settings: MonitorSettings) {
-		this._settings = Object.assign({
-			servers: []
-		}, settings);
+		this._settings = Object.assign({}, DEFAULT_SETTINGS, settings);
 
 		let drawer = this.querySelector('monitor-drawer');
 
-		let s = this.settings.servers.map((data) => {
-			let server = languageClient.createMonitorServer();
-			server.id = data.name;
-			server.address = data.address;
-			server.port = data.port;
+		this.settings.servers.forEach((data) => {
+			let server = this.createServer(data);
 
-			if (data.build) {
-				server.build = data.build;
-			}
-
-			if (data.token) {
-				server.token = data.token;
-			}
-
-			return { name: data.name, server }
+			drawer.addServer({ name: data.name, server });
 		});
-
-		console.log('servers', s);
-
-		drawer.servers = s;
 	}
+
 
 	static get styles() {
 		return style;
@@ -62,6 +55,23 @@ class MonitorApp extends LitElement {
     	`;
 	}
 
+	private createServer(data: Server) {
+		let server = languageClient.createMonitorServer();
+		server.id = data.name;
+		server.address = data.address;
+		server.port = data.port;
+
+		if (data.build) {
+			server.build = data.build;
+		}
+
+		if (data.token) {
+			server.token = data.token;
+		}
+
+		return server;
+	}
+
 	addServer(options: MonitorServerItemOptions) {
 		this.settings.servers.push({
 			name: options.name,
@@ -69,22 +79,18 @@ class MonitorApp extends LitElement {
 			port: options.server.port,
 			build: options.server.build
 		});
+		window.localStorage.setItem('settings', JSON.stringify(this.settings));
 
 		let drawer = this.querySelector('monitor-drawer');
-
-		drawer.servers = Array.from(drawer.servers).concat(options);
-
-		window.localStorage.setItem('settings', JSON.stringify(this.settings));
+		drawer.addServer(options);
 	}
 
 	removeServer(serverName: string) {
 		this.settings.servers = this.settings.servers.filter((server => server.name !== serverName));
+		window.localStorage.setItem('settings', JSON.stringify(this.settings));
 
 		let drawer = this.querySelector('monitor-drawer');
-
-		drawer.servers = drawer.servers.filter((server => server.name !== serverName));
-
-		window.localStorage.setItem('settings', JSON.stringify(this.settings));
+		drawer.removeServer(serverName);
 	}
 
 	storeConnectionToken(serverName: string, token: string) {
@@ -95,6 +101,16 @@ class MonitorApp extends LitElement {
 
 			window.localStorage.setItem('settings', JSON.stringify(this.settings));
 		}
+	}
+
+	get config(): MonitorSettingsConfig {
+		return this.settings.config;
+	}
+
+	set config(value: MonitorSettingsConfig) {
+		this.settings.config = value;
+
+		window.localStorage.setItem('settings', JSON.stringify(this.settings));
 	}
 
 	onBeginServerConnection(event: CustomEvent<MonitorServerItemOptions>): boolean | void {

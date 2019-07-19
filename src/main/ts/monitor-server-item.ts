@@ -21,7 +21,7 @@ export interface MonitorServerItemOptions {
 @customElement('monitor-server-item')
 export class MonitorServerItem extends LitElement {
 
-	@property({ type: String })
+	@property({ type: String, reflect: true, attribute: true })
 	name: string;
 
 	@property({ type: String })
