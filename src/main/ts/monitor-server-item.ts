@@ -227,7 +227,8 @@ export class MonitorServerItem extends LitElement {
 				}
 
 				options.items.push({
-					text: 'Parar o servidor'
+					text: 'Parar o servidor',
+					callback: () => { this.stopServer() }
 				});
 			}
 		}
@@ -242,6 +243,8 @@ export class MonitorServerItem extends LitElement {
 		app.removeServer(this.name);
 	}
 
-
+	stopServer() {
+		this.server.stopServer();
+	}
 }
 
