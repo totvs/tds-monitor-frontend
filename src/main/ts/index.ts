@@ -22,7 +22,7 @@ import './monitor-ripple';
 import './monitor-linear-progress';
 import './monitor-button';
 import './monitor-checkbox';
-
+import './monitor-radio';
 
 import { TdsLanguageClient } from '@totvs/tds-languageclient';
 
