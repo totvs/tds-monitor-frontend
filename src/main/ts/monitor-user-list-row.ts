@@ -39,8 +39,8 @@ export class MonitorUserListRow extends LitElement {
 			<td class="right">${this.user.threadId}</td>
 			<td class="left">${this.user.server}</td>
 			<td class="left">${this.user.mainName}</td>
-			<td class="left">${this.user.loginTime}</td>
-			<td class="left">${this.user.elapsedTime}</td>
+			<td class="center">${new Date(this.user.loginTime).toLocaleString()}</td>
+			<td class="center">${this.user.elapsedTime}</td>
 			<td class="right">${this.user.totalInstrCount}</td>
 			<td class="right">${this.user.instrCountPerSec}</td>
 			<td class="left">${this.user.remark}</td>

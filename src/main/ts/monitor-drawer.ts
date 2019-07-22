@@ -3,6 +3,7 @@ import { MonitorAddServerDialog } from './monitor-add-server-dialog';
 import { MonitorServerItem, MonitorServerItemOptions } from './monitor-server-item';
 import { style } from '../css/monitor-drawer.css';
 import { MonitorSettingsDialog } from './monitor-settings-dialog';
+import { MonitorMenu, MenuOptions } from './monitor-menu';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -51,7 +52,7 @@ export class MonitorDrawer extends LitElement {
 				<slot></slot>
 				<footer>
 					<monitor-button icon='settings' @click="${this.onButtonSettingsClicked}">Configurações</monitor-button>
-					<mwc-icon-button icon='more_vert'></mwc-icon-button>
+					<mwc-icon-button icon='more_vert' @click="${this.onMenuClick}"></mwc-icon-button>
 				</footer>
 			</aside>
         `;
@@ -69,5 +70,31 @@ export class MonitorDrawer extends LitElement {
 		dialog.show();
 	}
 
+	onMenuClick(event: MouseEvent) {
+		let menu: MonitorMenu,
+			options: MenuOptions = {
+				parent: event.target as HTMLElement,
+				position: {
+					my: 'bottom left',
+					at: 'top left'
+				},
+				items: [
+					{
+						text: 'Recarregar pagina',
+						callback: () => window.reload()
+					},
+					{
+						text: 'Ferramentas do desenvolvedor',
+						callback: () => window.toggleDevTools()
+					}
+
+				]
+			};
+
+
+		menu = new MonitorMenu(options);
+
+		menu.open = true;
+	}
 }
 

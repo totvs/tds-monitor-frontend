@@ -47,12 +47,6 @@ export class MonitorServerView extends LitElement {
 
 	render(): TemplateResult {
 
-		/*
-			<header>
-				<h1>${'this.name'}</h1>
-				<h2>${'this.address'}:${'this.port'}</h2>
-			</header>
-		*/
 		return html`
 			${this.server ? html`
 			<header>
