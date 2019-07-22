@@ -115,6 +115,8 @@ export class MonitorServerItem extends LitElement {
 
 		if (this.server) {
 			this.status = 'connected';
+
+			this.getConnectionStatus();
 		}
 		else {
 			this.status = 'error';
@@ -217,12 +219,14 @@ export class MonitorServerItem extends LitElement {
 			if (this.status === 'connected') {
 				if (this.enableNewConnections) {
 					options.items.push({
-						text: 'Desabilitar novas conexões'
+						text: 'Desabilitar novas conexões',
+						callback: () => { this.setConnectionStatus(false) }
 					});
 				}
 				else {
 					options.items.push({
-						text: 'Habilitar novas conexões'
+						text: 'Habilitar novas conexões',
+						callback: () => { this.setConnectionStatus(true) }
 					});
 				}
 
@@ -245,6 +249,15 @@ export class MonitorServerItem extends LitElement {
 
 	stopServer() {
 		this.server.stopServer();
+	}
+
+	getConnectionStatus() {
+		this.server.getConnectionStatus()
+			.then((status) => this.enableNewConnections = status);
+	}
+
+	setConnectionStatus(status: boolean) {
+		this.server.setConnectionStatus(status);
 	}
 }
 

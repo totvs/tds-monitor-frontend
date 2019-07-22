@@ -4,6 +4,7 @@ import { style } from '../css/monitor-user-list.css';
 import { MonitorButton } from './monitor-button';
 import { MonitorSendMessageDialog } from './monitor-send-message-dialog';
 import { MonitorUserListRow } from './monitor-user-list-row';
+import { MonitorKillUserDialog } from './monitor-kill-user-dialog';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -74,11 +75,8 @@ export class MonitorUserList extends LitElement {
 					<monitor-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem">
 						Enviar Mensagem
 					</monitor-button>
-					<monitor-button icon="power_off" @click="${this.onButtonAppKillUserClick}" ?disabled=${!this.userSelected} title="Desconectar">
+					<monitor-button icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="Desconectar">
 						Desconectar
-					</monitor-button>
-					<monitor-button icon="power_off" @click="${this.onButtonKillUserClick}" ?disabled=${!this.userSelected} title="Desconectar Imediatamente">
-						Desconectar Imediatamente
 					</monitor-button>
 					<!--
 					<monitor-text-input outlined icon="search"></monitor-text-input>
@@ -131,22 +129,13 @@ export class MonitorUserList extends LitElement {
 		dialog.show();
 	}
 
-	onButtonKillUserClick(event: MouseEvent) {
-		this._rows
+	onButtonKillUserDialogClick(event: MouseEvent) {
+		let users = this._rows
 			.filter((row) => row.checked)
-			.forEach((row) => {
-			//console.log(row.user.username + " :: " + row.user.computerName + " :: " + row.user.threadId + " :: " + row.user.server);
-			this.server.killUser(row.user.username, row.user.computerName, row.user.threadId, row.user.server);
-		})
-	}
+			.map((row) => row.user);
 
-	onButtonAppKillUserClick(event: MouseEvent) {
-		this._rows
-			.filter((row) => row.checked)
-			.forEach((row) => {
-			//console.log(row.user.username + " :: " + row.user.computerName + " :: " + row.user.threadId + " :: " + row.user.server);
-			this.server.appKillUser(row.user.username, row.user.computerName, row.user.threadId, row.user.server);
-		})
+		let dialog = new MonitorKillUserDialog(this.server, users);
+		dialog.show();
 	}
 }
 

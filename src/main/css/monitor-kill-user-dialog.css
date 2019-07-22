@@ -1,0 +1,17 @@
+@import './monitor-dialog.css';
+
+dialog {
+	width: 300px;
+}
+
+slot {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+::slotted(monitor-radio) {
+	display: flex;
+    margin: 10px;
+	flex: 1 100%;
+    height: 120px;
+}
