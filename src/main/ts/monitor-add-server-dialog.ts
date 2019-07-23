@@ -3,8 +3,6 @@ import { style } from '../css/monitor-add-server-dialog.css';
 import { MonitorTextInput } from './monitor-text-input';
 import { MonitorDialog } from './monitor-dialog';
 import { MonitorButton } from './monitor-button';
-import "./monitor-warning";
-import "./monitor-text-input"
 
 @customElement('monitor-add-server-dialog')
 export class MonitorAddServerDialog extends MonitorDialog {
@@ -28,12 +26,12 @@ export class MonitorAddServerDialog extends MonitorDialog {
 		this.progress = 'hidden';
 
 		this.innerHTML = html`
-			<monitor-warning id='showError' msg='' showError='no' ></monitor-warning>
-			<monitor-text-input id="name" tabindex="1" type="text" label="Nome" class="validate" ></monitor-text-input>
+			<monitor-text-input id="name" tabindex="1" type="text" label="Nome"></monitor-text-input>
 			<monitor-text-input id="address" tabindex="2" type="text" label="Endereço"></monitor-text-input>
 			<monitor-text-input id="port" tabindex="3" type="number" label="Porta"></monitor-text-input>
 		`.getHTML();
-/*
+
+		/*
 
 
 		let inputName = new MonitorTextInput();
@@ -76,6 +74,7 @@ export class MonitorAddServerDialog extends MonitorDialog {
 		this.appendChild(inputUsername);
 		this.appendChild(inputPassword);
 		*/
+
 	}
 
 	static get styles(): CSSResult {
@@ -86,92 +85,57 @@ export class MonitorAddServerDialog extends MonitorDialog {
 		this.querySelectorAll<MonitorTextInput>('monitor-text-input')
 			.forEach((element => {
 				element.disabled = block;
+				//element.requestUpdate();
 			}));
 
 		this.renderRoot.querySelectorAll<MonitorButton>('monitor-button')
 			.forEach((element => {
 				element.disabled = block;
+				//element.requestUpdate();
 			}));
+
+		//this.requestUpdate();
 	}
 
 	onOkButtonClicked(event: Event) {
 		console.log('onOkButtonClicked');
+
+		this.blockControls(true);
 
 		const name = this.querySelector<MonitorTextInput>('#name').value,
 			address = this.querySelector<MonitorTextInput>('#address').value,
 			port = Number(this.querySelector<MonitorTextInput>('#port').value),
 			newServer = languageClient.createMonitorServer();
 
-		if (!name) {
-			this.progress = 'hidden';
-			this.blockControls(false);
-			this.focus()
-			document.getElementById('showError').showTheError("Nome de servidor Inválido !");
-			document.getElementById('name').showRedLine('Nome de Servidor Inválido','text');
+		newServer.address = address;
+		newServer.port = port;
 
-		}
-		else if (!address){
-			this.progress = 'hidden';
-			this.blockControls(false);
-			this.focus()
-			document.getElementById('showError').showTheError("Endereço do servidor Inválido !");
-			document.getElementById('address').showRedLine('Endereço Inválido', 'text');
-		}
-		else if(!port){
-			this.progress = 'hidden';
-			this.blockControls(false);
-			this.focus()
-			document.getElementById('showError').showTheError("Porta do servidor Inválida !");
-			document.getElementById('port').showRedLine('Porta Inválida', 'number');
-		}
-		else {
+		this.progress = 'visible';
 
-			const listOfServers = JSON.parse(window.localStorage.getItem('settings'));
-			let cantStoreValue = listOfServers.servers.filter(item => {
-				return ((item.address == address && item.port == port) || item.name == name )});
-
-			if(cantStoreValue.length > 0) {
+		newServer.validate()
+			.then((valid: boolean) => {
 				this.progress = 'hidden';
 				this.blockControls(false);
-				this.focus()
-				document.getElementById('showError').showTheError("Dados de servidor já cadastrados !");
-			}
-			else {
 
-				this.blockControls(true);
+				if (!valid) {
+					throw new Error('server.validate failed!');
+				}
 
-				newServer.address = address;
-				newServer.port = port;
+				const app = document.querySelector('monitor-app');
 
-				this.progress = 'visible';
+				app.addServer({
+					name: name,
+					server: newServer
+				});
 
-				newServer.validate()
-					.then((valid: boolean) => {
-						this.progress = 'hidden';
-						this.blockControls(false);
+				this.close();
+			})
+			.catch((error: Error) => {
+				console.error(error);
 
-						if (!valid) {
-							throw new Error('server.validate failed!');
-						}
-
-						const app = document.querySelector('monitor-app');
-
-						app.addServer({
-							name: name,
-							server: newServer
-						});
-
-						this.close();
-					})
-					.catch((error: Error) => {
-						console.error(error);
-
-						this.progress = 'hidden';
-						this.blockControls(false);
-					});
-			}
-
-		}
+				this.progress = 'hidden';
+				this.blockControls(false);
+			});
 	}
 
 	onCancelButtonClicked(event: Event) {
