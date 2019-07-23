@@ -110,6 +110,8 @@ export class MonitorServerItem extends LitElement {
 						composed: true
 					}));
 				}
+
+				return false;
 			}
 		}
 
