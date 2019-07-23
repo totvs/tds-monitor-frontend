@@ -1,5 +1,5 @@
-import { customElement, property, css } from "lit-element";
 import { Button } from '@material/mwc-button';
+import { css, customElement, property } from 'lit-element';
 import { style } from '../css/monitor-button.css';
 
 export interface ButtonOptions {

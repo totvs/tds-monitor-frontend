@@ -24,20 +24,22 @@ export class MonitorAddServerDialog extends MonitorDialog {
 
 		this.title = 'Adicionar Novo Servidor';
 		this.progress = 'hidden';
-
-		this.innerHTML = html`
-			<monitor-text-input id="name" tabindex="1" type="text" label="Nome"></monitor-text-input>
-			<monitor-text-input id="address" tabindex="2" type="text" label="Endereço"></monitor-text-input>
-			<monitor-text-input id="port" tabindex="3" type="number" label="Porta"></monitor-text-input>
-		`.getHTML();
 	}
 
 	static get styles(): CSSResult {
 		return style;
 	}
 
+	get body(){
+		return html`
+			<monitor-text-input id="name" tabindex="1" type="text" label="Nome"></monitor-text-input>
+			<monitor-text-input id="address" tabindex="2" type="text" label="Endereço"></monitor-text-input>
+			<monitor-text-input id="port" tabindex="3" type="number" min="1" label="Porta"></monitor-text-input>
+		`;
+	}
+
 	blockControls(block: boolean) {
-		this.querySelectorAll<MonitorTextInput>('monitor-text-input')
+		this.renderRoot.querySelectorAll<MonitorTextInput>('monitor-text-input')
 			.forEach((element => {
 				element.disabled = block;
 			}));
@@ -51,9 +53,9 @@ export class MonitorAddServerDialog extends MonitorDialog {
 	onOkButtonClicked(event: Event) {
 		this.blockControls(true);
 
-		const name = this.querySelector<MonitorTextInput>('#name').value,
-			address = this.querySelector<MonitorTextInput>('#address').value,
-			port = Number(this.querySelector<MonitorTextInput>('#port').value),
+		const name = this.renderRoot.querySelector<MonitorTextInput>('#name').value,
+			address = this.renderRoot.querySelector<MonitorTextInput>('#address').value,
+			port = Number(this.renderRoot.querySelector<MonitorTextInput>('#port').value),
 			newServer = languageClient.createMonitorServer();
 
 		newServer.address = address;

@@ -12,7 +12,7 @@ declare global {
 	}
 }
 
-const sameUser = (a: MonitorUser, b: MonitorUser) => ['username', 'computerName', 'threadId', 'server'].every((key: keyof MonitorUser) => a[key] === b[key]);
+const sameUser = (a: MonitorUser, b: MonitorUser) => ['threadId', 'username', 'computerName', 'server'].every((key: keyof MonitorUser) => a[key] === b[key]);
 
 
 @customElement('monitor-user-list')
@@ -26,8 +26,10 @@ export class MonitorUserList extends LitElement {
 		let oldValue = this._server;
 		this._server = value;
 
-		this.server.getUsers()
-			.then((users) => this.users = users);
+		if (this.server.token !== null) {
+			this.server.getUsers()
+				.then((users) => this.users = users);
+		}
 
 		this.requestUpdate('server', oldValue);
 	}
@@ -59,8 +61,8 @@ export class MonitorUserList extends LitElement {
 		this.requestUpdate('userSelected', oldValue);
 	}
 
-	_users: MonitorUser[];
-	_rows: MonitorUserListRow[];
+	_users: Array<MonitorUser> = [];
+	_rows: Array<MonitorUserListRow> = [];
 
 	@property({ type: Boolean })
 	get userSelected(): boolean {
@@ -77,22 +79,22 @@ export class MonitorUserList extends LitElement {
 
 	render() {
 		return html`
-			<div>
-				<header>
-					<monitor-button small icon="${this.checkAllIcon}" @click="${this.onButtonCheckAllClick}"></monitor-button>
-					<monitor-button small icon="arrow_drop_down"></monitor-button>
-					<monitor-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem">
-						Enviar Mensagem
-					</monitor-button>
-					<monitor-button icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="Desconectar">
-						Desconectar
-					</monitor-button>
-					<!--
-								<monitor-text-input outlined icon="search"></monitor-text-input>
-								<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
-								-->
-				</header>
+			<header>
+				<monitor-button small icon="${this.checkAllIcon}" @click="${this.onButtonCheckAllClick}"></monitor-button>
+				<monitor-button small icon="arrow_drop_down"></monitor-button>
+				<monitor-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem">
+					Enviar Mensagem
+				</monitor-button>
+				<monitor-button icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="Desconectar">
+					Desconectar
+				</monitor-button>
+				<!--
+										<monitor-text-input outlined icon="search"></monitor-text-input>
+										<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
+										-->
+			</header>
 
+			<div>
 				<table>
 					<thead>
 						<tr>

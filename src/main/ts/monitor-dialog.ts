@@ -16,6 +16,9 @@ export class MonitorDialog extends LitElement {
 	buttons: Array<MonitorButton> = null;
 	options: DialogOptions = null;
 
+	@property({ type: String })
+	public title: string = '';
+
 	@property({ type: String, reflect: true, attribute: true })
 	get progress(): ProgressOption {
 		return this.options ? this.options.progress : null;
@@ -49,10 +52,10 @@ export class MonitorDialog extends LitElement {
 					<h1>${this.title}</h1>
 				</header>
 				<monitor-linear-progress></monitor-linear-progress>
-				<main>
+				<main title="">
 					${this.body}
 				</main>
-				<footer>
+				<footer title="">
 					${this.buttons}
 				</footer>
 			</dialog>

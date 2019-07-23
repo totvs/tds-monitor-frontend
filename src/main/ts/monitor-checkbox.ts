@@ -1,5 +1,5 @@
-import { customElement, property, css } from "lit-element";
 import { Checkbox } from '@material/mwc-checkbox';
+import { css, customElement, property } from 'lit-element';
 import { style } from '../css/monitor-checkbox.css';
 
 @customElement('monitor-checkbox')

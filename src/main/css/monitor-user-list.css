@@ -4,6 +4,7 @@
 	overflow: hidden;
 	flex: 1 1 100%;
 	display: flex;
+	flex-direction: column;
 }
 
 div {
@@ -19,11 +20,6 @@ table {
 }
 
 thead {
-	/*
-	background-color: var(--mdc-theme-primary);
-	color: white;
-*/
-
 	color: rgba(0,0,0,0.6);
 }
 
@@ -58,4 +54,5 @@ tbody tr:hover {
 header {
 	display: flex;
 	align-items: center;
+	margin-bottom: 10px;
 }

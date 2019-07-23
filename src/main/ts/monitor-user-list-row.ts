@@ -1,5 +1,5 @@
-import { LitElement, html, customElement, CSSResult, property } from 'lit-element';
 import { MonitorUser } from '@totvs/tds-languageclient';
+import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
 import { style } from '../css/monitor-user-list-row.css';
 import { MonitorCheckbox } from './monitor-checkbox';
 

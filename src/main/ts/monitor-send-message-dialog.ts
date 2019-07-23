@@ -9,7 +9,7 @@ import { MonitorTextInput } from './monitor-text-input';
 export class MonitorSendMessageDialog extends MonitorDialog {
 
 	get message(): string {
-		return this.querySelector<MonitorTextInput>('#message').value;
+		return this.renderRoot.querySelector<MonitorTextInput>('#message').value;
 	}
 
 	@property({ type: String, reflect: true, attribute: true })
@@ -19,7 +19,6 @@ export class MonitorSendMessageDialog extends MonitorDialog {
 	set progress(value: ProgressOption) {
 		super.progress = value;
 	}
-
 
 	server: TdsMonitorServer;
 	users: Array<MonitorUser>;
@@ -43,30 +42,29 @@ export class MonitorSendMessageDialog extends MonitorDialog {
 		this.progress = 'hidden';
 		this.server = server;
 		this.users = users;
-
-		this.innerHTML = html`
-			<monitor-text-input id="message" tabindex="1" type="textarea"></monitor-text-input>
-		`.getHTML();
 	}
+
+	get body() {
+		return html`
+			<monitor-text-input id="message" tabindex="1" type="textarea"></monitor-text-input>
+		`;
+	}
+
 
 	static get styles(): CSSResult {
 		return style;
 	}
 
 	blockControls(block: boolean) {
-		this.querySelectorAll<MonitorTextInput>('monitor-text-input')
+		this.renderRoot.querySelectorAll<MonitorTextInput>('monitor-text-input')
 			.forEach((element => {
 				element.disabled = block;
-				//element.requestUpdate();
 			}));
 
 		this.renderRoot.querySelectorAll<MonitorButton>('monitor-button')
 			.forEach((element => {
 				element.disabled = block;
-				//element.requestUpdate();
 			}));
-
-		//this.requestUpdate();
 	}
 
 	onOkButtonClicked(event: Event) {

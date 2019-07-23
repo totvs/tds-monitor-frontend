@@ -1,10 +1,10 @@
-import { customElement, CSSResult, html } from 'lit-element';
+import { CSSResult, customElement, html } from 'lit-element';
 import { style } from '../css/monitor-authentication-dialog.css';
-import { MonitorTextInput } from './monitor-text-input';
-import { MonitorDialog } from './monitor-dialog';
 import { MonitorButton } from './monitor-button';
-import { MonitorServerItem } from './monitor-server-item';
 import { MonitorCheckbox } from './monitor-checkbox';
+import { MonitorDialog } from './monitor-dialog';
+import { MonitorServerItem } from './monitor-server-item';
+import { MonitorTextInput } from './monitor-text-input';
 
 @customElement('monitor-authentication-dialog')
 export class MonitorAuthenticationDialog extends MonitorDialog {
@@ -12,19 +12,19 @@ export class MonitorAuthenticationDialog extends MonitorDialog {
 	monitorServerItem: MonitorServerItem;
 
 	get username(): string {
-		return this.querySelector<MonitorTextInput>('#user').value;
+		return this.renderRoot.querySelector<MonitorTextInput>('#user').value;
 	}
 
 	get environment(): string {
-		return this.querySelector<MonitorTextInput>('#environment').value;
+		return this.renderRoot.querySelector<MonitorTextInput>('#environment').value;
 	}
 
 	get password(): string {
-		return this.querySelector<MonitorTextInput>('#password').value;
+		return this.renderRoot.querySelector<MonitorTextInput>('#password').value;
 	}
 
 	get storeToken(): boolean {
-		return this.querySelector<MonitorCheckbox>('#store').checked;
+		return this.renderRoot.querySelector<MonitorCheckbox>('#store').checked;
 	}
 
 	constructor(monitorServerItem: MonitorServerItem) {
@@ -45,8 +45,14 @@ export class MonitorAuthenticationDialog extends MonitorDialog {
 		this.monitorServerItem = monitorServerItem;
 
 		this.title = 'Autenticar Conexão';
+	}
 
-		this.innerHTML = html`
+	static get styles(): CSSResult {
+		return style;
+	}
+
+	get body() {
+		return html`
 			<monitor-text-input id="environment" tabindex="1" type="text" label="Ambiente"></monitor-text-input>
 			<monitor-text-input id="user" tabindex="2" type="text" label="Usuário"></monitor-text-input>
 			<monitor-text-input id="password" tabindex="3" type="password" label="Senha"></monitor-text-input>
@@ -54,11 +60,7 @@ export class MonitorAuthenticationDialog extends MonitorDialog {
 				<monitor-checkbox id="store" tabindex="4" title="Armazenar informacoes para reconexão automática"></monitor-checkbox>
 				<span>Armazenar informacoes para reconexão automática</span>
 			</label>
-		`.getHTML();
-	}
-
-	static get styles(): CSSResult {
-		return style;
+		`;
 	}
 
 	blockControls(block: boolean) {

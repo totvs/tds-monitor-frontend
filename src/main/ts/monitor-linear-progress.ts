@@ -1,5 +1,5 @@
-import { LinearProgress } from "@material/mwc-linear-progress";
-import { customElement, html } from "lit-element";
+import { LinearProgress } from '@material/mwc-linear-progress';
+import { customElement, html } from 'lit-element';
 
 @customElement('monitor-linear-progress')
 export class MonitoLinearProgress extends LinearProgress {
