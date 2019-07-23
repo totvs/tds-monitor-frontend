@@ -26,50 +26,58 @@ export class MonitorKillUserDialog extends MonitorDialog {
 			]
 		});
 
-		this.title = 'Desconectar Usuário';
+		this.title = 'Desconectar Usuários';
 
 		this.server = server;
 		this.users = users;
-
-		this.innerHTML = html`
-			<label>
-				<monitor-radio id="killUser" tabindex="1" name="killUserType" title="Finalização imediata"></monitor-radio>
-				<span>Finalização imediata</span>
-			</label>
-			<label>
-				<monitor-radio id="appKillUser" tabindex="2" name="killUserType" title="Aguardar pela aplicação"></monitor-radio>
-				<span>Aguardar pela aplicação</span>
-			</label>
-		`.getHTML();
 	}
 
 	static get styles(): CSSResult {
 		return style;
 	}
 
+	get body() {
+		return html`
+			<label @click="${this.onLabelClick}">
+				<monitor-radio id="killUser" checked tabindex="1" name="killUserType" title="Finalização imediata"></monitor-radio>
+				<span>Finalização imediata</span>
+			</label>
+			<label @click="${this.onLabelClick}">
+				<monitor-radio id="appKillUser" tabindex="2" name="killUserType" title="Aguardar pela aplicação"></monitor-radio>
+				<span>Aguardar pela aplicação</span>
+			</label>
+		`;
+	}
+
+	onLabelClick(event: MouseEvent) {
+		let label = event.currentTarget as HTMLLabelElement,
+			radio = label.querySelector<MonitorRadio>('monitor-radio');
+
+		this.renderRoot.querySelectorAll<MonitorRadio>('monitor-radio')
+			.forEach((radio: MonitorRadio) => radio.checked = false);
+
+		radio.checked = true;
+	}
+
+
 	blockControls(block: boolean) {
-		// this.querySelectorAll<MonitorRadio>('monitor-radio')
-		// 	.forEach((element => {
-		// 		element.disabled = block;
-		// 	}));
+		this.renderRoot.querySelectorAll<MonitorRadio>('monitor-radio')
+			.forEach((element: MonitorRadio) => {
+				element.disabled = block;
+			});
 
 		this.renderRoot.querySelectorAll<MonitorButton>('monitor-button')
-			.forEach((element => {
+			.forEach((element: MonitorButton) => {
 				element.disabled = block;
-			}));
+			});
 	}
 
 	onOkButtonClicked(event: Event) {
-		//Validar inputs aqui
-		if (!(document.getElementById('appKillUser') as MonitorRadio).checked && !(document.getElementById('killUser') as MonitorRadio).checked) {
-			// alert ou outro modal com o erro ???
-			return;
-		}
-
 		this.blockControls(true);
 		this.progress = 'visible';
 
-		let progressbar = this.renderRoot.querySelector('monitor-linear-progress'),
+		let appKillUser = this.renderRoot.querySelector('monitor-radio#appKillUser'),
+			progressbar = this.renderRoot.querySelector('monitor-linear-progress'),
 			step = 1 / this.users.length;
 
 		progressbar.determinate = true;
@@ -77,9 +85,9 @@ export class MonitorKillUserDialog extends MonitorDialog {
 
 		this.users.forEach((user) => {
 			//console.log(user.username + " :: " + user.computerName + " :: " + user.threadId + " :: " + user.server + " :: " + this.message);
-			if ((document.getElementById('appKillUser') as MonitorRadio).checked)
+			if (appKillUser.checked)
 				this.server.appKillUser(user.username, user.computerName, user.threadId, user.server);
-			else if ((document.getElementById('killUser') as MonitorRadio).checked)
+			else
 				this.server.killUser(user.username, user.computerName, user.threadId, user.server);
 
 			progressbar.progress += step;

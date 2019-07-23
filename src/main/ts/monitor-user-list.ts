@@ -12,6 +12,9 @@ declare global {
 	}
 }
 
+const sameUser = (a: MonitorUser, b: MonitorUser) => ['username', 'computerName', 'threadId', 'server'].every((key: keyof MonitorUser) => a[key] === b[key]);
+
+
 @customElement('monitor-user-list')
 export class MonitorUserList extends LitElement {
 
@@ -42,8 +45,14 @@ export class MonitorUserList extends LitElement {
 
 		this._users = newValue;
 		this._rows = this.users.map((user) => {
-			let row = new MonitorUserListRow(user);
+			let row = new MonitorUserListRow(user),
+				oldRow = this._rows.find(row => sameUser(row.user, user));
+
 			row.onchange = (event) => this.onCheckBoxChanged(event);
+
+			if (oldRow)
+				row.checked = oldRow.checked;
+
 			return row;
 		});
 
@@ -79,9 +88,9 @@ export class MonitorUserList extends LitElement {
 						Desconectar
 					</monitor-button>
 					<!--
-					<monitor-text-input outlined icon="search"></monitor-text-input>
-					<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
-					-->
+								<monitor-text-input outlined icon="search"></monitor-text-input>
+								<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
+								-->
 				</header>
 
 				<table>

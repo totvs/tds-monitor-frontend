@@ -50,13 +50,19 @@ export class MonitorDialog extends LitElement {
 				</header>
 				<monitor-linear-progress></monitor-linear-progress>
 				<main>
-					<slot></slot>
+					${this.body}
 				</main>
 				<footer>
 					${this.buttons}
 				</footer>
 			</dialog>
         `;
+	}
+
+	get body() {
+		return html`
+			<slot></slot>
+		`;
 	}
 
 	public showForResult(): Promise<boolean> {
