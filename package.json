@@ -6,15 +6,15 @@
 	"main": "target/index.html",
 	"files": [
 		"target"
-	],
-	"scripts": {
-		"build": "gulp build",
-		"watch": "gulp build --watch",
-		"clean": "gulp clean",
-		"prepublishOnly": "npm run clean && npm run build",
-		"lint": "eslint ./src/**",
-		"test": "echo \"Error: no test specified\" && exit 1"
-	},
+  ],
+  "scripts": {
+    "build": "gulp build",
+    "watch": "gulp build --watch",
+    "clean": "gulp clean",
+    "prepublishOnly": "npm run clean && npm run build",
+    "lint": "eslint ./src/**",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
 	"dependencies": {
 		"@material/mwc-button": "^0.6.0",
 		"@material/mwc-checkbox": "^0.6.0",
@@ -23,8 +23,8 @@
 		"@material/mwc-linear-progress": "^0.6.0",
 		"@material/mwc-radio": "^0.6.0",
 		"@material/mwc-ripple": "^0.6.0",
-		"@material/mwc-switch": "^0.6.0",
-		"@totvs/tds-languageclient": "0.0.4",
+    "@material/mwc-switch": "^0.6.0",
+    "@totvs/tds-languageclient": "0.0.4",
 		"@webcomponents/webcomponentsjs": "^2.2.10",
 		"core-js": "^3.1.4",
 		"lit-element": "^2.2.0",
