@@ -1,6 +1,5 @@
 import { CSSResult, customElement } from 'lit-element';
 import { html, render } from 'lit-html';
-
 import { style } from '../css/monitor-settings-dialog.css';
 import { MonitorCheckbox } from './monitor-checkbox';
 import { MonitorDialog } from './monitor-dialog';
@@ -27,19 +26,14 @@ export class MonitorSettingsDialog extends MonitorDialog {
 		this.title = 'Configurações';
 		this.progress = 'none';
 
-		const app = document.querySelector('monitor-app');
-
-
-		const {
-			language,
-			updateInterval,
-			alwaysOnTop,
-			generateUpdateLog,
-			generateExecutionLog
-		} = app.config;
-
-
-
+		const app = document.querySelector('monitor-app'),
+			{
+				language,
+				updateInterval,
+				alwaysOnTop,
+				generateUpdateLog,
+				generateExecutionLog
+			} = app.config;
 
 		let content = () => html`
 			<style>
@@ -65,6 +59,11 @@ export class MonitorSettingsDialog extends MonitorDialog {
 				section label {
 					flex: 1 1 100%;
 				}
+
+				section mwc-switch {
+					margin-right: 10px;
+					--mdc-theme-secondary: #EA9B3E;
+				}
 			</style>
 			<section>
 				<label for="language">Idioma</label>
@@ -80,15 +79,15 @@ export class MonitorSettingsDialog extends MonitorDialog {
 			</section>
 			<section>
 				<label for="alwaysOnTop">Manter sempre no topo das janelas</label>
-				<monitor-checkbox id="alwaysOnTop" ?checked=${alwaysOnTop}></monitor-checkbox>
+				<mwc-switch id="alwaysOnTop" ?checked=${alwaysOnTop}></mwc-switch>
 			</section>
 			<section>
 				<label for="generateUpdateLog">Gerar arquivo de log a cada atualização</label>
-				<monitor-checkbox id="generateUpdateLog" ?checked=${generateUpdateLog}></monitor-checkbox>
+				<mwc-switch id="generateUpdateLog" ?checked=${generateUpdateLog}></mwc-switch>
 			</section>
 			<section>
 				<label for="generateExecutionLog">Gerar log de execução de rotinas</label>
-				<monitor-checkbox id="generateExecutionLog" ?checked=${generateExecutionLog}></monitor-checkbox>
+				<mwc-switch id="generateExecutionLog" ?checked=${generateExecutionLog}></mwc-switch>
 			</section>
 		`;
 

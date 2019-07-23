@@ -41,7 +41,7 @@ export class MonitorUserList extends LitElement {
 		let oldValue = this._users;
 
 		this._users = newValue;
-		this._rows = this.users.map(user => {
+		this._rows = this.users.map((user) => {
 			let row = new MonitorUserListRow(user);
 			row.onchange = (event) => this.onCheckBoxChanged(event);
 			return row;
@@ -70,7 +70,7 @@ export class MonitorUserList extends LitElement {
 		return html`
 			<div>
 				<header>
-					<monitor-button small icon="check_box_outline_blank"></monitor-button>
+					<monitor-button small icon="${this.checkAllIcon}" @click="${this.onButtonCheckAllClick}"></monitor-button>
 					<monitor-button small icon="arrow_drop_down"></monitor-button>
 					<monitor-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem">
 						Enviar Mensagem
@@ -137,6 +137,31 @@ export class MonitorUserList extends LitElement {
 		let dialog = new MonitorKillUserDialog(this.server, users);
 		dialog.show();
 	}
+
+	onButtonCheckAllClick(event: MouseEvent) {
+		let check = !this._rows.some((row) => row.checked);
+
+		this._rows.forEach(row => row.checked = check);
+
+		this.requestUpdate('checkAllIcon');
+	}
+
+	@property({ type: String })
+	get checkAllIcon(): string {
+		let checkedRows = this._rows.filter((row) => row.checked).length;
+
+		if (checkedRows === 0) {
+			return 'check_box_outline_blank'
+		}
+		else if (checkedRows === this._rows.length) {
+			return 'check_box';
+		}
+		else {
+			return 'indeterminate_check_box';
+		}
+
+	}
+
 }
 
 

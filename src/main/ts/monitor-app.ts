@@ -1,8 +1,7 @@
-import { LitElement, html, customElement } from 'lit-element';
-import { MonitorServerItemOptions } from './monitor-server-item';
-import { MonitorUser } from '@totvs/tds-languageclient';
-import { MonitorSettings, MonitorSettingsConfig, Server } from './types';
+import { BuildVersion, MonitorUser } from '@totvs/tds-languageclient';
+import { customElement, html, LitElement } from 'lit-element';
 import { style } from '../css/monitor-app.css';
+import { MonitorServerItemOptions } from './monitor-server-item';
 
 const DEFAULT_SETTINGS: MonitorSettings = {
 	servers: [],
@@ -14,6 +13,27 @@ const DEFAULT_SETTINGS: MonitorSettings = {
 		generateExecutionLog: false
 	}
 };
+
+export interface MonitorSettings {
+	servers?: Array<Server>;
+	config?: MonitorSettingsConfig
+}
+
+export interface MonitorSettingsConfig {
+	language?: 'portuguese' | 'english' | 'spanish';
+	updateInterval?: number;
+	alwaysOnTop?: boolean;
+	generateUpdateLog?: boolean;
+	generateExecutionLog?: boolean;
+}
+
+interface Server {
+	name: string;
+	address: string;
+	port: number;
+	build: BuildVersion;
+	token?: string;
+}
 
 @customElement('monitor-app')
 class MonitorApp extends LitElement {

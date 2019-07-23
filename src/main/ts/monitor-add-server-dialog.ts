@@ -1,8 +1,8 @@
-import { customElement, CSSResult, html } from 'lit-element';
+import { CSSResult, customElement, html } from 'lit-element';
 import { style } from '../css/monitor-add-server-dialog.css';
-import { MonitorTextInput } from './monitor-text-input';
-import { MonitorDialog } from './monitor-dialog';
 import { MonitorButton } from './monitor-button';
+import { MonitorDialog } from './monitor-dialog';
+import { MonitorTextInput } from './monitor-text-input';
 
 @customElement('monitor-add-server-dialog')
 export class MonitorAddServerDialog extends MonitorDialog {
