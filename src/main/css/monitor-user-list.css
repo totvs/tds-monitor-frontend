@@ -2,33 +2,17 @@
 
 :host {
 	overflow: hidden;
-	flex-grow: 1;
+	flex: 1 1 100%;
 	display: flex;
+	flex-direction: column;
 }
 
 div {
 	overflow: auto;
-	padding: 30px;
 	height: 100%;
 	width: 100%;
 }
 
-.iddle .error-message, .iddle .connecting-message, .iddle table  {
-	display: none;
-}
-
-
-.connecting .error-message, .connecting table  {
-	display: none;
-}
-
-.connected .error-message, .connected .connecting-message  {
-	display: none;
-}
-
-.error .connecting-message, .error table {
-	display: none;
-}
 
 table {
 	border-collapse: collapse;
@@ -38,6 +22,8 @@ table {
 thead {
 	color: rgba(0,0,0,0.6);
 }
+
+
 
 th, td {
 	white-space: nowrap;
@@ -54,4 +40,19 @@ td.right {
 
 tr {
 	border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+tbody tr {
+	will-change: background-color;
+	transition: background-color .2s cubic-bezier(.4,0,.2,1);
+}
+
+tbody tr:hover {
+	background-color: rgba(158,158,158,.2);
+}
+
+header {
+	display: flex;
+	align-items: center;
+	margin-bottom: 10px;
 }

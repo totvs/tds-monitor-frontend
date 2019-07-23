@@ -1,4 +1,4 @@
-import { customElement, property, html } from "lit-element";
+import { customElement, property, html, css } from "lit-element";
 import { Ripple } from "@material/mwc-ripple";
 
 @customElement('monitor-ripple')
@@ -26,30 +26,20 @@ export class MonitorRipple extends Ripple {
 		super();
 	}
 
-	/*
-	_onMouseEnter = (event: MouseEvent) => { this.active = true; event.stopPropagation(); };
-	_onMouseExit = (event: MouseEvent) => { this.active = false; event.stopPropagation(); };
-
-	connectedCallback() {
-		super.connectedCallback();
-
-		this.interactionNode.addEventListener('mouseover', this._onMouseEnter);
-		this.interactionNode.addEventListener('mouseout', this._onMouseExit);
+	static get style() {
+		return css`
+			${super.styles}
+		`;
 	}
 
-	disconnectedCallback() {
-		super.disconnectedCallback();
-
-		this.interactionNode.removeEventListener('mouseover', this._onMouseEnter);
-		this.interactionNode.removeEventListener('mouseout', this._onMouseExit);
-	}
-	*/
 
 	render() {
 		return html`
 			<style>
+				${this.dark ? '' : html`
 				div.mdc-ripple-surface::before, div.mdc-ripple-surface::after {
-    				background-color: ${this.dark ? '#FFFFFF' : '#000000'};
+    				background-color: #FFFFFF;
+				}`
 				}
 			</style>
 			${super.render()}

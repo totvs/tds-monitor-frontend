@@ -1,0 +1,73 @@
+@import './reset.css';
+
+:host {
+	flex-grow: 1;
+	flex-direction: column;
+	display: flex;
+	overflow: hidden;
+	padding: 0;
+}
+
+:host([status=iddle]) .error-message,
+:host([status=iddle]) .connecting-message,
+:host([status=iddle]) monitor-user-list  {
+	display: none;
+}
+
+
+:host([status=connecting]) .error-message,
+:host([status=connecting]) monitor-user-list,
+:host([status=connecting]) header  {
+	display: none;
+}
+
+:host([status=connected]) .error-message,
+:host([status=connected]) .connecting-message,
+:host([status=connected]) .messages {
+	display: none;
+}
+
+:host([status=error]) .connecting-message,
+:host([status=error]) monitor-user-list,
+:host([status=error]) header {
+	display: none;
+}
+
+header, monitor-user-list {
+	margin: 30px;
+}
+
+header h2 {
+	margin: 0;
+    text-align: center;
+}
+
+div.messages {
+	display: flex;
+	flex: 1 1 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.connecting-message label {
+	display: flex;
+	margin: 10px;
+}
+
+:host([showlog]) footer {
+	display: block;
+}
+
+footer {
+	display: none;
+	height: 200px;
+	padding: 10px;
+	overflow: auto;
+	box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+	font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+}
+
+footer span {
+	display: block;
+}

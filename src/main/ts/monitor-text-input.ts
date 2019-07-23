@@ -56,37 +56,32 @@ export class MonitorTextInput extends LitElement {
 		let min = (this.type === 'number') ? this.min : null,
 			max = (this.type === 'number') ? this.max : null;
 
-		//				${min !== null ? html`min="${min}"` : ''}
-		//${max !== null ? html`max="${max}"` : ''}
+//				${min !== null ? html`min="${min}"` : ''}
+//${max !== null ? html`max="${max}"` : ''}
 
 		return html`
-			<div class="${this.value === '' ? 'is-empty' : ''}">
+			<div class="${this.value === '' ? ' is-empty' : ''}">
 				${this.icon ? html`<mwc-icon-button icon="${this.icon}"></mwc-icon-button>` : ''}
 				${this.type !== 'textarea' ? html`
-				<input type="${this.type}" .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @keydown="${this.onInputKeyDown}"
-				 min=${min} max=${max} tabindex="0" />
-				` : html`
-				<textarea .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @keydown="${this.onInputKeyDown}"
+				<input
+					type="${this.type}"
+					.value="${this.value}"
+					?disabled=${this.disabled}
+					@change="${this.onInputChanged}"
+					@keydown="${this.onInputKeyDown}"
+					min=${min}
+					max=${max}
+				 	tabindex="0" />
+				 ` : html`
+				 <textarea .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @keydown="${this.onInputKeyDown}"
 				 tabindex="0" />
 				`}
-							<label>${this.label}</label>
-							${this.outlined ? '' : html`<hr />`}
-						</div>
+				<label>${this.label}</label>
+				${this.outlined ? '' : html`<hr />`}
+			</div>
 		`;
 	}
 
-
-	showRedLine(fieldContent: string, fieldType: string) {
-		var oldLabel = this.label;
-		this.renderRoot.querySelector('div').classList.add('invalid');
-		this.label = fieldContent;
-		this.type = fieldType;
-
-		setTimeout(() => {
-			this.label = oldLabel;
-
-		}, 3000);
-	}
 
 	onInputChanged(event: Event) {
 		this.value = (event.target as HTMLInputElement).value;
@@ -105,8 +100,6 @@ export class MonitorTextInput extends LitElement {
 
 				break;
 		}
-
-		this.renderRoot.querySelector('div').classList.remove('invalid');
 	}
 
 }

@@ -1,8 +1,8 @@
 import { LitElement, html, customElement, CSSResult, TemplateResult } from 'lit-element';
-import { style } from '../css/monitor-body.css';
+import { style } from '../css/monitor-main.css';
 
-@customElement('monitor-body')
-export class MonitorBody extends LitElement {
+@customElement('monitor-main')
+export class MonitorMain extends LitElement {
 
 	constructor() {
 		super();

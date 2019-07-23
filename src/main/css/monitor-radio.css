@@ -1,0 +1,7 @@
+@import './reset.css';
+
+:host {
+	--mdc-theme-secondary: #EA9B3E;
+	height: 40px;
+	width: 40px;
+}

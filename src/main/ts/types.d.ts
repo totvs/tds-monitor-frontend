@@ -1,21 +1,21 @@
-interface MonitorSettings {
-	servers?: Array<Server>;
-}
-
-interface Server {
-	name: string;
-	address: string;
-	port: number;
-}
-
 interface Window {
 	reload(): void;
 	toggleDevTools(): void;
+	restore(): void;
+	maximize(): void;
+	minimize(): void;
 }
 
-
 declare module '*.css' {
-	import { CSSResult } from "lit-element";
+	import { CSSResult } from 'lit-element';
 
 	export const style: CSSResult;
 }
+
+
+interface JsonRpcMessage<T> {
+	jsonrpc: string;
+	method: string;
+	params?: T;
+}
+

@@ -1,0 +1,5 @@
+@import './reset.css';
+
+:host {
+	--mdc-theme-secondary: #EA9B3E;
+}

@@ -8,9 +8,24 @@ export interface MenuOptions {
 	items?: MenuItemOptions[]
 }
 
+//interface Position
+
+declare type VerticalPosition = 'top' | 'center' | 'bottom';
+declare type HorizontalPosition = 'left' | 'center' | 'right';
+declare type PositionOptions = 'top left' | 'top center' | 'top right' |
+	'center left' | 'center center' | 'center right' |
+	'bottom left' | 'bottom center' | 'bottom right';
+interface Position {
+	x: HorizontalPosition;
+	y: VerticalPosition;
+}
+
+
 interface MenuOptionsPosition {
 	x?: number;
 	y?: number;
+	my?: PositionOptions;
+	at?: PositionOptions;
 }
 
 @customElement('monitor-menu')
@@ -66,6 +81,55 @@ export class MonitorMenu extends LitElement {
 			this.style.left = `${position.x}px`;
 		}
 		else {
+			let my: Position = { y: 'top', x: 'left' },
+				at: Position = { y: 'bottom', x: 'left' },
+				parent = this.options.parent;
+
+			if (position.my)
+				({ 0: my.y, 1: my.x } = position.my.split(' ') as [VerticalPosition, HorizontalPosition]);
+
+			if (position.at)
+				({ 0: at.y, 1: at.x } = position.at.split(' ') as [VerticalPosition, HorizontalPosition]);
+
+
+			let rect = parent.getBoundingClientRect(),
+				top = rect.top,
+				left = rect.left;
+
+			if (at.y === 'bottom') {
+				top += rect.height;
+			}
+			else if (at.y === 'center') {
+				top += (rect.height / 2);
+			}
+
+			if (my.y === 'bottom') {
+				top -= this.clientHeight;
+			}
+			else if (my.y === 'center') {
+				top -= (this.clientHeight / 2);
+			}
+
+
+			if (at.x === 'right') {
+				left += rect.width;
+			}
+			else if (at.x === 'center') {
+				left += (rect.width / 2);
+			}
+
+			if (my.x === 'right') {
+				left -= this.clientWidth;
+			}
+			else if (my.x === 'center') {
+				left -= (this.clientWidth / 2);
+			}
+
+			this.style.top = `${top}px`;
+			this.style.left = `${left}px`;
+
+			/*
+			//my top right at bottom right of parent
 			const parent = this.options.parent,
 				rect = parent.getBoundingClientRect();
 
@@ -74,6 +138,7 @@ export class MonitorMenu extends LitElement {
 
 			this.style.top = `${top}px`;
 			this.style.left = `${left}px`;
+			*/
 		}
 	}
 
