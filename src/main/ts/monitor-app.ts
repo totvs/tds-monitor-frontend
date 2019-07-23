@@ -35,6 +35,19 @@ interface Server {
 	token?: string;
 }
 
+
+export enum MessageType {
+	ERROR = 1,
+	WARNING = 2,
+	INFO = 3,
+	LOG = 4
+}
+
+interface WindowLogMessage {
+	type: MessageType;
+	message: string;
+}
+
 @customElement('monitor-app')
 class MonitorApp extends LitElement {
 
@@ -46,6 +59,13 @@ class MonitorApp extends LitElement {
 		this.addEventListener('server-connected', this.onServerConnected);
 		this.addEventListener('server-init', this.onBeginServerConnection);
 		this.addEventListener('server-error', this.onServerError);
+
+
+		const serverView = this.querySelector('monitor-server-view');
+
+		languageClient.on('window/logMessage', (data: WindowLogMessage) => {
+			serverView.log(data.message, data.type);
+		});
 	}
 
 	get settings(): MonitorSettings {

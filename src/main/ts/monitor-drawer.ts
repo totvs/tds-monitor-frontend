@@ -68,7 +68,7 @@ export class MonitorDrawer extends LitElement {
 	}
 
 	onMenuClick(event: MouseEvent) {
-		let menu: MonitorMenu,
+		const serverView = document.querySelector('monitor-server-view'),
 			options: MenuOptions = {
 				parent: event.target as HTMLElement,
 				position: {
@@ -77,21 +77,34 @@ export class MonitorDrawer extends LitElement {
 				},
 				items: [
 					{
+						text: serverView.showlog ? 'Ocultar Log' : 'Exibir Log',
+						callback: () => { serverView.showlog = !serverView.showlog },
+						separator: true
+					},
+					{
 						text: 'Recarregar pagina',
-						callback: () => window.reload()
+						callback: () => { window.reload() }
 					},
 					{
 						text: 'Ferramentas do desenvolvedor',
-						callback: () => window.toggleDevTools()
+						callback: () => { window.toggleDevTools() },
+						separator: true
+					},
+					{
+						text: 'Sobre...',
+						callback: () => { this.showAboutDialog() }
 					}
-
 				]
 			};
 
 
-		menu = new MonitorMenu(options);
-
+		const menu = new MonitorMenu(options);
 		menu.open = true;
 	}
+
+	showAboutDialog() {
+
+	}
+
 }
 

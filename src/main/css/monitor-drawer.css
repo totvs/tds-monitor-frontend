@@ -1,6 +1,7 @@
 @import './reset.css';
 
 :host {
+	z-index: 10;
 	left: 0px;
 	min-width: 256px;
 	flex-grow: 0;

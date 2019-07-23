@@ -1,6 +1,7 @@
 import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
 import { CSSResult, customElement, html, LitElement, property, TemplateResult } from 'lit-element';
 import { style } from '../css/monitor-server-view.css';
+import { MessageType } from './monitor-app';
 
 export type ServerViewStatus = 'iddle' | 'connecting' | 'connected' | 'error';
 
@@ -9,6 +10,9 @@ export class MonitorServerView extends LitElement {
 
 	@property({ type: String })
 	name: string = '';
+
+	@property({ type: Boolean, reflect: true, attribute: true })
+	showlog: boolean = false;
 
 	@property({ type: Object })
 	set server(value: TdsMonitorServer) {
@@ -61,6 +65,7 @@ export class MonitorServerView extends LitElement {
 				</span>
 				<span class='error-message'>${this.error}</span>
 			</div>
+			<footer></footer>
 		`;
 	}
 
@@ -77,6 +82,37 @@ export class MonitorServerView extends LitElement {
 		}, (app.config.updateInterval * 1000));
 	}
 
+	log(message: string, type: MessageType) {
+		const span = document.createElement('span'),
+			footer = this.renderRoot.querySelector('footer');
+
+		switch (type) {
+			case MessageType.ERROR:
+				span.innerHTML = "[ERROR] ";
+				break;
+			case MessageType.WARNING:
+				span.innerHTML = "[WARN&nbsp;] ";
+				break;
+			case MessageType.INFO:
+				span.innerHTML = "[INFO&nbsp;] ";
+				break;
+			case MessageType.LOG:
+				span.innerHTML = "[LOG&nbsp;&nbsp;] ";
+				break;
+			default:
+				span.innerHTML = "[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] ";
+				break;
+		}
+
+		span.innerHTML += message;
+
+		footer.append(span);
+		footer.scrollTop = footer.scrollHeight;
+
+		if (footer.childElementCount > 200) {
+			footer.removeChild(footer.children[0]);
+		}
+	}
 }
 
 declare global {

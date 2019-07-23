@@ -11,3 +11,11 @@ declare module '*.css' {
 
 	export const style: CSSResult;
 }
+
+
+interface JsonRpcMessage<T> {
+	jsonrpc: string;
+	method: string;
+	params?: T;
+}
+
