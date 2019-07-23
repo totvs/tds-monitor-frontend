@@ -1,7 +1,7 @@
-import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
+import { html, CSSResult, property, customElement, LitElement } from 'lit-element';
+import { MonitorMenu, MenuOptions } from './monitor-menu';
 import { style } from '../css/monitor-app-bar.css';
 
-declare type WindowState = 'minimized' | 'maximized' | 'restored';
 
 @customElement('monitor-app-bar')
 export class MonitorAppBar extends LitElement {
@@ -9,60 +9,48 @@ export class MonitorAppBar extends LitElement {
 	@property({ type: String })
 	public text: string = 'TOTVS Monitor';
 
-	@property({ type: String })
-	public state: WindowState = 'restored';
-
-	get maximizeIcon() {
-		switch (this.state) {
-			case 'maximized':
-				return 'filter_none';
-			default:
-				return 'crop_square'
-		}
-	}
-
 	constructor() {
 		super();
-
-		window.addEventListener('maximized', () => {
-			this.state = 'maximized';
-			this.requestUpdate('maximizeIcon');
-		});
-
-		window.addEventListener('restored', () => {
-			this.state = 'restored';
-			this.requestUpdate('maximizeIcon');
-		});
 	}
 
 	static get styles(): CSSResult {
 		return style;
-	}
+  	}
 
 	render() {
 		return html`
 			<header>
 				<img class="logo" src='./totvs_h_neg_pb_optimized.svg' height="36" width="36" />
 				<h1>${this.text}</h1>
-				<mwc-icon-button id='minimize' icon='minimize' @click='${this.onButtonMinimizeClick}'></mwc-icon-button>
-				<mwc-icon-button id='maximize' icon='${this.maximizeIcon}' @click='${this.onButtonMaximizeClick}'></mwc-icon-button>
-				<mwc-icon-button id='close' icon='close' @click='${this.onButtonCloseClick}'></mwc-icon-button>
+				<div class="menu">
+					<monitor-ripple unbounded dark></monitor-ripple>
+					<img src='./more_vert.svg' height="36" width="36" @click="${this.onMenuClick}" />
+				</div>
 			</header>
         `;
 	}
 
-	onButtonMaximizeClick(event: Event) {
-		if (this.state === 'maximized')
-			window.restore();
-		else if (this.state === 'restored')
-			window.maximize();
+	onMenuClick(event: MouseEvent) {
+		let menu: MonitorMenu,
+			options: MenuOptions = {
+				parent: event.target as HTMLElement,
+				items: [
+					{
+						text: 'Recarregar pagina',
+						callback: () => window.reload()
+					},
+					{
+						text: 'Ferramentas do desenvolvedor',
+						callback: () => window.toggleDevTools()
+					}
+
+				]
+			};
+
+
+		menu = new MonitorMenu(options);
+
+		menu.open = true;
 	}
 
-	onButtonMinimizeClick(event: Event) {
-		window.minimize();
-	}
-
-	onButtonCloseClick(event: Event) {
-		window.close();
-	}
 }

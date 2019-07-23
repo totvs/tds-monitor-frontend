@@ -17,9 +17,6 @@
 			"@babel/plugin-transform-typescript"
 		],
 		[
-			"@babel/plugin-transform-async-to-generator"
-		],
-		[
 			"@babel/plugin-transform-arrow-functions",
 			{
 				"spec": true

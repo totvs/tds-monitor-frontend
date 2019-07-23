@@ -1,10 +1,6 @@
-import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
-import { CSSResult, customElement, html, LitElement, property, query } from 'lit-element';
+import { LitElement, html, customElement, CSSResult, property } from 'lit-element';
+import { MonitorUser } from '@totvs/tds-languageclient';
 import { style } from '../css/monitor-user-list.css';
-import { MonitorButton } from './monitor-button';
-import { MonitorSendMessageDialog } from './monitor-send-message-dialog';
-import { MonitorUserListRow } from './monitor-user-list-row';
-import { MonitorKillUserDialog } from './monitor-kill-user-dialog';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -12,93 +8,35 @@ declare global {
 	}
 }
 
-const sameUser = (a: MonitorUser, b: MonitorUser) => ['threadId', 'username', 'computerName', 'server'].every((key: keyof MonitorUser) => a[key] === b[key]);
-
+declare type MonitorUserListStatus = 'iddle' | 'connecting' | 'connected' | 'error';
 
 @customElement('monitor-user-list')
 export class MonitorUserList extends LitElement {
 
-	@query('monitor-button[icon="chat"]')
-	sendMessageButton: MonitorButton;
-
-	@property({ type: Object })
-	set server(value: TdsMonitorServer) {
-		let oldValue = this._server;
-		this._server = value;
-
-		if (this.server.token !== null) {
-			this.server.getUsers()
-				.then((users) => this.users = users);
-		}
-
-		this.requestUpdate('server', oldValue);
-	}
-	get server(): TdsMonitorServer {
-		return this._server;
-	}
-	_server: TdsMonitorServer = null;
-
 	@property({ type: Array })
-	get users(): MonitorUser[] {
-		return this._users;
-	};
-	set users(newValue: MonitorUser[]) {
-		let oldValue = this._users;
+	users: MonitorUser[] = [];
 
-		this._users = newValue;
-		this._rows = this.users.map((user) => {
-			let row = new MonitorUserListRow(user),
-				oldRow = this._rows.find(row => sameUser(row.user, user));
+	@property({ type: String })
+	name: string = '';
 
-			row.onchange = (event) => this.onCheckBoxChanged(event);
+	@property({ type: String })
+	error: string = '';
 
-			if (oldRow)
-				row.checked = oldRow.checked;
-
-			return row;
-		});
-
-		this.requestUpdate('userSelected', oldValue);
-	}
-
-	_users: Array<MonitorUser> = [];
-	_rows: Array<MonitorUserListRow> = [];
-
-	@property({ type: Boolean })
-	get userSelected(): boolean {
-		return (this.renderRoot.querySelectorAll('monitor-user-list-row[checked]').length > 0);
-	}
+	@property({ type: String })
+	status: MonitorUserListStatus = 'iddle';
 
 	static get styles(): CSSResult {
 		return style;
 	}
 
-	//<mwc-icon-button icon="not_interested">
-	//<mwc-icon-button icon="check_box_outline_blank"></mwc-icon-button>
-	//<mwc-icon-button icon="arrow_drop_down"></mwc-icon-button>
-
 	render() {
 		return html`
-			<header>
-				<monitor-button small icon="${this.checkAllIcon}" @click="${this.onButtonCheckAllClick}"></monitor-button>
-				<monitor-button small icon="arrow_drop_down"></monitor-button>
-				<monitor-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem">
-					Enviar Mensagem
-				</monitor-button>
-				<monitor-button icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="Desconectar">
-					Desconectar
-				</monitor-button>
-				<!--
-										<monitor-text-input outlined icon="search"></monitor-text-input>
-										<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
-										-->
-			</header>
-
-			<div>
+			<div class="${this.status}">
+				<span class='connecting-message'>Conectando ao servidor ${this.name}</span>
+				<span class='error-message'>${this.error}</span>
 				<table>
 					<thead>
 						<tr>
-							<th></th>
 							<th>User Name</th>
 							<th>Environment</th>
 							<th>Machine</th>
@@ -108,7 +46,7 @@ export class MonitorUserList extends LitElement {
 							<th>Connected</th>
 							<th>Elapsed Time</th>
 							<th>Instructions</th>
-							<th>Instructions/Seconds</th>
+							<th>Instrctions/Seconds</th>
 							<th>Comments</th>
 							<th>Memory</th>
 							<th>SID</th>
@@ -119,58 +57,30 @@ export class MonitorUserList extends LitElement {
 					</thead>
 
 					<tbody>
-						${this._rows}
+						${this.users.map(user => html`
+						<tr>
+							<td>${user.username}</td>
+							<td>${user.environment}</td>
+							<td>${user.computerName}</td>
+							<td class="right">${user.threadId}</td>
+							<td>${user.server}</td>
+							<td>${user.mainName}</td>
+							<td>${user.loginTime}</td>
+							<td>${user.elapsedTime}</td>
+							<td class="right">${user.totalInstrCount}</td>
+							<td class="right">${user.instrCountPerSec}</td>
+							<td>${user.remark}</td>
+							<td class="right">${user.memUsed}</td>
+							<td class="right">${user.sid}</td>
+							<td class="right">${user.ctreeTaskId}</td>
+							<td class="center">${user.inactiveTime}</td>
+							<td>${user.clientType}</td>
+						</tr>
+						`)}
 					</tbody>
 				</table>
 			</div>
         `;
-	}
-
-	onCheckBoxChanged(event: Event) {
-		this.requestUpdate('userSelected');
-	}
-
-	onButtonSendMessageClick(event: MouseEvent) {
-		let users = this._rows
-			.filter((row) => row.checked)
-			.map((row) => row.user);
-
-
-		let dialog = new MonitorSendMessageDialog(this.server, users);
-		dialog.show();
-	}
-
-	onButtonKillUserDialogClick(event: MouseEvent) {
-		let users = this._rows
-			.filter((row) => row.checked)
-			.map((row) => row.user);
-
-		let dialog = new MonitorKillUserDialog(this.server, users);
-		dialog.show();
-	}
-
-	onButtonCheckAllClick(event: MouseEvent) {
-		let check = !this._rows.some((row) => row.checked);
-
-		this._rows.forEach(row => row.checked = check);
-
-		this.requestUpdate('checkAllIcon');
-	}
-
-	@property({ type: String })
-	get checkAllIcon(): string {
-		let checkedRows = this._rows.filter((row) => row.checked).length;
-
-		if (checkedRows === 0) {
-			return 'check_box_outline_blank'
-		}
-		else if (checkedRows === this._rows.length) {
-			return 'check_box';
-		}
-		else {
-			return 'indeterminate_check_box';
-		}
-
 	}
 
 }

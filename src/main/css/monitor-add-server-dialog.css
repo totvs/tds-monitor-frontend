@@ -4,25 +4,24 @@ dialog {
 	width: 400px;
 }
 
-main {
+slot {
 	display: flex;
 	flex-wrap: wrap;
 }
 
-main monitor-text-input {
+::slotted(monitor-text-input) {
 	display: flex;
     margin: 10px;
 }
 
-main monitor-text-input#name,
-main monitor-text-input#build {
+::slotted(monitor-text-input#name), ::slotted(monitor-text-input#build) {
     flex: 1 100%;
 }
 
-main monitor-text-input#address {
+::slotted(monitor-text-input#address) {
     flex: 1 auto;
 }
 
-main monitor-text-input#port {
+::slotted(monitor-text-input#port) {
 	flex: 1 30%;
 }
