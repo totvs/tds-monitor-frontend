@@ -1,4 +1,4 @@
-import { LitElement, html, customElement, CSSResult, property } from 'lit-element';
+import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
 import { style } from '../css/monitor-text-input.css';
 
 @customElement('monitor-text-input')
@@ -8,16 +8,25 @@ export class MonitorTextInput extends LitElement {
 	type: string = 'text';
 
 	@property({ type: String, reflect: true, attribute: true })
-	classValue: string = '';
-
-	@property({ type: String, reflect: true, attribute: true })
 	value: string = '';
 
 	@property({ type: String, reflect: true, attribute: true })
-	label: string = '';
+	label: string = null;
 
 	@property({ type: Boolean, reflect: true, attribute: true })
 	disabled: boolean = false;
+
+	@property({ type: Boolean, reflect: true, attribute: true })
+	outlined: boolean = false;
+
+	@property({ type: String, reflect: true, attribute: true })
+	icon: string = null;
+
+	@property({ type: Number, reflect: true, attribute: true })
+	min: number = null;
+
+	@property({ type: Number, reflect: true, attribute: true })
+	max: number = null;
 
 	createRenderRoot() {
 		return this.attachShadow({ mode: 'open', delegatesFocus: true });
@@ -29,7 +38,7 @@ export class MonitorTextInput extends LitElement {
 		//this.setAttribute('tabindex', '0');
 
 		this.addEventListener('focus', (event: Event) => {
-			this.renderRoot.querySelector('input').focus();
+			this.renderRoot.querySelector<HTMLInputElement | HTMLTextAreaElement>('input, textarea').focus();
 		})
 
 	}
@@ -39,25 +48,43 @@ export class MonitorTextInput extends LitElement {
 	}
 
 	render() {
+		// let min = html`${((this.type === 'number') && (this.min !== null)) ? 'min="${this.min}"' : ''}`,
+		// max = html`${((this.type === 'number') && (this.max !== null)) ? 'max="${this.max}"' : ''}`;
+
+		//max = ((this.type === 'number') && (this.max !== null)) ? html`min="${this.max}"` : '';
+
+		let min = (this.type === 'number') ? this.min : null,
+			max = (this.type === 'number') ? this.max : null;
+
+		//				${min !== null ? html`min="${min}"` : ''}
+		//${max !== null ? html`max="${max}"` : ''}
+
 		return html`
-			<div class="${this.classValue === '' ? '' : ' is-empty invalid'}">
+			<div class="${this.value === '' ? 'is-empty' : ''}">
+				${this.icon ? html`<mwc-icon-button icon="${this.icon}"></mwc-icon-button>` : ''}
+				${this.type !== 'textarea' ? html`
 				<input type="${this.type}" .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @keydown="${this.onInputKeyDown}"
+				 min=${min} max=${max} tabindex="0" />
+				` : html`
+				<textarea .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @keydown="${this.onInputKeyDown}"
 				 tabindex="0" />
-				<label>${this.label}</label>
-				<hr />
-			</div>
+				`}
+							<label>${this.label}</label>
+							${this.outlined ? '' : html`<hr />`}
+						</div>
 		`;
 	}
 
 
-	showRedLine(fieldContent: string, fieldType: string){
+	showRedLine(fieldContent: string, fieldType: string) {
 		var oldLabel = this.label;
-		this.classValue = 'error'
+		this.renderRoot.querySelector('div').classList.add('invalid');
 		this.label = fieldContent;
 		this.type = fieldType;
 
-		setTimeout( () => {
+		setTimeout(() => {
 			this.label = oldLabel;
+
 		}, 3000);
 	}
 
@@ -78,7 +105,8 @@ export class MonitorTextInput extends LitElement {
 
 				break;
 		}
-		this.classValue = ''
+
+		this.renderRoot.querySelector('div').classList.remove('invalid');
 	}
 
 }

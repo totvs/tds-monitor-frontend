@@ -1,5 +1,5 @@
-import { customElement,  html } from "lit-element";
-import { LinearProgress } from "@material/mwc-linear-progress";
+import { LinearProgress } from '@material/mwc-linear-progress';
+import { customElement, html } from 'lit-element';
 
 @customElement('monitor-linear-progress')
 export class MonitoLinearProgress extends LinearProgress {
@@ -19,3 +19,12 @@ export class MonitoLinearProgress extends LinearProgress {
 		`;
 	}
 }
+
+
+declare global {
+	interface HTMLElementTagNameMap {
+		'monitor-linear-progress': MonitoLinearProgress;
+	}
+}
+
+
