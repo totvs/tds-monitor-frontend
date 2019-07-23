@@ -259,7 +259,8 @@ export class MonitorServerItem extends LitElement {
 	}
 
 	setConnectionStatus(status: boolean) {
-		this.server.setConnectionStatus(status);
+		this.enableNewConnections = status
+		this.server.setConnectionStatus(this.enableNewConnections);
 	}
 }
 
