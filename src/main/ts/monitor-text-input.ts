@@ -8,6 +8,9 @@ export class MonitorTextInput extends LitElement {
 	type: string = 'text';
 
 	@property({ type: String, reflect: true, attribute: true })
+	classValue: string = '';
+
+	@property({ type: String, reflect: true, attribute: true })
 	value: string = '';
 
 	@property({ type: String, reflect: true, attribute: true })
@@ -37,7 +40,7 @@ export class MonitorTextInput extends LitElement {
 
 	render() {
 		return html`
-			<div class="${this.value === '' ? ' is-empty' : ''}">
+			<div class="${this.classValue === '' ? '' : ' is-empty invalid'}">
 				<input type="${this.type}" .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @keydown="${this.onInputKeyDown}"
 				 tabindex="0" />
 				<label>${this.label}</label>
@@ -46,6 +49,17 @@ export class MonitorTextInput extends LitElement {
 		`;
 	}
 
+
+	showRedLine(fieldContent: string, fieldType: string){
+		var oldLabel = this.label;
+		this.classValue = 'error'
+		this.label = fieldContent;
+		this.type = fieldType;
+
+		setTimeout( () => {
+			this.label = oldLabel;
+		}, 3000);
+	}
 
 	onInputChanged(event: Event) {
 		this.value = (event.target as HTMLInputElement).value;
@@ -64,6 +78,7 @@ export class MonitorTextInput extends LitElement {
 
 				break;
 		}
+		this.classValue = ''
 	}
 
 }
