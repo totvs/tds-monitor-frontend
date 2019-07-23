@@ -36,7 +36,6 @@ export class MonitorWarning extends LitElement {
 	showTheError(message: string){
 		this.msg = message;
 		this.showError = 'yes';
-		/** invalid input */
 		setTimeout( () => this.showError = 'no', 3000);
 
 	}
