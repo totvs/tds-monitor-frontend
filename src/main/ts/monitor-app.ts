@@ -84,6 +84,16 @@ class MonitorApp extends LitElement {
 		});
 	}
 
+	get version(): string {
+		return window.versions.main;
+	}
+
+	get dependencies(): Partial<Versions> {
+		return {
+			'@totvs/tds-languageclient': window.versions['@totvs/tds-languageclient'],
+			'@totvs/tds-monitor-frontend': window.versions['@totvs/tds-monitor-frontend']
+		};
+	}
 
 	static get styles() {
 		return style;

@@ -4,6 +4,14 @@ interface Window {
 	restore(): void;
 	maximize(): void;
 	minimize(): void;
+
+	versions: Versions;
+}
+
+interface Versions {
+	'main': string;
+	'@totvs/tds-languageclient': string;
+	'@totvs/tds-monitor-frontend': string;
 }
 
 declare module '*.css' {

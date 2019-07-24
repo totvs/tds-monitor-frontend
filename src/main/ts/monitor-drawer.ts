@@ -4,6 +4,7 @@ import { MonitorServerItem, MonitorServerItemOptions } from './monitor-server-it
 import { style } from '../css/monitor-drawer.css';
 import { MonitorSettingsDialog } from './monitor-settings-dialog';
 import { MonitorMenu, MenuOptions } from './monitor-menu';
+import { MonitorAboutDialog } from './monitor-about-dialog';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -103,7 +104,9 @@ export class MonitorDrawer extends LitElement {
 	}
 
 	showAboutDialog() {
+		const dialog = new MonitorAboutDialog();
 
+		dialog.show();
 	}
 
 }
