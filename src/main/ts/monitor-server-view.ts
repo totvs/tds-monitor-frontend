@@ -76,10 +76,14 @@ export class MonitorServerView extends LitElement {
 			window.clearInterval(this._updateHandler);
 		}
 
-		this._updateHandler = window.setInterval(() => {
-			this.server.getUsers()
-				.then(users => this.users = users);
-		}, (app.config.updateInterval * 1000));
+		if (app.config.updateInterval > 0) {
+			this._updateHandler = window.setInterval(() => {
+				if (this.server) {
+					this.server.getUsers()
+					.then(users => this.users = users);
+				}
+			}, (app.config.updateInterval * 1000));
+		}
 	}
 
 	log(message: string, type: MessageType) {

@@ -57,7 +57,7 @@ export class MonitorSettingsDialog extends MonitorDialog {
 			</section>
 			<section>
 				<label for="updateInterval">Intervalo para atualizacao de informações</label>
-				<monitor-text-input id="updateInterval" tabindex="1" type="number" min="5" small value="${updateInterval}"></monitor-text-input>
+				<monitor-text-input id="updateInterval" tabindex="1" type="number" min="0" max="3600" small value="${updateInterval}"></monitor-text-input>
 			</section>
 			<section>
 				<label for="alwaysOnTop">Manter sempre no topo das janelas</label>
@@ -74,6 +74,8 @@ export class MonitorSettingsDialog extends MonitorDialog {
 	}
 
 	onOkButtonClicked(event: Event) {
+		console.log('onOkButtonClicked: %s', this.renderRoot.querySelector<MonitorTextInput>('#updateInterval').value);
+
 		const app = document.querySelector('monitor-app');
 
 		app.config = {
@@ -83,6 +85,12 @@ export class MonitorSettingsDialog extends MonitorDialog {
 			generateUpdateLog: this.renderRoot.querySelector<MonitorCheckbox>('#generateUpdateLog').checked,
 			generateExecutionLog: this.renderRoot.querySelector<MonitorCheckbox>('#generateExecutionLog').checked
 		};
+
+		app.dispatchEvent(new CustomEvent<string>('settings-update', {
+			detail: 'Settings update.',
+			bubbles: true,
+			composed: true
+		}));
 
 		this.close();
 	}

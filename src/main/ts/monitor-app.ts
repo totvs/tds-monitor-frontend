@@ -6,7 +6,7 @@ import { MonitorServerItemOptions } from './monitor-server-item';
 const DEFAULT_SETTINGS: MonitorSettings = {
 	servers: [],
 	config: {
-		updateInterval: 5,
+		updateInterval: 0,
 		language: "portuguese",
 		alwaysOnTop: false,
 		generateUpdateLog: false,
@@ -59,7 +59,7 @@ class MonitorApp extends LitElement {
 		this.addEventListener('server-connected', this.onServerConnected);
 		this.addEventListener('server-init', this.onBeginServerConnection);
 		this.addEventListener('server-error', this.onServerError);
-
+		this.addEventListener('settings-update', this.onSettingsUpdate);
 
 		const serverView = this.querySelector('monitor-server-view');
 
@@ -174,10 +174,12 @@ class MonitorApp extends LitElement {
 		console.log('begin connnection to server ' + event.detail);
 	}
 
-	onServerConnected(event: CustomEvent<MonitorUser[]>): boolean | void {
+	onServerConnected(event: CustomEvent<MonitorServerItemOptions>): boolean | void {
 		let serverView = this.querySelector('monitor-server-view');
 
-		serverView.users = event.detail;
+		serverView.users = event.detail.users;
+		serverView.name = event.detail.name;
+		serverView.server = event.detail.server;
 		serverView.status = 'connected';
 
 		console.log('onConnected', event.detail);
@@ -187,10 +189,17 @@ class MonitorApp extends LitElement {
 		let serverView = this.querySelector('monitor-server-view');
 
 		serverView.users = [];
-		serverView.error = 'Não foi possivel conectar!';
+		serverView.error = event.detail; //'Não foi possivel conectar!';
 		serverView.status = 'error';
 	}
 
+	onSettingsUpdate(event: CustomEvent<string>): boolean | void {
+		let serverView = this.querySelector('monitor-server-view');
+
+		serverView.setServerUpdateInterval();
+
+		console.log('onSettingsUpdate');
+	}
 
 }
 

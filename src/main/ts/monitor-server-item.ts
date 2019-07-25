@@ -16,6 +16,7 @@ declare type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'e
 export interface MonitorServerItemOptions {
 	name: string;
 	server: TdsMonitorServer;
+	users: MonitorUser[];
 }
 
 @customElement('monitor-server-item')
@@ -63,20 +64,22 @@ export class MonitorServerItem extends LitElement {
 
 	async disconnectServer(): Promise<boolean> {
 		this.server.disconnect();
-		this.server = null;
+		//this.server = null;
 		this.status = 'disconnected';
 
 		return true;
 	}
 
 	async connectServer(dispatchEvents?: boolean): Promise<boolean> {
+		let connectionFailed = false;
 		this.status = 'connecting';
 
 		if (dispatchEvents) {
 			this.dispatchEvent(new CustomEvent<MonitorServerItemOptions>('server-init', {
 				detail: {
 					name: this.name,
-					server: this.server
+					server: this.server,
+					users: []
 				},
 				bubbles: true,
 				composed: true
@@ -84,38 +87,75 @@ export class MonitorServerItem extends LitElement {
 		}
 
 		if (this.server.token !== null) {
-			await this.server.reconnect();
+			let result = await this.server.reconnect();
+
+			if (!result) {
+				connectionFailed = true;
+				//this.server = null;
+				// this.status = 'error';
+
+				// if (dispatchEvents) {
+				// 	this.dispatchEvent(new CustomEvent<string>('server-error', {
+				// 		detail: 'Nao foi possivel conectar ao servidor!',
+				// 		bubbles: true,
+				// 		composed: true
+				// 	}));
+				// }
+
+				// return false;
+			}
 		}
 		else {
 			let dialog = new MonitorAuthenticationDialog(this),
 				result = await dialog.showForResult();
 
 			if (result) {
-				await this.server.connect({
+				result = await this.server.connect({
 					username: dialog.username,
 					password: dialog.password,
 					environment: dialog.environment
 				});
 
-				if (dialog.storeToken) {
-					const app = document.querySelector('monitor-app');
-					app.storeConnectionToken(this.name, this.server.token);
+				if (result) {
+					if (dialog.storeToken) {
+						const app = document.querySelector('monitor-app');
+						app.storeConnectionToken(this.name, this.server.token);
+					}
+				}
+				else {
+					connectionFailed = true;
+					//this.server = null;
+					// this.status = 'error';
+
+					// if (dispatchEvents) {
+					// 	this.dispatchEvent(new CustomEvent<string>('server-error', {
+					// 		detail: 'Nao foi possivel conectar ao servidor!',
+					// 		bubbles: true,
+					// 		composed: true
+					// 	}));
+					// }
+
+					// return false;
 				}
 			}
 			else {
-				if (dispatchEvents) {
-					this.dispatchEvent(new CustomEvent<string>('server-error', {
-						detail: 'Nao foi possivel conectar ao servidor!',
-						bubbles: true,
-						composed: true
-					}));
-				}
+				connectionFailed = true;
+				//this.server = null;
+				// this.status = 'error';
 
-				return false;
+				// if (dispatchEvents) {
+				// 	this.dispatchEvent(new CustomEvent<string>('server-error', {
+				// 		detail: 'Nao foi possivel conectar ao servidor!',
+				// 		bubbles: true,
+				// 		composed: true
+				// 	}));
+				// }
+
+				// return false;
 			}
 		}
 
-		if (this.server) {
+		if (!connectionFailed) {
 			this.status = 'connected';
 
 			this.getConnectionStatus();
@@ -125,7 +165,7 @@ export class MonitorServerItem extends LitElement {
 
 			if (dispatchEvents) {
 				this.dispatchEvent(new CustomEvent<string>('server-error', {
-					detail: 'Nao foi possivel conectar ao servidor!',
+					detail: 'Não foi possivel se conectar a este servidor.',
 					bubbles: true,
 					composed: true
 				}));
@@ -138,11 +178,25 @@ export class MonitorServerItem extends LitElement {
 	async getUsers() {
 		let users = await this.server.getUsers();
 
-		this.dispatchEvent(new CustomEvent<MonitorUser[]>('server-connected', {
-			detail: users,
-			bubbles: true,
-			composed: true
-		}));
+		if (users != null) {
+			this.dispatchEvent(new CustomEvent<MonitorServerItemOptions>('server-connected', {
+				detail: {
+					name: this.name,
+					server: this.server,
+					users: users
+				},
+				bubbles: true,
+				composed: true
+			}));
+		} else {
+			this.status = 'error';
+
+			this.dispatchEvent(new CustomEvent<string>('server-error', {
+				detail: 'Não foi possivel se conectar a este servidor.',
+				bubbles: true,
+				composed: true
+			}));
+		}
 	}
 
 
@@ -208,6 +262,10 @@ export class MonitorServerItem extends LitElement {
 				separator: true,
 				callback: () => { this.connectServer(false) }
 			});
+			// options.items.push({
+			// 	text: 'Habilitar novas conexões',
+			// 	callback: () => { this.setConnectionStatus(true) }
+			// });
 		}
 		else {
 			if (this.status !== 'error') {
