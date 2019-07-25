@@ -1,0 +1,16 @@
+@import './reset.css';
+
+/*
+span.mdc-linear-progress__bar-inner {
+	background-color: #EA9B3E;
+}
+*/
+
+:host {
+    --mdc-theme-primary: #EA9B3E;
+    --mdc-theme-secondary: #FFFFFF;
+}
+
+.mdc-linear-progress--indeterminate div.mdc-linear-progress__secondary-bar {
+	visibility: inherit;
+}

@@ -65,7 +65,7 @@ export class MonitorServerView extends LitElement {
 				</span>
 				<span class='error-message'>${this.error}</span>
 			</div>
-			<footer></footer>
+			<monitor-log-view></monitor-log-view>
 		`;
 	}
 
@@ -83,35 +83,9 @@ export class MonitorServerView extends LitElement {
 	}
 
 	log(message: string, type: MessageType) {
-		const span = document.createElement('span'),
-			footer = this.renderRoot.querySelector('footer');
+		const logViewer = this.renderRoot.querySelector('monitor-log-view');
 
-		switch (type) {
-			case MessageType.ERROR:
-				span.innerHTML = "[ERROR] ";
-				break;
-			case MessageType.WARNING:
-				span.innerHTML = "[WARN&nbsp;] ";
-				break;
-			case MessageType.INFO:
-				span.innerHTML = "[INFO&nbsp;] ";
-				break;
-			case MessageType.LOG:
-				span.innerHTML = "[LOG&nbsp;&nbsp;] ";
-				break;
-			default:
-				span.innerHTML = "[&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;] ";
-				break;
-		}
-
-		span.innerHTML += message;
-
-		footer.append(span);
-		footer.scrollTop = footer.scrollHeight;
-
-		if (footer.childElementCount > 200) {
-			footer.removeChild(footer.children[0]);
-		}
+		logViewer.add(message, type);
 	}
 }
 

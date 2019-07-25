@@ -18,6 +18,7 @@ import './monitor-button';
 import './monitor-checkbox';
 import './monitor-drawer';
 import './monitor-linear-progress';
+import './monitor-log-view';
 import './monitor-main';
 import './monitor-radio';
 import './monitor-ripple';

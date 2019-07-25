@@ -70,18 +70,21 @@ dialog footer {
 	flex-direction: row;
 	justify-content: flex-end;
 	align-items: center;
-	align-items: center;
+	height: fit-content;
+	padding: 12px;
 }
 
-dialog header, dialog footer  {
+dialog header,
+dialog footer  {
 	display: flex;
 	min-height: 56px;
 	width: 100%;
-	height: 100%;
+	height: fit-content;
 }
 
 footer monitor-button  {
-	margin-right: 12px;
+	height: 48px;
+	margin-left: 12px;
 }
 
 dialog header h1 {

@@ -4,12 +4,12 @@ dialog {
 	width: 500px;
 }
 
-slot {
+main {
 	display: flex;
 	flex-wrap: wrap;
 }
 
-::slotted(monitor-text-input) {
+main monitor-text-input {
 	display: flex;
     margin: 10px;
 	flex: 1 100%;

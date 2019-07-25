@@ -1,0 +1,60 @@
+@import './reset.css';
+
+:host {
+	position: relative;
+    display: flex;
+	flex-direction: column;
+	height: 200px;
+	padding: 0;
+	box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
+	font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+}
+
+slot {
+	overflow: auto;
+	display: flex;
+    flex: 1 1 100%;
+    flex-direction: column;
+	padding: 15px;
+}
+
+::slotted(span) {
+	display: block;
+	white-space: pre-wrap;
+}
+
+header {
+	display: flex;
+	flex-direction: row;
+	border-bottom: 1px solid rgba(158,158,158,.2);
+}
+
+header * {
+	user-select: none;
+}
+
+header div {
+	flex: 1 1 100%;
+}
+
+header mwc-icon  {
+	padding: 4px;
+	margin: 6px;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+header mwc-icon:hover {
+	background-color: rgba(158,158,158,.2);
+}
+
+mark {
+	position: absolute;
+    top: 0;
+    height: 5px;
+    left: 0;
+    right: 0;
+    cursor: ns-resize;
+    background-color: transparent;
+    z-index: 1;
+}

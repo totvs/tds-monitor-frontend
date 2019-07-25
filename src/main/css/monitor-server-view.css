@@ -55,19 +55,17 @@ div.messages {
 	margin: 10px;
 }
 
-:host([showlog]) footer {
-	display: block;
+:host([showlog]) monitor-log-view {
+	display: flex;
 }
 
-footer {
+
+monitor-log-view {
 	display: none;
-	height: 200px;
-	padding: 10px;
-	overflow: auto;
-	box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
-	font-family: Consolas, "Andale Mono WT", "Andale Mono", "Lucida Console", "Lucida Sans Typewriter", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", "Liberation Mono", "Nimbus Mono L", Monaco, "Courier New", Courier, monospace;
+	flex: 0 0 200px;
 }
 
-footer span {
-	display: block;
+monitor-user-list {
+	flex: 1 1 auto;
 }
+

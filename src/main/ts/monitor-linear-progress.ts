@@ -1,23 +1,18 @@
 import { LinearProgress } from '@material/mwc-linear-progress';
-import { customElement, html } from 'lit-element';
+import { css, customElement } from 'lit-element';
+import { style } from '../css/monitor-linear-progress.css';
 
 @customElement('monitor-linear-progress')
 export class MonitoLinearProgress extends LinearProgress {
 
-	render() {
-		return html`
-			<style>
-				span.mdc-linear-progress__bar-inner {
-					background-color: #EA9B3E;
-				}
 
-				.mdc-linear-progress--indeterminate div.mdc-linear-progress__secondary-bar {
-					visibility: inherit;
-				}
-			</style>
-			${super.render()}
+	static get styles() {
+		return css`
+			${super.styles}
+			${style}
 		`;
 	}
+
 }
 
 
