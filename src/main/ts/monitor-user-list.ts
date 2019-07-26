@@ -52,8 +52,10 @@ export class MonitorUserList extends LitElement {
 
 			row.onchange = (event) => this.onCheckBoxChanged(event);
 
-			if (oldRow)
+			if (oldRow) {
 				row.checked = oldRow.checked;
+				row.visible = oldRow.visible;
+			}
 
 			return row;
 		});
@@ -63,6 +65,7 @@ export class MonitorUserList extends LitElement {
 
 	_users: Array<MonitorUser> = [];
 	_rows: Array<MonitorUserListRow> = [];
+	_searchHandle: number = null;
 
 	@property({ type: Boolean })
 	get userSelected(): boolean {
@@ -88,8 +91,8 @@ export class MonitorUserList extends LitElement {
 				<monitor-button icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="Desconectar">
 					Desconectar
 				</monitor-button>
+				<monitor-text-input outlined icon="search" @change="${this.onSearchChanged}" @input="${this.onSearchInput}"></monitor-text-input>
 				<!--
-										<monitor-text-input outlined icon="search"></monitor-text-input>
 										<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
 										-->
 			</header>
@@ -126,6 +129,42 @@ export class MonitorUserList extends LitElement {
         `;
 	}
 
+	onSearchChanged(event: Event) {
+		console.log('changed', event);
+	}
+
+	onSearchInput(event: Event) {
+		console.log('input', event);
+
+		if (this._searchHandle !== null) {
+			cancelAnimationFrame(this._searchHandle);
+		}
+
+		this._searchHandle = requestAnimationFrame(() => {
+			this._searchHandle = null;
+			const text = this.renderRoot.querySelector('monitor-text-input').value;
+
+			if (text.trim() === '') {
+				this._rows.every(row => {
+					row.visible = true;
+					return (this._searchHandle === null);
+				});
+
+				return;
+			}
+
+			const query = new RegExp(text, "i");
+
+			this._rows.every(row => {
+				row.visible = findInSearch(row.user, query);
+
+				return (this._searchHandle === null);
+			});
+
+		});
+	}
+
+
 	onCheckBoxChanged(event: Event) {
 		this.requestUpdate('userSelected');
 	}
@@ -152,7 +191,7 @@ export class MonitorUserList extends LitElement {
 	onButtonCheckAllClick(event: MouseEvent) {
 		let check = !this._rows.some((row) => row.checked);
 
-		this._rows.forEach(row => row.checked = check);
+		this._rows.forEach(row => row.visible ? row.checked = check : false);
 
 		this.requestUpdate('checkAllIcon');
 	}
@@ -176,3 +215,12 @@ export class MonitorUserList extends LitElement {
 }
 
 
+
+const findInSearch = (user: MonitorUser, query: RegExp) =>  {
+	return Object.keys(user)
+		.some((key: keyof MonitorUser) => query.test(user[key].toString()))
+
+		//.some((key: keyof MonitorUser) => user[key].toString().indexOf(query) > -1)
+}
+
+// const findInSearch = (user: MonitorUser, query: string) => ['username', 'computerName', 'server', 'server'].every((key: keyof MonitorUser) => a[key] === b[key]);

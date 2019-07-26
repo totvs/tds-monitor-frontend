@@ -15,8 +15,23 @@ export class MonitorUserListRow extends LitElement {
 	@property({ type: Object })
 	user: MonitorUser = null;
 
-	@property({type: Boolean, reflect: true, attribute: true})
+	@property({ type: Boolean, reflect: true, attribute: true })
 	checked = false;
+
+	@property({ type: Boolean, reflect: true, attribute: true })
+	set visible(value: boolean) {
+		const oldValue = this.visible;
+
+		if (value)
+			this.style.removeProperty('display');
+		else
+			this.style.display = 'none';
+
+		this.requestUpdate('visible', oldValue);
+	}
+	get visible() {
+		return this.style.display !== 'none';
+	}
 
 	constructor(user: MonitorUser) {
 		super();

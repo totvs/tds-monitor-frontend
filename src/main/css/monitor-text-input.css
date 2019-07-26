@@ -13,6 +13,7 @@
 
 div {
 	width: 100%;
+	height: 100%;
 	display: block;
 	position: relative;
 }
@@ -52,14 +53,23 @@ textarea {
 	will-change: border,margin;
 	transition: border .2s cubic-bezier(.4,0,.2,1), margin .2s cubic-bezier(.4,0,.2,1);
 
-	border: var(--material-input-line-height, 1px) solid var(--material-input-border-color, rgb(206,212,218));
+	border-width: var(--material-input-line-height, 1px);
+	border-style: solid;
+	border-color: var(--material-input-border-color, rgb(206,212,218));
 	border-radius: 4px;
-	margin: 1px;
+	margin: 0px;
+}
+
+:host([outlined][icon]) input,
+:host([outlined][icon]) textarea {
+	padding: 0 0 0 40px;
 }
 
 :host([outlined]) input:focus,
 :host([outlined]) textarea:focus {
-	border: var(--material-input-highlight-line-height, 2px) solid var(--material-input-highlight-color, rgb(54,79,199));
+	border-width: var(--material-input-highlight-line-height, 1px);
+	border-style: solid;
+	border-color: var(--material-input-highlight-color, rgb(54,79,199));
 	margin: 0px;
 }
 
@@ -228,4 +238,11 @@ textarea:focus ~ hr:after {
 
 .material-input__message:empty{
 	display: none;
+}
+
+mwc-icon {
+    position: absolute;
+	left: 10px;
+	top: 50%;
+	transform: translateY(-50%);
 }

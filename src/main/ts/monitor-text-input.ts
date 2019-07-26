@@ -48,32 +48,26 @@ export class MonitorTextInput extends LitElement {
 	}
 
 	render() {
-		// let min = html`${((this.type === 'number') && (this.min !== null)) ? 'min="${this.min}"' : ''}`,
-		// max = html`${((this.type === 'number') && (this.max !== null)) ? 'max="${this.max}"' : ''}`;
-
-		//max = ((this.type === 'number') && (this.max !== null)) ? html`min="${this.max}"` : '';
-
 		let min = (this.type === 'number') ? this.min : null,
 			max = (this.type === 'number') ? this.max : null;
 
-//				${min !== null ? html`min="${min}"` : ''}
-//${max !== null ? html`max="${max}"` : ''}
 
 		return html`
 			<div class="${this.value === '' ? ' is-empty' : ''}">
-				${this.icon ? html`<mwc-icon-button icon="${this.icon}"></mwc-icon-button>` : ''}
+				${this.icon ? html`<mwc-icon>${this.icon}</mwc-icon>` : ''}
 				${this.type !== 'textarea' ? html`
 				<input
 					type="${this.type}"
 					.value="${this.value}"
 					?disabled=${this.disabled}
 					@change="${this.onInputChanged}"
+					@input="${this.onInputInput}"
 					@keydown="${this.onInputKeyDown}"
 					min=${min}
 					max=${max}
 				 	tabindex="0" />
 				 ` : html`
-				 <textarea .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @keydown="${this.onInputKeyDown}"
+				 <textarea .value="${this.value}" ?disabled=${this.disabled} @change="${this.onInputChanged}" @input="${this.onInputInput}" @keydown="${this.onInputKeyDown}"
 				 tabindex="0" />
 				`}
 				<label>${this.label}</label>
@@ -85,6 +79,14 @@ export class MonitorTextInput extends LitElement {
 
 	onInputChanged(event: Event) {
 		this.value = (event.target as HTMLInputElement).value;
+
+		//this.dispatchEvent(new Event(event.type, event));
+	}
+
+	onInputInput(event: Event) {
+		this.value = (event.target as HTMLInputElement).value;
+
+		//this.dispatchEvent(new Event(event.type, event));
 	}
 
 	onInputKeyDown(event: KeyboardEvent) {
@@ -102,5 +104,11 @@ export class MonitorTextInput extends LitElement {
 		}
 	}
 
+}
+
+declare global {
+	interface HTMLElementTagNameMap {
+		'monitor-text-input': MonitorTextInput;
+	}
 }
 

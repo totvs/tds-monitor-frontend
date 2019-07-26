@@ -39,7 +39,12 @@ export class MonitorServerView extends LitElement {
 
 	set users(value: MonitorUser[]) {
 		this.renderRoot.querySelector('monitor-user-list').users = value;
+
+		this.requestUpdate('users');
 	};
+	get users(){
+		return this.renderRoot.querySelector('monitor-user-list').users;
+	}
 
 	constructor() {
 		super();
@@ -50,11 +55,11 @@ export class MonitorServerView extends LitElement {
 	}
 
 	render(): TemplateResult {
-
 		return html`
 			${this.server ? html`
 			<header>
 				<h2>${this.name} (${this.server.address}:${this.server.port})</h2>
+				<span>Usuários conectados: ${this.users.length}</span>
 			</header>
 			` : ''}
 			<monitor-user-list></monitor-user-list>

@@ -52,7 +52,12 @@ tbody tr:hover {
 }
 
 header {
+	height: 40px;
 	display: flex;
 	align-items: center;
 	margin-bottom: 10px;
+}
+
+header monitor-text-input {
+	height: 100%;
 }
