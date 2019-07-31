@@ -4,6 +4,7 @@ import { style } from '../css/monitor-server-item.css';
 import { monitorIcon } from './icon-monitor-svg';
 import { MonitorAuthenticationDialog } from './monitor-authentication-dialog';
 import { MenuOptions, MonitorMenu } from './monitor-menu';
+import { MonitorOtherActionsDialog } from './monitor-other-actions-dialog';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -64,7 +65,7 @@ export class MonitorServerItem extends LitElement {
 
 	async disconnectServer(): Promise<boolean> {
 		this.server.disconnect();
-		//this.server = null;
+
 		this.status = 'disconnected';
 
 		return true;
@@ -91,18 +92,6 @@ export class MonitorServerItem extends LitElement {
 
 			if (!result) {
 				connectionFailed = true;
-				//this.server = null;
-				// this.status = 'error';
-
-				// if (dispatchEvents) {
-				// 	this.dispatchEvent(new CustomEvent<string>('server-error', {
-				// 		detail: 'Nao foi possivel conectar ao servidor!',
-				// 		bubbles: true,
-				// 		composed: true
-				// 	}));
-				// }
-
-				// return false;
 			}
 		}
 		else {
@@ -124,41 +113,15 @@ export class MonitorServerItem extends LitElement {
 				}
 				else {
 					connectionFailed = true;
-					//this.server = null;
-					// this.status = 'error';
-
-					// if (dispatchEvents) {
-					// 	this.dispatchEvent(new CustomEvent<string>('server-error', {
-					// 		detail: 'Nao foi possivel conectar ao servidor!',
-					// 		bubbles: true,
-					// 		composed: true
-					// 	}));
-					// }
-
-					// return false;
 				}
 			}
 			else {
 				connectionFailed = true;
-				//this.server = null;
-				// this.status = 'error';
-
-				// if (dispatchEvents) {
-				// 	this.dispatchEvent(new CustomEvent<string>('server-error', {
-				// 		detail: 'Nao foi possivel conectar ao servidor!',
-				// 		bubbles: true,
-				// 		composed: true
-				// 	}));
-				// }
-
-				// return false;
 			}
 		}
 
 		if (!connectionFailed) {
 			this.status = 'connected';
-
-			this.getConnectionStatus();
 		}
 		else {
 			this.status = 'error';
@@ -277,22 +240,11 @@ export class MonitorServerItem extends LitElement {
 			}
 
 			if (this.status === 'connected') {
-				if (this.enableNewConnections) {
-					options.items.push({
-						text: 'Desabilitar novas conexões',
-						callback: () => { this.setConnectionStatus(false) }
-					});
-				}
-				else {
-					options.items.push({
-						text: 'Habilitar novas conexões',
-						callback: () => { this.setConnectionStatus(true) }
-					});
-				}
-
 				options.items.push({
-					text: 'Parar o servidor',
-					callback: () => { this.stopServer() }
+					text: 'Outras ações',
+					callback: () => {
+						this.otherActions();
+					 }
 				});
 			}
 		}
@@ -307,18 +259,12 @@ export class MonitorServerItem extends LitElement {
 		app.removeServer(this.name);
 	}
 
-	stopServer() {
-		this.server.stopServer();
-	}
-
-	getConnectionStatus() {
-		this.server.getConnectionStatus()
+	async otherActions() {
+		await this.server.getConnectionStatus()
 			.then((status) => this.enableNewConnections = status);
-	}
 
-	setConnectionStatus(status: boolean) {
-		this.enableNewConnections = status
-		this.server.setConnectionStatus(this.enableNewConnections);
+		let dialog = new MonitorOtherActionsDialog(this.server, this.enableNewConnections);
+		dialog.show();
 	}
 }
 

@@ -5,6 +5,7 @@ import { MonitorButton } from './monitor-button';
 import { MonitorSendMessageDialog } from './monitor-send-message-dialog';
 import { MonitorUserListRow } from './monitor-user-list-row';
 import { MonitorKillUserDialog } from './monitor-kill-user-dialog';
+import { MonitorOtherActionsDialog } from './monitor-other-actions-dialog';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -37,6 +38,8 @@ export class MonitorUserList extends LitElement {
 		return this._server;
 	}
 	_server: TdsMonitorServer = null;
+	_connectionStatus: boolean = false;
+	_footer: string;
 
 	@property({ type: Array })
 	get users(): MonitorUser[] {
@@ -61,6 +64,20 @@ export class MonitorUserList extends LitElement {
 		});
 
 		this.requestUpdate('userSelected', oldValue);
+
+		var lastUpdate = new Date().toLocaleDateString(undefined, {
+			month: '2-digit',
+			day: '2-digit',
+			year: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit',
+			second: '2-digit'
+		});
+
+		const app = document.querySelector('monitor-app');
+		this._footer = this.users.length + " usuário"+(this.users.length>1?"s":"") + " conectado" + (this.users.length>1?"s":"")
+			+ " - Intervalo para auto atualização: " + (app.config.updateInterval > 0 ? (app.config.updateInterval + " segundos") : "desativado" )
+			+ " - Atualizado em: " + lastUpdate;
 	}
 
 	_users: Array<MonitorUser> = [];
@@ -84,17 +101,29 @@ export class MonitorUserList extends LitElement {
 		return html`
 			<header>
 				<monitor-button small icon="${this.checkAllIcon}" @click="${this.onButtonCheckAllClick}"></monitor-button>
-				<monitor-button small icon="arrow_drop_down"></monitor-button>
-				<monitor-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem">
-					Enviar Mensagem
-				</monitor-button>
-				<monitor-button icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="Desconectar">
-					Desconectar
-				</monitor-button>
+				<monitor-button small icon="arrow_drop_down" title="Seleção"></monitor-button>
+				&nbsp;
+				&nbsp;
+				<monitor-button small icon="refresh" @click="${this.onRefresh}" title="Atualizar"></monitor-button>
+				&nbsp;
+				&nbsp;
+				<monitor-button small icon="update" @click="${this.onSelfRefresh}" title="Auto atualizar"></monitor-button>
+				<!-- monitor-button small icon="arrow_drop_down" title="Intervalo de auto atualizar"></monitor-button -->
+				&nbsp;
+				&nbsp;
+				<monitor-button small icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem"></monitor-button>
+				&nbsp;
+				&nbsp;
+				<monitor-button small icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="Desconectar"></monitor-button>
+				&nbsp;
+				&nbsp;
 				<monitor-text-input outlined icon="search" @change="${this.onSearchChanged}" @input="${this.onSearchInput}"></monitor-text-input>
+				&nbsp;
+				&nbsp;
+				<monitor-button small icon="more_vert" @click="${this.onButtonOtherActionsClick}" title="Outras ações"></monitor-button>
 				<!--
-										<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
-										-->
+				<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
+				-->
 			</header>
 
 			<div>
@@ -110,8 +139,8 @@ export class MonitorUserList extends LitElement {
 							<th>Program</th>
 							<th>Connected</th>
 							<th>Elapsed Time</th>
-							<th>Instructions</th>
-							<th>Instructions/Seconds</th>
+							<th>Instruc.</th>
+							<th>Instruc./Sec</th>
 							<th>Comments</th>
 							<th>Memory</th>
 							<th>SID</th>
@@ -126,6 +155,10 @@ export class MonitorUserList extends LitElement {
 					</tbody>
 				</table>
 			</div>
+
+			<footer>
+				<span class="footer">${this._footer}</span>
+			</footer>
         `;
 	}
 
@@ -164,6 +197,15 @@ export class MonitorUserList extends LitElement {
 		});
 	}
 
+	onRefresh(event: Event) {
+		if (this.server) {
+			this.server.getUsers()
+			.then(users => this.users = users);
+		}
+	}
+
+	onSelfRefresh(event: Event) {
+	}
 
 	onCheckBoxChanged(event: Event) {
 		this.requestUpdate('userSelected');
@@ -194,6 +236,14 @@ export class MonitorUserList extends LitElement {
 		this._rows.forEach(row => row.visible ? row.checked = check : false);
 
 		this.requestUpdate('checkAllIcon');
+	}
+
+	async onButtonOtherActionsClick(event: MouseEvent) {
+		await this.server.getConnectionStatus()
+		.then((status) => this._connectionStatus = status);
+
+		let dialog = new MonitorOtherActionsDialog(this.server, this._connectionStatus);
+		dialog.show();
 	}
 
 	@property({ type: String })

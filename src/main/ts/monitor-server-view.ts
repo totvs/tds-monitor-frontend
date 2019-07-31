@@ -59,7 +59,6 @@ export class MonitorServerView extends LitElement {
 			${this.server ? html`
 			<header>
 				<h2>${this.name} (${this.server.address}:${this.server.port})</h2>
-				<span>Usuários conectados: ${this.users.length}</span>
 			</header>
 			` : ''}
 			<monitor-user-list></monitor-user-list>
@@ -88,6 +87,11 @@ export class MonitorServerView extends LitElement {
 					.then(users => this.users = users);
 				}
 			}, (app.config.updateInterval * 1000));
+		}
+
+		if (this.server) {
+			this.server.getUsers()
+			.then(users => this.users = users);
 		}
 	}
 

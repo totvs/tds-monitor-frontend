@@ -13,6 +13,10 @@ div {
 	width: 100%;
 }
 
+span.footer {
+	padding: 5px;
+	text-align: right;
+}
 
 table {
 	border-collapse: collapse;
