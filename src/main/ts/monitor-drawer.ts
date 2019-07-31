@@ -83,15 +83,6 @@ export class MonitorDrawer extends LitElement {
 						separator: true
 					},
 					{
-						text: 'Recarregar pagina',
-						callback: () => { window.reload() }
-					},
-					{
-						text: 'Ferramentas do desenvolvedor',
-						callback: () => { window.toggleDevTools() },
-						separator: true
-					},
-					{
 						text: 'Sobre...',
 						callback: () => { this.showAboutDialog() }
 					}
