@@ -57,8 +57,8 @@ export class MonitorAuthenticationDialog extends MonitorDialog {
 			<monitor-text-input id="user" tabindex="2" type="text" label="Usuário"></monitor-text-input>
 			<monitor-text-input id="password" tabindex="3" type="password" label="Senha"></monitor-text-input>
 			<label>
-				<monitor-checkbox id="store" tabindex="4" title="Armazenar informacoes para reconexão automática"></monitor-checkbox>
-				<span>Armazenar informacoes para reconexão automática</span>
+				<monitor-checkbox id="store" tabindex="4" title="Armazenar informações para reconexão automática"></monitor-checkbox>
+				<span>Armazenar informações para reconexão automática</span>
 			</label>
 		`;
 	}
