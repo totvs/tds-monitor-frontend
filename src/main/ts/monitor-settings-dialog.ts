@@ -56,7 +56,7 @@ export class MonitorSettingsDialog extends MonitorDialog {
 				</select>
 			</section>
 			<section>
-				<label for="updateInterval">Intervalo para atualizacao de informações</label>
+				<label for="updateInterval">Intervalo para atualização de informações</label>
 				<monitor-text-input id="updateInterval" tabindex="1" type="number" min="0" max="3600" small value="${updateInterval}"></monitor-text-input>
 			</section>
 			<section>
