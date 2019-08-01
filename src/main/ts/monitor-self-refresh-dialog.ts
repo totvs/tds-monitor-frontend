@@ -53,19 +53,19 @@ export class MonitorSelfRefreshDialog extends MonitorDialog {
 	get body() {
 		return html`
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setFastInterval" tabindex="1" name="setUpdateIntervalType" title="5 segundos" [checked]="this.selected == 1"></monitor-radio>
+				<monitor-radio id="setFastInterval" tabindex="1" name="setUpdateIntervalType" title="5 segundos" ?checked=${this.selected == 1}></monitor-radio>
 				<span>5 segundos</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setMediumInterval" tabindex="2" name="setUpdateIntervalType" title="15 segundos" [checked]="this.selected == 2"></monitor-radio>
+				<monitor-radio id="setMediumInterval" tabindex="2" name="setUpdateIntervalType" title="15 segundos" ?checked=${this.selected == 2}></monitor-radio>
 				<span>15 segundos</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setSlowInterval" tabindex="3" name="setUpdateIntervalType" title="30 segundos" [checked]="this.selected == 3"></monitor-radio>
+				<monitor-radio id="setSlowInterval" tabindex="3" name="setUpdateIntervalType" title="30 segundos" ?checked=${this.selected == 3}></monitor-radio>
 				<span>30 segundos</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setCustomInterval" tabindex="4" name="setUpdateIntervalType" title="Definir intervalo personalizado" [checked]="this.selected == 4"></monitor-radio>
+				<monitor-radio id="setCustomInterval" tabindex="4" name="setUpdateIntervalType" title="Definir intervalo personalizado" ?checked=${this.selected == 4}></monitor-radio>
 				<monitor-text-input id="customUpdateInterval" tabindex="5" type="number" min="0" max="3600" small value="${this.updateInterval}"></monitor-text-input><span>segundos</span>
 			</label>
 		`;
