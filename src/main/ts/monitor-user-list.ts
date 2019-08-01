@@ -6,6 +6,7 @@ import { MonitorSendMessageDialog } from './monitor-send-message-dialog';
 import { MonitorUserListRow } from './monitor-user-list-row';
 import { MonitorKillUserDialog } from './monitor-kill-user-dialog';
 import { MonitorOtherActionsDialog } from './monitor-other-actions-dialog';
+import { MonitorSelfRefreshDialog } from './monitor-self-refresh-dialog';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -205,6 +206,8 @@ export class MonitorUserList extends LitElement {
 	}
 
 	onSelfRefresh(event: Event) {
+		let dialog = new MonitorSelfRefreshDialog();
+		dialog.show();
 	}
 
 	onCheckBoxChanged(event: Event) {
@@ -215,7 +218,6 @@ export class MonitorUserList extends LitElement {
 		let users = this._rows
 			.filter((row) => row.checked)
 			.map((row) => row.user);
-
 
 		let dialog = new MonitorSendMessageDialog(this.server, users);
 		dialog.show();
@@ -240,7 +242,7 @@ export class MonitorUserList extends LitElement {
 
 	async onButtonOtherActionsClick(event: MouseEvent) {
 		await this.server.getConnectionStatus()
-		.then((status) => this._connectionStatus = status);
+			.then((status: boolean) => this._connectionStatus = status);
 
 		let dialog = new MonitorOtherActionsDialog(this.server, this._connectionStatus);
 		dialog.show();
@@ -263,8 +265,6 @@ export class MonitorUserList extends LitElement {
 	}
 
 }
-
-
 
 const findInSearch = (user: MonitorUser, query: RegExp) =>  {
 	return Object.keys(user)

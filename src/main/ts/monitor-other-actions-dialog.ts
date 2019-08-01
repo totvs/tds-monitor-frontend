@@ -1,11 +1,11 @@
 import { customElement, CSSResult, html } from 'lit-element';
-import { style } from '../css/monitor-kill-user-dialog.css';
+import { style } from '../css/monitor-other-actions-dialog.css';
 import { MonitorDialog } from './monitor-dialog';
 import { MonitorButton } from './monitor-button';
-import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
+import { TdsMonitorServer } from '@totvs/tds-languageclient';
 import { MonitorRadio } from './monitor-radio';
 
-@customElement('monitor-other-action-dialog')
+@customElement('monitor-other-actions-dialog')
 export class MonitorOtherActionsDialog extends MonitorDialog {
 
 	server: TdsMonitorServer;
@@ -39,7 +39,7 @@ export class MonitorOtherActionsDialog extends MonitorDialog {
 	get body() {
 		return html`
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setConnectionStatus" checked tabindex="1" name="otherActionsType" title="${this.connectionStatus ? 'Desabilitar' : 'Habilitar'} novas conexões"></monitor-radio>
+				<monitor-radio id="setConnectionStatus" tabindex="1" name="otherActionsType" title="${this.connectionStatus ? 'Desabilitar' : 'Habilitar'} novas conexões"></monitor-radio>
 				<span>${this.connectionStatus ? 'Desabilitar' : 'Habilitar'} novas conexões</span>
 			</label>
 			<label @click="${this.onLabelClick}">
@@ -74,15 +74,9 @@ export class MonitorOtherActionsDialog extends MonitorDialog {
 
 	onOkButtonClicked(event: Event) {
 		this.blockControls(true);
-		//this.progress = 'visible';
 
-		let setConnectionStatus = this.renderRoot.querySelector('monitor-radio#setConnectionStatus'),
-			stopServer = this.renderRoot.querySelector('monitor-radio#stopServer');
-			//progressbar = this.renderRoot.querySelector('monitor-linear-progress'),
-			//step = 1 / this.users.length;
-
-		//progressbar.determinate = true;
-		//progressbar.progress = 0;
+		let setConnectionStatus = this.renderRoot.querySelector<MonitorRadio>('monitor-radio#setConnectionStatus'),
+			stopServer = this.renderRoot.querySelector<MonitorRadio>('monitor-radio#stopServer');
 
 		if (setConnectionStatus.checked) {
 			this.server.setConnectionStatus(!this.connectionStatus);
@@ -92,7 +86,6 @@ export class MonitorOtherActionsDialog extends MonitorDialog {
 		}
 
 		this.blockControls(false);
-		//this.progress = 'hidden';
 		this.close();
 	}
 
