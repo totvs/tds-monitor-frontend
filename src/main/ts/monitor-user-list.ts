@@ -40,7 +40,9 @@ export class MonitorUserList extends LitElement {
 	}
 	_server: TdsMonitorServer = null;
 	_connectionStatus: boolean = false;
-	_footer: string;
+	_footerConnectedUser: string;
+	_footerUpdateInterval: string;
+	_footerLastUpdate: string;
 
 	@property({ type: Array })
 	get users(): MonitorUser[] {
@@ -74,11 +76,10 @@ export class MonitorUserList extends LitElement {
 			minute: '2-digit',
 			second: '2-digit'
 		});
-
 		const app = document.querySelector('monitor-app');
-		this._footer = this.users.length + " usuário"+(this.users.length>1?"s":"") + " conectado" + (this.users.length>1?"s":"")
-			+ " - Intervalo para auto atualização: " + (app.config.updateInterval > 0 ? (app.config.updateInterval + " segundos") : "desativado" )
-			+ " - Atualizado em: " + lastUpdate;
+		this._footerConnectedUser = (this.users.length>0?this.users.length:'Nenhum') + " usuário"+(this.users.length>1?"s":"") + " conectado" + (this.users.length>1?"s":"");
+		this._footerUpdateInterval = "Intervalo para auto atualização: " + (app.config.updateInterval > 0 ? (app.config.updateInterval + " segundos") : "Desativado" );
+		this._footerLastUpdate = "Atualizado em: " + lastUpdate;
 	}
 
 	_users: Array<MonitorUser> = [];
@@ -158,7 +159,11 @@ export class MonitorUserList extends LitElement {
 			</div>
 
 			<footer>
-				<span class="footer">${this._footer}</span>
+				<span class="footer">${this._footerConnectedUser}</span>
+				-
+				<span class="footer">${this._footerUpdateInterval}</span>
+				-
+				<span class="footer">${this._footerLastUpdate}</span>
 			</footer>
         `;
 	}

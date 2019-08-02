@@ -32,7 +32,10 @@ export class MonitorSelfRefreshDialog extends MonitorDialog {
 		const app = document.querySelector('monitor-app');
 
 		this.updateInterval = app.config.updateInterval;
-		if (this.updateInterval == 5) {
+		if (this.updateInterval == 0) {
+			this.selected = 0;
+		}
+		else if (this.updateInterval == 5) {
 			this.selected = 1;
 		}
 		else if (this.updateInterval == 15) {
@@ -53,20 +56,24 @@ export class MonitorSelfRefreshDialog extends MonitorDialog {
 	get body() {
 		return html`
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setFastInterval" tabindex="1" name="setUpdateIntervalType" title="5 segundos" ?checked=${this.selected == 1}></monitor-radio>
+				<monitor-radio id="setOffInterval" tabindex="1" name="setUpdateIntervalType" title="Desativado" ?checked=${this.selected == 0}></monitor-radio>
+				<span>Desativado</span>
+			</label>
+			<label @click="${this.onLabelClick}">
+				<monitor-radio id="setFastInterval" tabindex="2" name="setUpdateIntervalType" title="5 segundos" ?checked=${this.selected == 1}></monitor-radio>
 				<span>5 segundos</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setMediumInterval" tabindex="2" name="setUpdateIntervalType" title="15 segundos" ?checked=${this.selected == 2}></monitor-radio>
+				<monitor-radio id="setMediumInterval" tabindex="3" name="setUpdateIntervalType" title="15 segundos" ?checked=${this.selected == 2}></monitor-radio>
 				<span>15 segundos</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setSlowInterval" tabindex="3" name="setUpdateIntervalType" title="30 segundos" ?checked=${this.selected == 3}></monitor-radio>
+				<monitor-radio id="setSlowInterval" tabindex="4" name="setUpdateIntervalType" title="30 segundos" ?checked=${this.selected == 3}></monitor-radio>
 				<span>30 segundos</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setCustomInterval" tabindex="4" name="setUpdateIntervalType" title="Definir intervalo personalizado" ?checked=${this.selected == 4}></monitor-radio>
-				<monitor-text-input id="customUpdateInterval" tabindex="5" type="number" min="0" max="3600" small value="${this.updateInterval}"></monitor-text-input><span>segundos</span>
+				<monitor-radio id="setCustomInterval" tabindex="5" name="setUpdateIntervalType" title="Definir intervalo personalizado" ?checked=${this.selected == 4}></monitor-radio>
+				<monitor-text-input id="customUpdateInterval" tabindex="6" type="number" min="0" max="3600" small value="${this.updateInterval}"></monitor-text-input><span>segundos</span>
 			</label>
 		`;
 	}
@@ -104,14 +111,18 @@ export class MonitorSelfRefreshDialog extends MonitorDialog {
 
 		const app = document.querySelector('monitor-app');
 
-		let setFastInterval = this.renderRoot.querySelector<MonitorRadio>('monitor-radio#setFastInterval'),
+		let setOffInterval = this.renderRoot.querySelector<MonitorRadio>('monitor-radio#setOffInterval'),
+			setFastInterval = this.renderRoot.querySelector<MonitorRadio>('monitor-radio#setFastInterval'),
 			setMediumInterval = this.renderRoot.querySelector<MonitorRadio>('monitor-radio#setMediumInterval'),
 			setSlowInterval = this.renderRoot.querySelector<MonitorRadio>('monitor-radio#setSlowInterval'),
 			setCustomInterval = this.renderRoot.querySelector<MonitorRadio>('monitor-radio#setCustomInterval'),
 			customUpdateInterval = parseInt(this.renderRoot.querySelector<MonitorTextInput>('monitor-text-input#customUpdateInterval').value, 0),
 			newUpdateInterval;
 
-		if (setFastInterval.checked) {
+		if (setOffInterval.checked) {
+			newUpdateInterval = 0;
+		}
+		else if (setFastInterval.checked) {
 			newUpdateInterval = 5;
 		}
 		else if (setMediumInterval.checked) {
