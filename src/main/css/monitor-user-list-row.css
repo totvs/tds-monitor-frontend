@@ -8,15 +8,16 @@
 	border-bottom: 1px solid rgba(0,0,0,0.12);
 	will-change: background-color;
 	transition: background-color .2s cubic-bezier(.4,0,.2,1);
+	height: 46px;
 }
 
 :host(:hover) {
 	background-color: rgba(158,158,158,.2);
 }
 
-th, td {
+td {
 	white-space: nowrap;
-	padding: 3px 5px;
+	padding: 0 5px;
 }
 
 td.center {

@@ -2,11 +2,11 @@ import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
 import { CSSResult, customElement, html, LitElement, property, query } from 'lit-element';
 import { style } from '../css/monitor-user-list.css';
 import { MonitorButton } from './monitor-button';
-import { MonitorSendMessageDialog } from './monitor-send-message-dialog';
-import { MonitorUserListRow } from './monitor-user-list-row';
 import { MonitorKillUserDialog } from './monitor-kill-user-dialog';
 import { MonitorOtherActionsDialog } from './monitor-other-actions-dialog';
 import { MonitorSelfRefreshDialog } from './monitor-self-refresh-dialog';
+import { MonitorSendMessageDialog } from './monitor-send-message-dialog';
+import { MonitorUserListRow } from './monitor-user-list-row';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -14,8 +14,9 @@ declare global {
 	}
 }
 
-const sameUser = (a: MonitorUser, b: MonitorUser) => ['threadId', 'username', 'computerName', 'server'].every((key: keyof MonitorUser) => a[key] === b[key]);
-
+interface MonitorUserRow extends MonitorUser {
+	checked: boolean;
+}
 
 @customElement('monitor-user-list')
 export class MonitorUserList extends LitElement {
@@ -44,14 +45,40 @@ export class MonitorUserList extends LitElement {
 	_footerUpdateInterval: string;
 	_footerLastUpdate: string;
 
+
+	query: RegExp = null;
+
 	@property({ type: Array })
 	get users(): MonitorUser[] {
-		return this._users;
+		const users = Array.from(this._users.values())
+
+		if (this.query !== null)
+			return users.filter((user) => findInSearch(user, this.query));
+
+		return users;
 	};
 	set users(newValue: MonitorUser[]) {
 		let oldValue = this._users;
+		const newMap = new Map<string, MonitorUserRow>();
 
-		this._users = newValue;
+
+		newValue.forEach((user: MonitorUser) => {
+			const key = `${user.username}${user.computerName}${user.threadId}${user.server}`;
+
+			if (this._users.has(key)) {
+				const oldUser = this._users.get(key);
+
+				newMap.set(key, Object.assign({}, oldUser, user));
+			}
+			else {
+				newMap.set(key, Object.assign({ checked: false}, user));
+			}
+		});
+
+		this._users.clear();
+		this._users = newMap;
+
+		/*
 		this._rows = this.users.map((user) => {
 			let row = new MonitorUserListRow(user),
 				oldRow = this._rows.find(row => sameUser(row.user, user));
@@ -59,12 +86,15 @@ export class MonitorUserList extends LitElement {
 			row.onchange = (event) => this.onCheckBoxChanged(event);
 
 			if (oldRow) {
+				oldRow.onchange = null;
+
 				row.checked = oldRow.checked;
 				row.visible = oldRow.visible;
 			}
 
 			return row;
 		});
+		*/
 
 		this.requestUpdate('userSelected', oldValue);
 
@@ -77,13 +107,16 @@ export class MonitorUserList extends LitElement {
 			second: '2-digit'
 		});
 		const app = document.querySelector('monitor-app');
-		this._footerConnectedUser = (this.users.length>0?this.users.length:'Nenhum') + " usuário"+(this.users.length>1?"s":"") + " conectado" + (this.users.length>1?"s":"");
-		this._footerUpdateInterval = "Intervalo para auto atualização: " + (app.config.updateInterval > 0 ? (app.config.updateInterval + " segundos") : "Desativado" );
+		this._footerConnectedUser = (this.users.length > 0 ? this.users.length : 'Nenhum') + " usuário" + (this.users.length > 1 ? "s" : "") + " conectado" + (this.users.length > 1 ? "s" : "");
+		this._footerUpdateInterval = "Intervalo para auto atualização: " + (app.config.updateInterval > 0 ? (app.config.updateInterval + " segundos") : "Desativado");
 		this._footerLastUpdate = "Atualizado em: " + lastUpdate;
 	}
 
-	_users: Array<MonitorUser> = [];
-	_rows: Array<MonitorUserListRow> = [];
+	get rows(): Array<MonitorUserListRow> {
+		return Array.from(this.renderRoot.querySelectorAll('monitor-user-list-row'));
+	}
+
+	_users: Map<string, MonitorUserRow> = new Map();
 	_searchHandle: number = null;
 
 	@property({ type: Boolean })
@@ -94,10 +127,6 @@ export class MonitorUserList extends LitElement {
 	static get styles(): CSSResult {
 		return style;
 	}
-
-	//<mwc-icon-button icon="not_interested">
-	//<mwc-icon-button icon="check_box_outline_blank"></mwc-icon-button>
-	//<mwc-icon-button icon="arrow_drop_down"></mwc-icon-button>
 
 	render() {
 		return html`
@@ -116,7 +145,8 @@ export class MonitorUserList extends LitElement {
 				<monitor-button small icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem"></monitor-button>
 				&nbsp;
 				&nbsp;
-				<monitor-button small icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="Desconectar"></monitor-button>
+				<monitor-button small icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected}
+				 title="Desconectar"></monitor-button>
 				&nbsp;
 				&nbsp;
 				<monitor-text-input outlined icon="search" @change="${this.onSearchChanged}" @input="${this.onSearchInput}"></monitor-text-input>
@@ -124,8 +154,8 @@ export class MonitorUserList extends LitElement {
 				&nbsp;
 				<monitor-button small icon="more_vert" @click="${this.onButtonOtherActionsClick}" title="Outras ações"></monitor-button>
 				<!--
-				<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
-				-->
+							<monitor-button title="Desabilitar novas conexões" icon="not_interested">Desabilitar novas conexões</monitor-button>
+							-->
 			</header>
 
 			<div>
@@ -153,7 +183,31 @@ export class MonitorUserList extends LitElement {
 					</thead>
 
 					<tbody>
-						${this._rows}
+						${this.users.map((user: MonitorUserRow) => {
+							return html`
+								<monitor-user-list-row
+									@change="${this.onCheckBoxChanged}"
+									?checked=${user.checked}
+
+									username="${user.username}"
+									environment="${user.environment}"
+									computerName="${user.computerName}"
+									threadId="${user.threadId}"
+									server="${user.server}"
+									mainName="${user.mainName}"
+									loginTime="${user.loginTime}"
+									elapsedTime="${user.elapsedTime}"
+									totalInstrCount="${user.totalInstrCount}"
+									instrCountPerSec="${user.instrCountPerSec}"
+									remark="${user.remark}"
+									memUsed="${user.memUsed}"
+									sid="${user.sid}"
+									ctreeTaskId="${user.ctreeTaskId}"
+									inactiveTime="${user.inactiveTime}"
+									clientType="${user.clientType}">
+								</monitor-user-list-row>
+							`;
+						})}
 					</tbody>
 				</table>
 			</div>
@@ -173,40 +227,33 @@ export class MonitorUserList extends LitElement {
 	}
 
 	onSearchInput(event: Event) {
-		console.log('input', event);
-
 		if (this._searchHandle !== null) {
-			cancelAnimationFrame(this._searchHandle);
+			//console.log('canceling animation frame')
+
+			window.clearTimeout(this._searchHandle);
+			this._searchHandle = null;
 		}
 
-		this._searchHandle = requestAnimationFrame(() => {
+		this._searchHandle = window.setTimeout(() => {
 			this._searchHandle = null;
+
 			const text = this.renderRoot.querySelector('monitor-text-input').value;
 
 			if (text.trim() === '') {
-				this._rows.every(row => {
-					row.visible = true;
-					return (this._searchHandle === null);
-				});
-
-				return;
+				this.query = null;
+			}
+			else {
+				this.query = new RegExp(text, 'i');
 			}
 
-			const query = new RegExp(text, "i");
-
-			this._rows.every(row => {
-				row.visible = findInSearch(row.user, query);
-
-				return (this._searchHandle === null);
-			});
-
-		});
+			this.requestUpdate('users');
+		}, 300);
 	}
 
 	onRefresh(event: Event) {
 		if (this.server) {
 			this.server.getUsers()
-			.then(users => this.users = users);
+				.then(users => this.users = users);
 		}
 	}
 
@@ -216,31 +263,34 @@ export class MonitorUserList extends LitElement {
 	}
 
 	onCheckBoxChanged(event: Event) {
+		const row = event.target as MonitorUserListRow,
+			key = `${row.username}${row.computerName}${row.threadId}${row.server}`;
+
+		this._users.get(key).checked = row.checked;
+
 		this.requestUpdate('userSelected');
 	}
 
 	onButtonSendMessageClick(event: MouseEvent) {
-		let users = this._rows
-			.filter((row) => row.checked)
-			.map((row) => row.user);
+		const users = this.users
+			.filter((row: MonitorUserRow) => row.checked);
 
-		let dialog = new MonitorSendMessageDialog(this.server, users);
+		const dialog = new MonitorSendMessageDialog(this.server, users);
 		dialog.show();
 	}
 
 	onButtonKillUserDialogClick(event: MouseEvent) {
-		let users = this._rows
-			.filter((row) => row.checked)
-			.map((row) => row.user);
+		const users = this.users
+			.filter((row: MonitorUserRow) => row.checked);
 
-		let dialog = new MonitorKillUserDialog(this.server, users);
+		const dialog = new MonitorKillUserDialog(this.server, users);
 		dialog.show();
 	}
 
 	onButtonCheckAllClick(event: MouseEvent) {
-		let check = !this._rows.some((row) => row.checked);
+		const check = !this.rows.some((row) => row.checked);
 
-		this._rows.forEach(row => row.visible ? row.checked = check : false);
+		this.rows.forEach(row => row.visible ? row.checked = check : false);
 
 		this.requestUpdate('checkAllIcon');
 	}
@@ -255,27 +305,24 @@ export class MonitorUserList extends LitElement {
 
 	@property({ type: String })
 	get checkAllIcon(): string {
-		let checkedRows = this._rows.filter((row) => row.checked).length;
+		const rows = this.rows,
+			every = rows.every(row => row.checked),
+			none = !rows.some(row => row.checked);
 
-		if (checkedRows === 0) {
+		if (none) {
 			return 'check_box_outline_blank'
 		}
-		else if (checkedRows === this._rows.length) {
+		else if (every) {
 			return 'check_box';
 		}
 		else {
 			return 'indeterminate_check_box';
 		}
-
 	}
 
 }
 
-const findInSearch = (user: MonitorUser, query: RegExp) =>  {
+const findInSearch = (user: MonitorUser, query: RegExp) => {
 	return Object.keys(user)
 		.some((key: keyof MonitorUser) => query.test(user[key].toString()))
-
-		//.some((key: keyof MonitorUser) => user[key].toString().indexOf(query) > -1)
 }
-
-// const findInSearch = (user: MonitorUser, query: string) => ['username', 'computerName', 'server', 'server'].every((key: keyof MonitorUser) => a[key] === b[key]);

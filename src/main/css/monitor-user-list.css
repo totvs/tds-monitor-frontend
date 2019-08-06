@@ -29,31 +29,11 @@ thead {
 
 
 
-th, td {
+th {
 	white-space: nowrap;
 	padding: 15px 10px;
 }
 
-td.center {
-	text-align: center;
-}
-
-td.right {
-	text-align: right;
-}
-
-tr {
-	border-bottom: 1px solid rgba(0,0,0,0.12);
-}
-
-tbody tr {
-	will-change: background-color;
-	transition: background-color .2s cubic-bezier(.4,0,.2,1);
-}
-
-tbody tr:hover {
-	background-color: rgba(158,158,158,.2);
-}
 
 header {
 	height: 40px;
@@ -64,4 +44,13 @@ header {
 
 header monitor-text-input {
 	height: 100%;
+}
+
+
+:host(.large) monitor-user-list-row {
+	height: 48px;
+}
+
+:host(.compact) monitor-user-list-row {
+	height: 28px;
 }

@@ -42,7 +42,7 @@ export class MonitorServerView extends LitElement {
 
 		this.requestUpdate('users');
 	};
-	get users(){
+	get users() {
 		return this.renderRoot.querySelector('monitor-user-list').users;
 	}
 
@@ -76,23 +76,35 @@ export class MonitorServerView extends LitElement {
 	setServerUpdateInterval() {
 		const app = document.querySelector('monitor-app');
 
-		if (this._updateHandler !== null) {
-			window.clearInterval(this._updateHandler);
-		}
-
-		if (app.config.updateInterval > 0) {
-			this._updateHandler = window.setInterval(() => {
-				if (this.server) {
-					this.server.getUsers()
-					.then(users => this.users = users);
-				}
-			}, (app.config.updateInterval * 1000));
-		}
+		this.setUpdateInterval(app.config.updateInterval * 1000);
 
 		if (this.server) {
 			this.server.getUsers()
-			.then(users => this.users = users);
+				.then(users => this.users = users);
 		}
+	}
+
+	setUpdateInterval(interval: number) {
+		if (this._updateHandler) {
+			clearTimeout(this._updateHandler);
+			this._updateHandler = null;
+		}
+
+		if (interval === 0)
+			return;
+
+		const update = () => {
+			if (this.server) {
+				this.server.getUsers()
+					.then(users => this.users = users)
+					.then(() => {
+						console.log('updating');
+						this._updateHandler = window.setTimeout(() => update(), interval);
+					});
+			}
+		}
+
+		this._updateHandler = window.setTimeout(() => update(), interval);
 	}
 
 	log(message: string, type: MessageType) {

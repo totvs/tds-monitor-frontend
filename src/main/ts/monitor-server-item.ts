@@ -17,7 +17,7 @@ declare type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'e
 export interface MonitorServerItemOptions {
 	name: string;
 	server: TdsMonitorServer;
-	users: MonitorUser[];
+	users?: MonitorUser[];
 }
 
 @customElement('monitor-server-item')

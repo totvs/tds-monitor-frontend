@@ -1,4 +1,4 @@
-import { BuildVersion, MonitorUser } from '@totvs/tds-languageclient';
+import { BuildVersion } from '@totvs/tds-languageclient';
 import { customElement, html, LitElement } from 'lit-element';
 import { style } from '../css/monitor-app.css';
 import { MonitorServerItemOptions } from './monitor-server-item';
