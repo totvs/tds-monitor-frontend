@@ -8,6 +8,9 @@ export class MonitorTextInput extends LitElement {
 	type: string = 'text';
 
 	@property({ type: String, reflect: true, attribute: true })
+	classValue: string = '';
+
+	@property({ type: String, reflect: true, attribute: true })
 	value: string = '';
 
 	@property({ type: String, reflect: true, attribute: true })
@@ -53,7 +56,7 @@ export class MonitorTextInput extends LitElement {
 
 
 		return html`
-			<div class="${this.value === '' ? ' is-empty' : ''}">
+			<div class="${this.classValue === '' ? '' : ' is-empty invalid'}">
 				${this.icon ? html`<mwc-icon>${this.icon}</mwc-icon>` : ''}
 				${this.type !== 'textarea' ? html`
 				<input
@@ -76,6 +79,18 @@ export class MonitorTextInput extends LitElement {
 		`;
 	}
 
+	showRedLine(fieldContent: string, fieldType: string){
+		var oldClassValue = this.classValue;
+		var oldLabel = this.label;
+		this.classValue = 'error'
+		this.label = fieldContent;
+		this.type = fieldType;
+
+		setTimeout( () => {
+			this.classValue = oldClassValue;
+			this.label = oldLabel;
+		}, 3000);
+	}
 
 	onInputChanged(event: Event) {
 		this.value = (event.target as HTMLInputElement).value;
@@ -99,9 +114,10 @@ export class MonitorTextInput extends LitElement {
 					bubbles: true,
 					composed: true
 				}));
-
 				break;
 		}
+		//this.value = '';
+		//this.classValue = '';
 	}
 
 }

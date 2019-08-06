@@ -25,6 +25,7 @@ import './monitor-ripple';
 import './monitor-server-view';
 import './monitor-text-input';
 import './monitor-user-list';
+import './monitor-warning';
 
 import { TdsLanguageClient } from '@totvs/tds-languageclient';
 
@@ -38,22 +39,3 @@ const app = document.querySelector('monitor-app'),
 if (settings) {
 	app.settings = JSON.parse(settings);
 }
-else {
-	app.settings = {
-		"servers": [
-			{
-				name: "Production",
-				address: "LOCALHOST",
-				port: 5555,
-				build: '7.00.170117A'
-			},
-			{
-				name: "LOBO-GUARA",
-				address: "192.168.168.1",
-				port: 6000,
-				build: '7.00.170117A'
-			}
-		]
-	}
-}
-

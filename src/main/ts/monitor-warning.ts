@@ -1,25 +1,14 @@
 import { LitElement, html, customElement, property  } from 'lit-element';
 import { style } from '../css/monitor-warning.css'
 
-// import { LitElement, html, customElement, } from 'lit-element';
-// import { style } from '../css/monitor-text-input.css';
-
 @customElement('monitor-warning')
 export class MonitorWarning extends LitElement {
-	// showError: string;
-	// msg: String;
+
 	@property({ type: String, reflect: true, attribute: true })
 	msg: string = '';
 
 	@property({ type: String, reflect: true, attribute: true })
 	showError: string = '';
-
-	static get properties(){
-		return {
-			msg: {Type: String,},
-			showError: {Type: String}
-		};
-	}
 
 	static get styles() {
 		return style;
@@ -37,7 +26,6 @@ export class MonitorWarning extends LitElement {
 		this.msg = message;
 		this.showError = 'yes';
 		setTimeout( () => this.showError = 'no', 3000);
-
 	}
 
 	hideTheError(){
@@ -45,3 +33,8 @@ export class MonitorWarning extends LitElement {
 	}
 }
 
+declare global {
+	interface HTMLElementTagNameMap {
+		'monitor-warning': MonitorWarning;
+	}
+}
