@@ -1,6 +1,6 @@
 {
 	"name": "@totvs/tds-monitor-frontend",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"description": "",
 	"license": "MIT",
 	"main": "target/index.html",
@@ -24,7 +24,7 @@
 		"@material/mwc-radio": "^0.6.0",
 		"@material/mwc-ripple": "^0.6.0",
     "@material/mwc-switch": "^0.6.0",
-    "@totvs/tds-languageclient": "0.0.4",
+    "@totvs/tds-languageclient": "0.0.5",
 		"@webcomponents/webcomponentsjs": "^2.2.10",
 		"core-js": "^3.1.4",
 		"lit-element": "^2.2.1",
