@@ -24,7 +24,14 @@ export class MonitorUserListRow extends LitElement {
 	mainName = '';
 
 	@property({ type: String, reflect: true, attribute: true })
-	loginTime = '';
+	get loginTime(): string {
+		return this._loginTime;
+	}
+	set loginTime(value: string) {
+		this._loginTime = new Date(value).toLocaleString();
+	}
+
+	_loginTime = '';
 
 	@property({ type: String, reflect: true, attribute: true })
 	elapsedTime = '';
