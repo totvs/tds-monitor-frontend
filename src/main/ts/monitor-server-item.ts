@@ -191,7 +191,7 @@ export class MonitorServerItem extends LitElement {
 
 				break;
 			case 'connected':
-				//await this.getUsers();
+				await this.getUsers();
 
 				break;
 			default:
