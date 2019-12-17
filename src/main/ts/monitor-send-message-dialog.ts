@@ -80,7 +80,7 @@ export class MonitorSendMessageDialog extends MonitorDialog {
 		let progressbar = this.renderRoot.querySelector('monitor-linear-progress'),
 			step = 1 / this.users.length;
 
-		progressbar.determinate = true;
+		progressbar.indeterminate = false;
 		progressbar.progress = 0;
 
 		this.users.forEach((user) => {

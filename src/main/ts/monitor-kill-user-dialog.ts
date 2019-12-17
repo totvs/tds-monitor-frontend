@@ -76,11 +76,11 @@ export class MonitorKillUserDialog extends MonitorDialog {
 		this.blockControls(true);
 		this.progress = 'visible';
 
-		let appKillUser = this.renderRoot.querySelector('monitor-radio#appKillUser'),
+		let appKillUser = this.renderRoot.querySelector<MonitorRadio>('monitor-radio#appKillUser'),
 			progressbar = this.renderRoot.querySelector('monitor-linear-progress'),
 			step = 1 / this.users.length;
 
-		progressbar.determinate = true;
+		progressbar.indeterminate = false;
 		progressbar.progress = 0;
 
 		this.users.forEach((user) => {

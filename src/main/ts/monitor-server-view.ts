@@ -65,7 +65,7 @@ export class MonitorServerView extends LitElement {
 			<div class='messages'>
 				<span class='connecting-message'>
 					<label>Conectando ao servidor ${this.name}</label>
-					<monitor-linear-progress></monitor-linear-progress>
+					<monitor-linear-progress indeterminate></monitor-linear-progress>
 				</span>
 				<span class='error-message'>${this.error}</span>
 			</div>

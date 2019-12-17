@@ -51,7 +51,7 @@ export class MonitorDialog extends LitElement {
 				<header>
 					<h1>${this.title}</h1>
 				</header>
-				<monitor-linear-progress></monitor-linear-progress>
+				<monitor-linear-progress indeterminate></monitor-linear-progress>
 				<main title="">
 					${this.body}
 				</main>

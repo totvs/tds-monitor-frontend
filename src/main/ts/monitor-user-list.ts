@@ -54,18 +54,20 @@ export class MonitorUserList extends LitElement {
 	set users(newValue: MonitorUser[]) {
 		const newMap = new Map<string, MonitorUserRow>();
 
-		newValue.forEach((user: MonitorUser) => {
-			const key = `${user.username}${user.computerName}${user.threadId}${user.server}`;
+		if (newValue !== null) {
+			newValue.forEach((user: MonitorUser) => {
+				const key = `${user.username}${user.computerName}${user.threadId}${user.server}`;
 
-			if (this._users.has(key)) {
-				const oldUser = this._users.get(key);
+				if (this._users.has(key)) {
+					const oldUser = this._users.get(key);
 
-				newMap.set(key, Object.assign({}, oldUser, user));
-			}
-			else {
-				newMap.set(key, Object.assign({ checked: false}, user));
-			}
-		});
+					newMap.set(key, Object.assign({}, oldUser, user));
+				}
+				else {
+					newMap.set(key, Object.assign({ checked: false }, user));
+				}
+			});
+		}
 
 		this._users.clear();
 		this._users = newMap;
@@ -147,7 +149,7 @@ export class MonitorUserList extends LitElement {
 
 					<tbody>
 						${this.users.map((user: MonitorUserRow) => {
-							return html`
+			return html`
 								<monitor-user-list-row
 									@change="${this.onCheckBoxChanged}"
 									?checked=${user.checked}
@@ -170,7 +172,7 @@ export class MonitorUserList extends LitElement {
 									clientType="${user.clientType}">
 								</monitor-user-list-row>
 							`;
-						})}
+		})}
 					</tbody>
 				</table>
 			</div>
