@@ -118,9 +118,9 @@ export class MonitorUserList extends LitElement {
 				<mwc-icon-button icon="update" @click="${this.onSelfRefresh}" title="Auto atualizar"></mwc-icon-button>
 				<mwc-icon-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem"></mwc-icon-button >
 				<mwc-icon-button icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="Desconectar"></mwc-icon-button >
+				<mwc-icon-button icon="more_vert" @click="${this.onButtonOtherActionsClick}" title="Outras ações"></mwc-icon-button >
 				<div></div>
 				<monitor-text-input outlined icon="search" @input="${this.onSearchInput}"></monitor-text-input>
-				<monitor-button small icon="more_vert" @click="${this.onButtonOtherActionsClick}" title="Outras ações"></monitor-button>
 			</header>
 
 			<div>
