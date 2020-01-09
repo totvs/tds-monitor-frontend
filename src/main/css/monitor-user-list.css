@@ -11,6 +11,13 @@ div {
 	overflow: auto;
 	height: 100%;
 	width: 100%;
+	flex-grow: 1;
+    display: flex;
+    flex-basis: 0;
+}
+
+footer {
+	display: flex;
 }
 
 span.footer {
