@@ -208,9 +208,11 @@ export class MonitorServerItem extends LitElement {
 					y: event.pageY,
 				},
 				items: [
+					/*
 					{
 						text: 'Editar Dados do Servidor',
 					},
+					*/
 					{
 						text: 'Excluir Servidor',
 						callback: () => { this.deleteServer() },
