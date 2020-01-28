@@ -24,7 +24,7 @@
 		"@material/mwc-radio": "^0.11.1",
 		"@material/mwc-ripple": "^0.11.1",
 		"@material/mwc-switch": "^0.11.1",
-		"@totvs/tds-languageclient": "git+https://github.com/bardez/tds-languageclient.git",
+		"@totvs/tds-languageclient": "0.0.7",
 		"@webcomponents/webcomponentsjs": "^2.4.0",
 		"core-js": "^3.5.0",
 		"events": "^3.0.0",
