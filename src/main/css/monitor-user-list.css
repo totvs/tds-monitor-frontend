@@ -12,8 +12,8 @@ div {
 	height: 100%;
 	width: 100%;
 	flex-grow: 1;
-    display: flex;
-    flex-basis: 0;
+	display: flex;
+	flex-basis: 0;
 }
 
 footer {
@@ -42,11 +42,11 @@ th {
 	text-align: left;
 }
 
-th.with-icon{
+th.with-icon {
 	display: inline-flex;
-    justify-content: left;
-    align-items: center;
-    text-align: left;
+	justify-content: left;
+	align-items: center;
+	text-align: left;
 }
 
 header {
