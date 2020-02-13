@@ -150,13 +150,13 @@ export class MonitorUserList extends LitElement {
 
 					<tbody>
 						${this.users.sort((a, b) => { //Ordenação dos usuário por ambiente baseado no sortOrder
-							if (a.environment < b.environment) 
-								return 1 * this._sortOrder; 
-							if (a.environment > b.environment) 
-								return -1 * this._sortOrder; 
-							return 0; 
+							if (a.environment < b.environment)
+								return 1 * this._sortOrder;
+							if (a.environment > b.environment)
+								return -1 * this._sortOrder;
+							return 0;
 						} ).map((user: MonitorUserRow) => {
-			return html`
+							return html`
 								<monitor-user-list-row
 									@change="${this.onCheckBoxChanged}"
 									?checked=${user.checked}
