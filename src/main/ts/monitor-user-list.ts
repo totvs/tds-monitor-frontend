@@ -38,6 +38,7 @@ export class MonitorUserList extends LitElement {
 	_footerConnectedUser: string;
 	_footerUpdateInterval: string;
 	_footerLastUpdate: string;
+	_sortOrder : number = -1; // Odenação PAdrão (A-Z)
 
 
 	query: RegExp = null;
@@ -118,9 +119,9 @@ export class MonitorUserList extends LitElement {
 				<mwc-icon-button icon="update" @click="${this.onSelfRefresh}" title="Auto atualizar"></mwc-icon-button>
 				<mwc-icon-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem"></mwc-icon-button >
 				<mwc-icon-button icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="Desconectar"></mwc-icon-button >
+				<mwc-icon-button icon="more_vert" @click="${this.onButtonOtherActionsClick}" title="Outras ações"></mwc-icon-button >
 				<div></div>
 				<monitor-text-input outlined icon="search" @input="${this.onSearchInput}"></monitor-text-input>
-				<monitor-button small icon="more_vert" @click="${this.onButtonOtherActionsClick}" title="Outras ações"></monitor-button>
 			</header>
 
 			<div>
@@ -129,7 +130,7 @@ export class MonitorUserList extends LitElement {
 						<tr>
 							<th></th>
 							<th>User Name</th>
-							<th>Environment</th>
+							<th class='with-icon'>Environment <mwc-icon-button icon="${this._sortOrder == -1 ? 'arrow_drop_up' : 'arrow_drop_down'}" @click="${this.onSortEnvironment}" title="Ordenar"></mwc-icon-button></th>
 							<th>Machine</th>
 							<th>Thread ID</th>
 							<th>User In Server</th>
@@ -148,14 +149,20 @@ export class MonitorUserList extends LitElement {
 					</thead>
 
 					<tbody>
-						${this.users.map((user: MonitorUserRow) => {
+						${this.users.sort((a, b) => { //Ordenação dos usuário por ambiente baseado no sortOrder
+							if (a.environment < b.environment) 
+								return 1 * this._sortOrder; 
+							if (a.environment > b.environment) 
+								return -1 * this._sortOrder; 
+							return 0; 
+						} ).map((user: MonitorUserRow) => {
 			return html`
 								<monitor-user-list-row
 									@change="${this.onCheckBoxChanged}"
 									?checked=${user.checked}
 
 									username="${user.username}"
-									environment="${user.environment}"
+									environment="${user.environment.toUpperCase()}"
 									computerName="${user.computerName}"
 									threadId="${user.threadId}"
 									server="${user.server}"
@@ -185,6 +192,17 @@ export class MonitorUserList extends LitElement {
 				<span class="footer">${this._footerLastUpdate}</span>
 			</footer>
         `;
+	}
+
+	/**
+	 * @author Bardez
+	 * @description Ordenação de usuários obtidos do webservice
+	 * @since 28/01/20
+	*/
+	async onSortEnvironment() {
+		this._sortOrder *= -1;
+		const users = await this.server.getUsers();
+		this.users = users;
 	}
 
 	onSearchInput(event: Event) {

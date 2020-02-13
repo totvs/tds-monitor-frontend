@@ -12,8 +12,8 @@ div {
 	height: 100%;
 	width: 100%;
 	flex-grow: 1;
-    display: flex;
-    flex-basis: 0;
+	display: flex;
+	flex-basis: 0;
 }
 
 footer {
@@ -39,8 +39,15 @@ thead {
 th {
 	white-space: nowrap;
 	padding: 15px 10px;
+	text-align: left;
 }
 
+th.with-icon {
+	display: inline-flex;
+	justify-content: left;
+	align-items: center;
+	text-align: left;
+}
 
 header {
 	height: 40px;
@@ -65,3 +72,4 @@ header monitor-text-input {
 :host(.compact) monitor-user-list-row {
 	height: 28px;
 }
+

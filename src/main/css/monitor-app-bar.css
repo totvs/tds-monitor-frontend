@@ -9,7 +9,7 @@ header {
 	-webkit-app-region: drag;
 	user-select: none;
 	z-index: 1000;
-	min-height: 56px;
+	min-height: 36px;
 	box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
 	color: #f5f5f5;
 	background-color: #494440;
@@ -36,8 +36,8 @@ img.logo {
 
 div.menu {
 	border-radius: 50%;
-	height: 50px;
-	width: 50px;
+	height: 30px;
+	width: 30px;
 	padding: 8px;
 	will-change: background-color;
 	transition: background-color .2s cubic-bezier(.4,0,.2,1);
