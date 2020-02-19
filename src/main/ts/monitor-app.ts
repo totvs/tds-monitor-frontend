@@ -77,6 +77,11 @@ class MonitorApp extends LitElement {
 
 		let drawer = this.querySelector('monitor-drawer');
 
+		// Ordena por nome
+		this.settings.servers.sort(function(a, b){
+			return a.name.localeCompare(b.name);
+		});
+
 		this.settings.servers.forEach((data) => {
 			let server = this.createServer(data);
 
@@ -132,7 +137,23 @@ class MonitorApp extends LitElement {
 		window.localStorage.setItem('settings', JSON.stringify(this.settings));
 
 		let drawer = this.querySelector('monitor-drawer');
-		drawer.addServer(options);
+
+		// Remove servers
+		this.settings.servers.forEach((data) => {
+			console.log(data.name)
+			drawer.removeServer(data.name);
+		});
+		
+		// Ordena por nome
+		this.settings.servers.sort(function(a, b){
+			return a.name.localeCompare(b.name);
+		});
+
+		// Adiciona todos em ordem alfabetica
+		this.settings.servers.forEach((data) => {
+			let server = this.createServer(data);
+			drawer.addServer({ name: data.name, server });
+		});
 	}
 
 	removeServer(serverName: string) {
