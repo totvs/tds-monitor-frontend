@@ -29,9 +29,11 @@ export interface MonitorSettingsConfig {
 
 interface Server {
 	name: string;
+	serverType: number,
 	address: string;
 	port: number;
 	build: BuildVersion;
+	secure: boolean;
 	token?: string;
 }
 
@@ -113,26 +115,27 @@ class MonitorApp extends LitElement {
 	private createServer(data: Server) {
 		let server = languageClient.createMonitorServer();
 		server.id = data.name;
+		server.serverType = data.serverType;
 		server.address = data.address;
 		server.port = data.port;
-
 		if (data.build) {
 			server.build = data.build;
 		}
-
+		server.secure = data.secure;
 		if (data.token) {
 			server.token = data.token;
 		}
-
 		return server;
 	}
 
 	addServer(options: MonitorServerItemOptions) {
 		this.settings.servers.push({
 			name: options.name,
+			serverType: options.server.serverType,
 			address: options.server.address,
 			port: options.server.port,
-			build: options.server.build
+			build: options.server.build,
+			secure: options.server.secure
 		});
 		window.localStorage.setItem('settings', JSON.stringify(this.settings));
 

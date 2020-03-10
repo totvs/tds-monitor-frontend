@@ -8,9 +8,9 @@
 	padding: 0;
 }
 
-:host([status=iddle]) .error-message,
-:host([status=iddle]) .connecting-message,
-:host([status=iddle]) monitor-user-list  {
+:host([status=idle]) .error-message,
+:host([status=idle]) .connecting-message,
+:host([status=idle]) monitor-user-list  {
 	display: none;
 }
 

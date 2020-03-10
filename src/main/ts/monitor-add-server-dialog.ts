@@ -4,6 +4,7 @@ import { MonitorButton } from './monitor-button';
 import { MonitorDialog } from './monitor-dialog';
 import { MonitorTextInput } from './monitor-text-input';
 import { MonitorWarning } from './monitor-warning';
+import { MonitorRadio } from './monitor-radio';
 
 @customElement('monitor-add-server-dialog')
 export class MonitorAddServerDialog extends MonitorDialog {
@@ -37,6 +38,14 @@ export class MonitorAddServerDialog extends MonitorDialog {
 			<monitor-text-input id="name" tabindex="1" type="text" label="Nome" class="validate" ></monitor-text-input>
 			<monitor-text-input id="address" tabindex="2" type="text" label="Endereço"></monitor-text-input>
 			<monitor-text-input id="port" tabindex="3" type="number" min="1" label="Porta"></monitor-text-input>
+			<label @click="${this.onLabelClick}">
+				<monitor-radio id="serverType" value="1" checked tabindex="4" name="serverType" title="Protheus"></monitor-radio>
+				<span>Protheus</span>
+			</label>
+			<label @click="${this.onLabelClick}">
+				<monitor-radio id="serverType" value="2" tabindex="5" name="serverType" title="Logix"></monitor-radio>
+				<span>Logix</span>
+			</label>
 		`;
 	}
 
@@ -46,10 +55,25 @@ export class MonitorAddServerDialog extends MonitorDialog {
 				element.disabled = block;
 			}));
 
+		this.renderRoot.querySelectorAll<MonitorRadio>('monitor-radio')
+			.forEach((element => {
+				element.disabled = block;
+			}));
+
 		this.renderRoot.querySelectorAll<MonitorButton>('monitor-button')
 			.forEach((element => {
 				element.disabled = block;
 			}));
+	}
+
+	onLabelClick(event: MouseEvent) {
+		let label = event.currentTarget as HTMLLabelElement,
+			radio = label.querySelector<MonitorRadio>('monitor-radio');
+
+		this.renderRoot.querySelectorAll<MonitorRadio>('monitor-radio')
+			.forEach((radio: MonitorRadio) => radio.checked = false);
+
+		radio.checked = true;
 	}
 
 	onOkButtonClicked(event: Event) {
@@ -61,6 +85,14 @@ export class MonitorAddServerDialog extends MonitorDialog {
 			show_error = this.renderRoot.querySelector<MonitorWarning>('monitor-warning#show_error'),
 			newServer = languageClient.createMonitorServer();
 
+		let serverType = -1;
+		this.renderRoot.querySelectorAll<MonitorRadio>('#serverType')
+			.forEach((element => {
+				if (element.checked) {
+					serverType = Number(element.value);
+				}
+			}));
+
 		if (!name) {
 			this.progress = 'hidden';
 			this.blockControls(false);
@@ -68,6 +100,12 @@ export class MonitorAddServerDialog extends MonitorDialog {
 			this.renderRoot.querySelector<MonitorTextInput>('monitor-text-input#name').showRedLine('Nome inválido','text');
 			show_error.showTheError("Nome de servidor inválido");
 
+		}
+		else if (serverType == -1){
+			this.progress = 'hidden';
+			this.blockControls(false);
+			this.focus()
+			show_error.showTheError("Seleção de tipo de servidor inválido");
 		}
 		else if (!address){
 			this.progress = 'hidden';
@@ -99,6 +137,8 @@ export class MonitorAddServerDialog extends MonitorDialog {
 
 				this.blockControls(true);
 
+				newServer.serverType = serverType;
+				console.log("newServer.serverType: "+newServer.serverType);
 				newServer.address = address;
 				newServer.port = port;
 

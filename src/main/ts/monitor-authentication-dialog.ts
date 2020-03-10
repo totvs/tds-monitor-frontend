@@ -15,10 +15,6 @@ export class MonitorAuthenticationDialog extends MonitorDialog {
 		return this.renderRoot.querySelector<MonitorTextInput>('#user').value;
 	}
 
-	get environment(): string {
-		return this.renderRoot.querySelector<MonitorTextInput>('#environment').value;
-	}
-
 	get password(): string {
 		return this.renderRoot.querySelector<MonitorTextInput>('#password').value;
 	}
@@ -53,7 +49,6 @@ export class MonitorAuthenticationDialog extends MonitorDialog {
 
 	get body() {
 		return html`
-			<monitor-text-input id="environment" tabindex="1" type="text" label="Ambiente"></monitor-text-input>
 			<monitor-text-input id="user" tabindex="2" type="text" label="Usuário"></monitor-text-input>
 			<monitor-text-input id="password" tabindex="3" type="password" label="Senha"></monitor-text-input>
 			<label>

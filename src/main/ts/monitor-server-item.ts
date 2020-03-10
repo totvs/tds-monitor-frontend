@@ -2,6 +2,7 @@ import { BuildVersion, MonitorUser, TdsMonitorServer } from '@totvs/tds-language
 import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
 import { style } from '../css/monitor-server-item.css';
 import { monitorIcon } from './icon-monitor-svg';
+import { MonitorConnectionDialog } from './monitor-connection-dialog';
 import { MonitorAuthenticationDialog } from './monitor-authentication-dialog';
 import { MenuOptions, MonitorMenu } from './monitor-menu';
 import { MonitorOtherActionsDialog } from './monitor-other-actions-dialog';
@@ -95,20 +96,31 @@ export class MonitorServerItem extends LitElement {
 			}
 		}
 		else {
-			let dialog = new MonitorAuthenticationDialog(this),
-				result = await dialog.showForResult();
+			let connDialog = new MonitorConnectionDialog(this),
+				connResult = await connDialog.showForResult();
 
-			if (result) {
-				result = await this.server.connect({
-					username: dialog.username,
-					password: dialog.password,
-					environment: dialog.environment
-				});
+			if (connResult) {
+				connResult = await this.server.connect(this.name, this.server.serverType, this.server.address, this.server.port, this.server.secure, this.build, connDialog.environment);
 
-				if (result) {
-					if (dialog.storeToken) {
-						const app = document.querySelector('monitor-app');
-						app.storeConnectionToken(this.name, this.server.token);
+				if (connResult) {
+					let authDialog = new MonitorAuthenticationDialog(this),
+						authResult = await authDialog.showForResult();
+
+					if (authResult) {
+						authResult = await this.server.authenticate(authDialog.username, authDialog.password);
+
+						if (authResult) {
+							if (authDialog.storeToken) {
+								const app = document.querySelector('monitor-app');
+								app.storeConnectionToken(this.name, this.server.token);
+							}
+						}
+						else {
+							connectionFailed = true;
+						}
+					}
+					else {
+						connectionFailed = true;
 					}
 				}
 				else {
@@ -180,9 +192,9 @@ export class MonitorServerItem extends LitElement {
 		switch (this.status) {
 			case 'disconnected':
 			case 'error':
-				let sucess = await this.connectServer(true);
+				let success = await this.connectServer(true);
 
-				if (sucess)
+				if (success)
 					await this.getUsers();
 
 				break;
@@ -241,7 +253,7 @@ export class MonitorServerItem extends LitElement {
 					text: 'Outras ações',
 					callback: () => {
 						this.otherActions();
-					 }
+					}
 				});
 			}
 		}

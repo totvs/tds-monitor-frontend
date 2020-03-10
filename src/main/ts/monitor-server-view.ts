@@ -3,7 +3,7 @@ import { CSSResult, customElement, html, LitElement, property, TemplateResult } 
 import { style } from '../css/monitor-server-view.css';
 import { MessageType } from './monitor-app';
 
-export type ServerViewStatus = 'iddle' | 'connecting' | 'connected' | 'error';
+export type ServerViewStatus = 'idle' | 'connecting' | 'connected' | 'error';
 
 @customElement('monitor-server-view')
 export class MonitorServerView extends LitElement {
@@ -35,7 +35,7 @@ export class MonitorServerView extends LitElement {
 	error: string = '';
 
 	@property({ type: String, reflect: true, attribute: true })
-	status: ServerViewStatus = 'iddle';
+	status: ServerViewStatus = 'idle';
 
 	set users(value: MonitorUser[]) {
 		this.renderRoot.querySelector('monitor-user-list').users = value;

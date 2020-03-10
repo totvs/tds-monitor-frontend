@@ -1,6 +1,6 @@
 {
 	"name": "@totvs/tds-monitor-frontend",
-	"version": "0.0.10",
+	"version": "0.0.11",
 	"description": "",
 	"license": "MIT",
 	"main": "target/index.html",
@@ -24,7 +24,7 @@
 		"@material/mwc-radio": "^0.13.0",
 		"@material/mwc-ripple": "^0.13.0",
 		"@material/mwc-switch": "^0.13.0",
-		"@totvs/tds-languageclient": "0.0.10",
+		"@totvs/tds-languageclient": "0.0.11",
 		"@webcomponents/webcomponentsjs": "^2.4.1",
 		"core-js": "^3.6.4",
 		"lit-element": "^2.2.1",
@@ -32,17 +32,17 @@
 		"regenerator-runtime": "^0.13.3"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.8.4",
+		"@babel/core": "^7.8.7",
 		"@babel/plugin-proposal-class-properties": "^7.8.3",
 		"@babel/plugin-proposal-decorators": "^7.8.3",
 		"@babel/plugin-syntax-dynamic-import": "^7.8.3",
 		"@babel/plugin-transform-arrow-functions": "^7.8.3",
 		"@babel/plugin-transform-async-to-generator": "^7.8.3",
 		"@babel/plugin-transform-block-scoping": "^7.8.3",
-		"@babel/plugin-transform-classes": "^7.8.3",
+		"@babel/plugin-transform-classes": "^7.8.6",
 		"@babel/plugin-transform-template-literals": "^7.8.3",
-		"@babel/plugin-transform-typescript": "^7.8.3",
-		"@babel/preset-env": "^7.8.4",
+		"@babel/plugin-transform-typescript": "^7.8.7",
+		"@babel/preset-env": "^7.8.7",
 		"@babel/preset-typescript": "^7.8.3",
 		"babelify": "^10.0.0",
 		"browserify": "^16.5.0",
@@ -54,11 +54,11 @@
 		"q": "^1.5.1",
 		"shelljs": "^0.8.3",
 		"tfilter": "^1.0.1",
-		"typescript": "^3.7.5",
+		"typescript": "^3.8.3",
 		"typescript-lit-html-plugin": "^0.9.0",
 		"vinyl-buffer": "^1.0.1",
 		"vinyl-source-stream": "^2.0.0",
 		"watchify": "^3.11.1",
-		"yargs": "^15.1.0"
+		"yargs": "^15.3.0"
 	}
 }
