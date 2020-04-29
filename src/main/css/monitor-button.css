@@ -22,6 +22,11 @@
     display: none;
 }
 
+:host([small]) button slot[name=icon],
+:host([small]) button slot[name=trailingIcon] {
+    display: contents;
+}
+
 button.mdc-button {
 	height: 100%;
 }
