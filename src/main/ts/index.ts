@@ -26,7 +26,9 @@ import './monitor-server-view';
 import './monitor-text-input';
 import './monitor-user-list';
 import './monitor-user-list-row';
+import './monitor-user-list-column-header';
 import './monitor-warning';
+
 
 import { TdsLanguageClient } from '@totvs/tds-languageclient';
 

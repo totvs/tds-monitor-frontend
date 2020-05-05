@@ -1,0 +1,59 @@
+@import "./reset.css";
+
+:host {
+	/*	display: flex;
+	*/
+
+	display: table-cell;
+	white-space: nowrap;
+	padding: 15px 10px;
+	text-align: left;
+}
+
+div {
+	position: relative;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: flex;
+}
+
+:host(:hover) i {
+	opacity: 0.5;
+}
+
+i {
+	opacity: 0;
+	height: 24px;
+	width: 24px;
+	display: inline-block;
+	margin: 0 5px;
+
+	font-family: "Material Icons";
+	font-weight: normal;
+	font-style: normal;
+	font-size: 24px;
+
+	/* Support for all WebKit browsers. */
+	-webkit-font-smoothing: antialiased;
+	/* Support for Safari and Chrome. */
+	text-rendering: optimizeLegibility;
+
+	user-select: none;
+	transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+}
+
+:host([order="ascending"]) i {
+	opacity: 1;
+	transform: rotate(180deg);
+}
+
+:host([order="descending"]) i {
+	opacity: 1;
+	transform: rotate(0deg);
+}
+
+label {
+	font-weight: bold;
+}

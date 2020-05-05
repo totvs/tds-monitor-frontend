@@ -34,20 +34,11 @@ thead {
 	color: rgba(0,0,0,0.6);
 }
 
-
-
-th {
-	white-space: nowrap;
-	padding: 15px 10px;
-	text-align: left;
+thead tr {
+	border-bottom: 1px solid rgba(0,0,0,0.12);
 }
 
-th.with-icon {
-	display: inline-flex;
-	justify-content: left;
-	align-items: center;
-	text-align: left;
-}
+
 
 header {
 	height: 40px;
@@ -73,3 +64,10 @@ header monitor-text-input {
 	height: 28px;
 }
 
+monitor-user-list-row:nth-child(even) {
+	background-color: rgb(245, 245, 245);
+}
+
+monitor-user-list-row:nth-child(odd) {
+	background-color: rgb(255, 255, 255);
+}

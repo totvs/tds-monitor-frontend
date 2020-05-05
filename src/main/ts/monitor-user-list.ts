@@ -2,21 +2,31 @@ import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
 import { CSSResult, customElement, html, LitElement, property, query } from 'lit-element';
 import { style } from '../css/monitor-user-list.css';
 import { MonitorButton } from './monitor-button';
+import { ColumnKey, columnOrder, columnText } from './monitor-columns';
 import { MonitorKillUserDialog } from './monitor-kill-user-dialog';
 import { MonitorOtherActionsDialog } from './monitor-other-actions-dialog';
 import { MonitorSelfRefreshDialog } from './monitor-self-refresh-dialog';
 import { MonitorSendMessageDialog } from './monitor-send-message-dialog';
 import { MonitorUserListRow } from './monitor-user-list-row';
+import { HeaderClickEvent, MonitorUserListColumnHeader, SortOrder } from './monitor-user-list-column-header';
+import { sortUsers } from './util/sort-users';
 
 interface MonitorUserRow extends MonitorUser {
 	checked: boolean;
 }
+
+const columns = columnOrder.map((key: ColumnKey) => ({
+	id: key,
+	text: columnText[key]
+}));
 
 @customElement('monitor-user-list')
 export class MonitorUserList extends LitElement {
 
 	@query('monitor-button[icon="chat"]')
 	sendMessageButton: MonitorButton;
+	sortOrder: SortOrder = SortOrder.Descending;
+	sortColumn: ColumnKey = 'username';
 
 	@property({ type: Object })
 	set server(value: TdsMonitorServer) {
@@ -38,7 +48,7 @@ export class MonitorUserList extends LitElement {
 	_footerConnectedUser: string;
 	_footerUpdateInterval: string;
 	_footerLastUpdate: string;
-	_sortOrder : number = -1; // Odenação PAdrão (A-Z)
+	_sortOrder: number = -1; // Odenação PAdrão (A-Z)
 
 
 	query: RegExp = null;
@@ -98,6 +108,10 @@ export class MonitorUserList extends LitElement {
 		return Array.from(this.renderRoot.querySelectorAll('monitor-user-list-row'));
 	}
 
+	get columns(): Array<MonitorUserListColumnHeader> {
+		return Array.from(this.renderRoot.querySelectorAll('monitor-user-list-column-header'));
+	}
+
 	_users: Map<string, MonitorUserRow> = new Map();
 	_searchHandle: number = null;
 
@@ -126,39 +140,26 @@ export class MonitorUserList extends LitElement {
 			<div>
 				<table>
 					<thead>
-						<tr>
+						<tr @header-click="${this.onHeaderClick}">
 							<th></th>
-							<th>User Name</th>
-							<th class='with-icon'>Environment <mwc-icon-button icon="${this._sortOrder == -1 ? 'arrow_drop_up' : 'arrow_drop_down'}" @click="${this.onSortEnvironment}" title="Ordenar"></mwc-icon-button></th>
-							<th>Machine</th>
-							<th>Thread ID</th>
-							<th>User In Server</th>
-							<th>Program</th>
-							<th>Connected</th>
-							<th>Elapsed Time</th>
-							<th>Instruc.</th>
-							<th>Instruc./Sec</th>
-							<th>Comments</th>
-							<th>Memory</th>
-							<th>SID</th>
-							<th>RPO</th>
-							<th>Inactive Time</th>
-							<th>Connection Type</th>
+							${columns.map(({ id, text }) => html`
+								<monitor-user-list-column-header
+									id="${id}"
+									caption="${text}"
+									order="${this.sortColumn === id ? this.sortOrder : SortOrder.Undefined}"
+								>
+								</monitor-user-list-column-header>
+							`)}
 						</tr>
 					</thead>
 
 					<tbody>
-						${this.users.sort((a, b) => { //Ordenação dos usuário por ambiente baseado no sortOrder
-							if (a.environment < b.environment)
-								return 1 * this._sortOrder;
-							if (a.environment > b.environment)
-								return -1 * this._sortOrder;
-							return 0;
-						} ).map((user: MonitorUserRow) => {
-							return html`
+						${this.sortedUsers.map((user: MonitorUserRow) => {
+			return html`
 								<monitor-user-list-row
 									@change="${this.onCheckBoxChanged}"
 									?checked=${user.checked}
+									order="${columnOrder.join(',')}"
 
 									username="${user.username}"
 									environment="${user.environment.toUpperCase()}"
@@ -192,6 +193,25 @@ export class MonitorUserList extends LitElement {
 			</footer>
         `;
 	}
+
+	onHeaderClick(event: HeaderClickEvent) {
+		const { column: id, order } = event.detail,
+			headers = Array.from(this.shadowRoot.querySelectorAll('monitor-user-list-column-header'));
+
+		headers
+			.filter(column => column.id !== id)
+			.forEach(column => column.order = SortOrder.Undefined);
+
+		this.sortColumn = id;
+		this.sortOrder = order;
+
+		this.requestUpdate('users');
+	}
+
+	get sortedUsers() {
+		return this.users.sort(sortUsers(this.sortColumn, this.sortOrder));
+	}
+
 
 	/**
 	 * @author Bardez
