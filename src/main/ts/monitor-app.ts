@@ -140,23 +140,7 @@ class MonitorApp extends LitElement {
 		window.localStorage.setItem('settings', JSON.stringify(this.settings));
 
 		let drawer = this.querySelector('monitor-drawer');
-
-		// Remove servers
-		this.settings.servers.forEach((data) => {
-			console.log(data.name)
-			drawer.removeServer(data.name);
-		});
-		
-		// Ordena por nome
-		this.settings.servers.sort(function(a, b){
-			return a.name.localeCompare(b.name);
-		});
-
-		// Adiciona todos em ordem alfabetica
-		this.settings.servers.forEach((data) => {
-			let server = this.createServer(data);
-			drawer.addServer({ name: data.name, server });
-		});
+		drawer.addServer({ name: options.name, server: options.server });
 	}
 
 	removeServer(serverName: string) {

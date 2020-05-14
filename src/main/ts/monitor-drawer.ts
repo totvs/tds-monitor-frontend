@@ -17,8 +17,19 @@ export class MonitorDrawer extends LitElement {
 
 	addServer(s: MonitorServerItemOptions) {
 		let item = new MonitorServerItem(s);
-
-		this.appendChild(item);
+		// sort
+		let before: MonitorServerItem = undefined;
+		this.childNodes.forEach((data: MonitorServerItem) => {
+			if (!before && item.name.localeCompare(data.name) < 0) {
+				before = data;
+			}
+		});
+		if (before) {
+			this.insertBefore(item, before);
+		}
+		else {
+			this.appendChild(item);
+		}
 	}
 
 	removeServer(serverName: string) {
