@@ -1,7 +1,6 @@
 import { MonitorUser } from '@totvs/tds-languageclient';
 import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
 import { style } from '../css/monitor-user-list-row.css';
-import { ColumnKey } from './monitor-columns';
 
 @customElement('monitor-user-list-row')
 export class MonitorUserListRow extends LitElement {
