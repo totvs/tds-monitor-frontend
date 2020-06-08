@@ -3,6 +3,6 @@
 Projeto da interface gráfica do TOTVS Monitor Electron
 
 
-## Creditos
+## Créditos
 
 - [Bardez](https://github.com/bardez) - Sorting Environment
