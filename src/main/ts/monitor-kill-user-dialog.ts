@@ -86,9 +86,9 @@ export class MonitorKillUserDialog extends MonitorDialog {
 		this.users.forEach((user) => {
 			//console.log(user.username + " :: " + user.computerName + " :: " + user.threadId + " :: " + user.server + " :: " + this.message);
 			if (appKillUser.checked)
-				this.server.appKillUser(user.username, user.computerName, user.threadId, user.server);
+				this.server.appKillUser(user.username, user.computerName, user.threadId, user.server, user.environment);
 			else
-				this.server.killUser(user.username, user.computerName, user.threadId, user.server);
+				this.server.killUser(user.username, user.computerName, user.threadId, user.server, user.environment);
 
 			progressbar.progress += step;
 		})
