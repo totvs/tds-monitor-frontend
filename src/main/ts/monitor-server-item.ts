@@ -89,7 +89,11 @@ export class MonitorServerItem extends LitElement {
 		}
 
 		if (this.server.token !== null) {
-			let result = await this.server.reconnect();
+			let result = await this.server.reconnect({ encoding: 'CP1252' });
+
+			if (!result) {
+				result = await this.server.reconnect({ encoding: 'CP1251' });
+			}
 
 			if (!result) {
 				connectionFailed = true;
@@ -107,7 +111,14 @@ export class MonitorServerItem extends LitElement {
 						authResult = await authDialog.showForResult();
 
 					if (authResult) {
-						authResult = await this.server.authenticate(authDialog.username, authDialog.password);
+						// Try to authenticate using latin codepage
+						authResult = await this.server.authenticate(authDialog.username, authDialog.password, 'CP1252');
+
+						if (!authResult) {
+							// Try to authenticate using cyrillic codepage
+							await this.server.connect(this.name, this.server.serverType, this.server.address, this.server.port, this.server.secure, this.build, connDialog.environment);
+							authResult = await this.server.authenticate(authDialog.username, authDialog.password, 'CP1251');
+						}
 
 						if (authResult) {
 							if (authDialog.storeToken) {
