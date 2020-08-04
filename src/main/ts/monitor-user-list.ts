@@ -155,13 +155,17 @@ export class MonitorUserList extends LitElement {
 
 					<tbody>
 						${this.sortedUsers.map((user: MonitorUserRow) => {
+							let displayUsername = user.appUser;
+							if (displayUsername === "") {
+								displayUsername = user.username;
+							}
 			return html`
 								<monitor-user-list-row
 									@change="${this.onCheckBoxChanged}"
 									?checked=${user.checked}
 									order="${columnOrder.join(',')}"
 
-									username="${user.username}"
+									username="${displayUsername}"
 									environment="${user.environment.toUpperCase()}"
 									computerName="${user.computerName}"
 									threadId="${user.threadId}"
