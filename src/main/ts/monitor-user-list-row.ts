@@ -6,6 +6,9 @@ import { style } from '../css/monitor-user-list-row.css';
 export class MonitorUserListRow extends LitElement {
 
 	@property({ type: String, reflect: true, attribute: true })
+	appUser: string;
+
+	@property({ type: String, reflect: true, attribute: true })
 	username = '';
 
 	@property({ type: String, reflect: true, attribute: true })
@@ -104,7 +107,7 @@ export class MonitorUserListRow extends LitElement {
 			<td>
 				<monitor-checkbox ?checked="${this.checked}" @change="${this.onCheckBoxChanged}"></monitor-checkbox>
 			</td>
-			<td class="left">${this.username}</td>
+			<td class="left">${this.appUser || this.username}</td>
 			<td class="left">${this.environment}</td>
 			<td class="left">${this.computerName}</td>
 			<td class="right">${this.threadId}</td>
