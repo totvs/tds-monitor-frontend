@@ -123,7 +123,7 @@ export class MonitorAddServerDialog extends MonitorDialog {
 		}
 		else {
 
-			const listOfServers = JSON.parse(window.localStorage.getItem('settings'));
+			const listOfServers = window.storage.get();
 			let cantStoreValue = listOfServers.servers.filter(item => {
 				return ((item.address == address && item.port == port) || item.name == name )});
 
