@@ -5,6 +5,7 @@ interface Window {
 	maximize(): void;
 	minimize(): void;
 
+	storage: Storage;
 	versions: Versions;
 }
 
@@ -27,3 +28,30 @@ interface JsonRpcMessage<T> {
 	params?: T;
 }
 
+interface Storage {
+	get: () => MonitorSettings;
+	set: (data: MonitorSettings) => void;
+}
+
+interface MonitorSettings {
+	servers?: Array<MonitorSettingsServer>;
+	config?: MonitorSettingsConfig
+}
+
+interface MonitorSettingsConfig {
+	language?: 'portuguese' | 'english' | 'spanish';
+	updateInterval?: number;
+	alwaysOnTop?: boolean;
+	generateUpdateLog?: boolean;
+	generateExecutionLog?: boolean;
+}
+
+interface MonitorSettingsServer {
+	name: string;
+	serverType: number,
+	address: string;
+	port: number;
+	build: string;
+	secure: boolean;
+	token?: string;
+}

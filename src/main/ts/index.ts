@@ -37,8 +37,8 @@ declare global {
 }
 
 const app = document.querySelector('monitor-app'),
-	settings = window.localStorage.getItem('settings');
+	settings = window.storage.get();
 
 if (settings) {
-	app.settings = JSON.parse(settings);
+	app.settings = settings;
 }

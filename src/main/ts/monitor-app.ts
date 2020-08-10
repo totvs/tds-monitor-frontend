@@ -14,30 +14,6 @@ const DEFAULT_SETTINGS: MonitorSettings = {
 	}
 };
 
-export interface MonitorSettings {
-	servers?: Array<Server>;
-	config?: MonitorSettingsConfig
-}
-
-export interface MonitorSettingsConfig {
-	language?: 'portuguese' | 'english' | 'spanish';
-	updateInterval?: number;
-	alwaysOnTop?: boolean;
-	generateUpdateLog?: boolean;
-	generateExecutionLog?: boolean;
-}
-
-interface Server {
-	name: string;
-	serverType: number,
-	address: string;
-	port: number;
-	build: BuildVersion;
-	secure: boolean;
-	token?: string;
-}
-
-
 export enum MessageType {
 	ERROR = 1,
 	WARNING = 2,
@@ -112,14 +88,14 @@ class MonitorApp extends LitElement {
     	`;
 	}
 
-	private createServer(data: Server) {
+	private createServer(data: MonitorSettingsServer) {
 		let server = languageClient.createMonitorServer();
 		server.id = data.name;
 		server.serverType = data.serverType;
 		server.address = data.address;
 		server.port = data.port;
 		if (data.build) {
-			server.build = data.build;
+			server.build = data.build as BuildVersion;
 		}
 		server.secure = data.secure;
 		if (data.token) {
@@ -137,7 +113,8 @@ class MonitorApp extends LitElement {
 			build: options.server.build,
 			secure: options.server.secure
 		});
-		window.localStorage.setItem('settings', JSON.stringify(this.settings));
+
+		window.storage.set(this.settings);
 
 		let drawer = this.querySelector('monitor-drawer');
 		drawer.addServer({ name: options.name, server: options.server });
@@ -145,7 +122,8 @@ class MonitorApp extends LitElement {
 
 	removeServer(serverName: string) {
 		this.settings.servers = this.settings.servers.filter((server => server.name !== serverName));
-		window.localStorage.setItem('settings', JSON.stringify(this.settings));
+
+		window.storage.set(this.settings);
 
 		let drawer = this.querySelector('monitor-drawer');
 		drawer.removeServer(serverName);
@@ -157,7 +135,7 @@ class MonitorApp extends LitElement {
 		if (server) {
 			server.token = token;
 
-			window.localStorage.setItem('settings', JSON.stringify(this.settings));
+			window.storage.set(this.settings);
 		}
 	}
 
@@ -168,7 +146,7 @@ class MonitorApp extends LitElement {
 	set config(value: MonitorSettingsConfig) {
 		this.settings.config = value;
 
-		window.localStorage.setItem('settings', JSON.stringify(this.settings));
+		window.storage.set(this.settings);
 	}
 
 	onBeginServerConnection(event: CustomEvent<MonitorServerItemOptions>): boolean | void {
