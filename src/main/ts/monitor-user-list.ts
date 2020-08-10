@@ -156,10 +156,10 @@ export class MonitorUserList extends LitElement {
 					<tbody>
 						${this.sortedUsers.map((user: MonitorUserRow) => {
 							let displayUsername = user.appUser;
-							if (displayUsername === "") {
+							if (!displayUsername) {
 								displayUsername = user.username;
 							}
-			return html`
+							return html`
 								<monitor-user-list-row
 									@change="${this.onCheckBoxChanged}"
 									?checked=${user.checked}
