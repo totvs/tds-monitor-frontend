@@ -123,10 +123,12 @@ export class MonitorAddServerDialog extends MonitorDialog {
 		}
 		else {
 
+			let cantStoreValue = [];
 			const listOfServers = window.storage.get();
-			let cantStoreValue = listOfServers.servers.filter(item => {
-				return ((item.address == address && item.port == port) || item.name == name )});
-
+			if (listOfServers && listOfServers.servers) {
+				cantStoreValue = listOfServers.servers.filter(item => {
+					return ((item.address == address && item.port == port) || item.name == name )});
+			}
 			if(cantStoreValue.length > 0) {
 				this.progress = 'hidden';
 				this.blockControls(false);
