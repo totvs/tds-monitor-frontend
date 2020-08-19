@@ -1,5 +1,5 @@
 import { SortOrder } from "../monitor-user-list-column-header";
-import { MonitorUser } from "@totvs/tds-languageclient";
+import { MonitorUserRow } from "../monitor-user-list";
 import { ColumnKey } from "../monitor-columns";
 
 const sortNumber = (a: number, b: number) => a - b;
@@ -17,7 +17,7 @@ const sortString = (a: string, b: string) => {
 };
 
 export function sortUsers(column: ColumnKey, order: SortOrder) {
-	return (a: MonitorUser, b: MonitorUser) => {
+	return (a: MonitorUserRow, b: MonitorUserRow) => {
 		let result = 0;
 		const valueA = a[column],
 			valueB = b[column];

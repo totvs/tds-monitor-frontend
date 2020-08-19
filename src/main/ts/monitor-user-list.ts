@@ -11,8 +11,9 @@ import { MonitorUserListRow } from './monitor-user-list-row';
 import { HeaderClickEvent, MonitorUserListColumnHeader, SortOrder } from './monitor-user-list-column-header';
 import { sortUsers } from './util/sort-users';
 
-interface MonitorUserRow extends MonitorUser {
+export interface MonitorUserRow extends MonitorUser {
 	checked: boolean;
+    usernameDisplayed: string;
 }
 
 const columns = columnOrder.map((key: ColumnKey) => ({
@@ -26,7 +27,7 @@ export class MonitorUserList extends LitElement {
 	@query('monitor-button[icon="chat"]')
 	sendMessageButton: MonitorButton;
 	sortOrder: SortOrder = SortOrder.Descending;
-	sortColumn: ColumnKey = 'username';
+	sortColumn: ColumnKey = 'usernameDisplayed';
 
 	@property({ type: Object })
 	set server(value: TdsMonitorServer) {
@@ -75,7 +76,8 @@ export class MonitorUserList extends LitElement {
 					newMap.set(key, Object.assign({}, oldUser, user));
 				}
 				else {
-					newMap.set(key, Object.assign({ checked: false }, user));
+					const usernameDisplayed = user.appUser || user.username;
+					newMap.set(key, Object.assign({ checked: false, usernameDisplayed: usernameDisplayed }, user));
 				}
 			});
 		}
@@ -161,7 +163,7 @@ export class MonitorUserList extends LitElement {
 									?checked=${user.checked}
 									order="${columnOrder.join(',')}"
 
-									appUser="${user.appUser || ''}"
+									usernameDisplayed="${user.usernameDisplayed}"
 									username="${user.username}"
 									environment="${user.environment.toUpperCase()}"
 									computerName="${user.computerName}"

@@ -21,7 +21,7 @@ export enum Columns {
 
 
 export interface ColumnData {
-	username: string;
+	usernameDisplayed: string;
 	environment: string;
 	computerName: string;
 	threadId: string;
@@ -42,7 +42,7 @@ export interface ColumnData {
 export type ColumnKey = keyof ColumnData;
 
 export const columnOrder: Array<ColumnKey> = [
-	'username',
+	'usernameDisplayed',
 	'environment',
 	'computerName',
 	'threadId',
@@ -61,7 +61,7 @@ export const columnOrder: Array<ColumnKey> = [
 ]
 
 export const columnText: ColumnData = {
-	username: 'User Name',
+	usernameDisplayed: 'User Name',
 	environment: 'Environment',
 	computerName: 'Computer Name',
 	threadId: 'Thread ID',
