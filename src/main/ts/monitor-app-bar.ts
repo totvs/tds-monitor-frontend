@@ -1,5 +1,6 @@
 import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
 import { style } from '../css/monitor-app-bar.css';
+import { i18n } from './util/i18n';
 
 declare type WindowState = 'minimized' | 'maximized' | 'restored';
 
@@ -7,7 +8,7 @@ declare type WindowState = 'minimized' | 'maximized' | 'restored';
 export class MonitorAppBar extends LitElement {
 
 	@property({ type: String })
-	public text: string = 'TOTVS Monitor';
+	public text: string = i18n.totvsMonitor();
 
 	@property({ type: String })
 	public state: WindowState = 'restored';

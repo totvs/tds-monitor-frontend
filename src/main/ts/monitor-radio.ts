@@ -1,4 +1,4 @@
-import { customElement, property, css } from "lit-element";
+import { customElement, css } from "lit-element";
 import { Radio } from '@material/mwc-radio';
 import { style } from '../css/monitor-radio.css';
 

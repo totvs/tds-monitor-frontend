@@ -5,6 +5,7 @@ import { style } from '../css/monitor-drawer.css';
 import { MonitorSettingsDialog } from './monitor-settings-dialog';
 import { MonitorMenu, MenuOptions } from './monitor-menu';
 import { MonitorAboutDialog } from './monitor-about-dialog';
+import { i18n } from './util/i18n';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -56,11 +57,11 @@ export class MonitorDrawer extends LitElement {
 							<rect width="2" height="14" x="14" y="8" fill="#FFF" rx="1"></rect>
 						</g>
 					</svg>
-					<label>Novo Servidor</label>
+					<label>${i18n.localize("NEW_SERVER", "New Server")}</label>
 				</header>
 				<slot></slot>
 				<footer>
-					<monitor-button icon='settings' @click="${this.onButtonSettingsClicked}">Configurações</monitor-button>
+					<monitor-button icon='settings' @click="${this.onButtonSettingsClicked}">${i18n.localize("CONFIGURATIONS", "Configurations")}</monitor-button>
 					<mwc-icon-button icon='more_vert' @click="${this.onMenuClick}"></mwc-icon-button>
 				</footer>
 			</aside>
@@ -89,12 +90,12 @@ export class MonitorDrawer extends LitElement {
 				},
 				items: [
 					{
-						text: serverView.showlog ? 'Ocultar Log' : 'Exibir Log',
+						text: serverView.showlog ? i18n.localize("HIDE_LOG", "Hide Log") : i18n.localize("SHOW_LOG", "Show Log"),
 						callback: () => { serverView.showlog = !serverView.showlog },
 						separator: true
 					},
 					{
-						text: 'Sobre...',
+						text: i18n.localize("ABOUT", "About..."),
 						callback: () => { this.showAboutDialog() }
 					}
 				]

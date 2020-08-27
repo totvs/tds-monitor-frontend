@@ -4,6 +4,7 @@ import { MonitorDialog } from './monitor-dialog';
 import { MonitorButton } from './monitor-button';
 import { TdsMonitorServer } from '@totvs/tds-languageclient';
 import { MonitorRadio } from './monitor-radio';
+import { i18n } from './util/i18n';
 
 @customElement('monitor-other-actions-dialog')
 export class MonitorOtherActionsDialog extends MonitorDialog {
@@ -16,17 +17,17 @@ export class MonitorOtherActionsDialog extends MonitorDialog {
 			escClose: true,
 			buttons: [
 				{
-					text: 'Ok',
+					text: i18n.ok(),
 					click: (event) => this.onOkButtonClicked(event)
 				},
 				{
-					text: 'Cancel',
+					text: i18n.cancel(),
 					click: (event) => this.onCancelButtonClicked(event)
 				}
 			]
 		});
 
-		this.title = 'Outras ações';
+		this.title = i18n.localize("OTHER_ACTIONS", "Other actions");
 
 		this.server = server;
 		this.connectionStatus = connectionStatus;
@@ -37,14 +38,16 @@ export class MonitorOtherActionsDialog extends MonitorDialog {
 	}
 
 	get body() {
+		let action = this.connectionStatus ? i18n.disable() : i18n.enable();
+		let setConnectionStatusTitle = i18n.localize("NEW_CONNECTIONS_ACTION", "{0} new connections", action);
 		return html`
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setConnectionStatus" tabindex="1" name="otherActionsType" title="${this.connectionStatus ? 'Desabilitar' : 'Habilitar'} novas conexões"></monitor-radio>
-				<span>${this.connectionStatus ? 'Desabilitar' : 'Habilitar'} novas conexões</span>
+				<monitor-radio id="setConnectionStatus" tabindex="1" name="otherActionsType" title="${setConnectionStatusTitle}"></monitor-radio>
+				<span>${setConnectionStatusTitle}</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="stopServer" tabindex="2" name="otherActionsType" title="Parar o Servidor"></monitor-radio>
-				<span>Parar o Servidor</span>
+				<monitor-radio id="stopServer" tabindex="2" name="otherActionsType" title="${i18n.localize("STOP_SERVER", "Stop Server")}"></monitor-radio>
+				<span>${i18n.localize("STOP_SERVER", "Stop Server")}</span>
 			</label>
 		`;
 	}

@@ -4,6 +4,7 @@ import { MonitorDialog } from './monitor-dialog';
 import { MonitorButton } from './monitor-button';
 import { MonitorRadio } from './monitor-radio';
 import { MonitorTextInput } from './monitor-text-input';
+import { i18n } from './util/i18n';
 
 
 @customElement('monitor-self-refresh-dialog')
@@ -17,17 +18,17 @@ export class MonitorSelfRefreshDialog extends MonitorDialog {
 			escClose: true,
 			buttons: [
 				{
-					text: 'Ok',
+					text: i18n.ok(),
 					click: (event) => this.onOkButtonClicked(event)
 				},
 				{
-					text: 'Cancel',
+					text: i18n.cancel(),
 					click: (event) => this.onCancelButtonClicked(event)
 				}
 			]
 		});
 
-		this.title = 'Intervalo de atualização';
+		this.title = i18n.localize("UPDATE_INTERVAL", "Update interval");
 
 		const app = document.querySelector('monitor-app');
 
@@ -56,24 +57,24 @@ export class MonitorSelfRefreshDialog extends MonitorDialog {
 	get body() {
 		return html`
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setOffInterval" tabindex="1" name="setUpdateIntervalType" title="Desativado" ?checked=${this.selected == 0}></monitor-radio>
-				<span>Desativado</span>
+				<monitor-radio id="setOffInterval" tabindex="1" name="setUpdateIntervalType" title="${i18n.disabled()}" ?checked=${this.selected == 0}></monitor-radio>
+				<span>${i18n.disabled()}</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setFastInterval" tabindex="2" name="setUpdateIntervalType" title="5 segundos" ?checked=${this.selected == 1}></monitor-radio>
-				<span>5 segundos</span>
+				<monitor-radio id="setFastInterval" tabindex="2" name="setUpdateIntervalType" title="${i18n.xSeconds(5)}" ?checked=${this.selected == 1}></monitor-radio>
+				<span>${i18n.xSeconds(5)}</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setMediumInterval" tabindex="3" name="setUpdateIntervalType" title="15 segundos" ?checked=${this.selected == 2}></monitor-radio>
-				<span>15 segundos</span>
+				<monitor-radio id="setMediumInterval" tabindex="3" name="setUpdateIntervalType" title="${i18n.xSeconds(15)}" ?checked=${this.selected == 2}></monitor-radio>
+				<span>${i18n.xSeconds(15)}</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setSlowInterval" tabindex="4" name="setUpdateIntervalType" title="30 segundos" ?checked=${this.selected == 3}></monitor-radio>
-				<span>30 segundos</span>
+				<monitor-radio id="setSlowInterval" tabindex="4" name="setUpdateIntervalType" title="${i18n.xSeconds(30)}" ?checked=${this.selected == 3}></monitor-radio>
+				<span>${i18n.xSeconds(30)}</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="setCustomInterval" tabindex="5" name="setUpdateIntervalType" title="Definir intervalo personalizado" ?checked=${this.selected == 4}></monitor-radio>
-				<monitor-text-input id="customUpdateInterval" tabindex="6" type="number" min="0" max="3600" small value="${this.updateInterval}"></monitor-text-input><span>segundos</span>
+				<monitor-radio id="setCustomInterval" tabindex="5" name="setUpdateIntervalType" title="${i18n.localize("SET_CUSTOM_INTERVAL", "Set custom interval")}" ?checked=${this.selected == 4}></monitor-radio>
+				<monitor-text-input id="customUpdateInterval" tabindex="6" type="number" min="0" max="3600" small value="${this.updateInterval}"></monitor-text-input><span>${i18n.localize("SECONDS", "seconds")}</span>
 			</label>
 		`;
 	}
@@ -139,11 +140,12 @@ export class MonitorSelfRefreshDialog extends MonitorDialog {
 			language: app.config.language,
 			alwaysOnTop: app.config.alwaysOnTop,
 			generateUpdateLog: app.config.generateUpdateLog,
-			generateExecutionLog: app.config.generateExecutionLog
+			generateExecutionLog: app.config.generateExecutionLog,
+			columnsConfig: app.config.columnsConfig
 		};
 
 		app.dispatchEvent(new CustomEvent<string>('settings-update', {
-			detail: 'Settings update.',
+			detail: i18n.localize("UPDATE_SETTINGS", "Update settings."),
 			bubbles: true,
 			composed: true
 		}));

@@ -4,6 +4,7 @@ import { MonitorButton } from './monitor-button';
 import { MonitorDialog } from './monitor-dialog';
 import { MonitorServerItem } from './monitor-server-item';
 import { MonitorTextInput } from './monitor-text-input';
+import { i18n } from './util/i18n';
 
 @customElement('monitor-connection-dialog')
 export class MonitorConnectionDialog extends MonitorDialog {
@@ -19,11 +20,11 @@ export class MonitorConnectionDialog extends MonitorDialog {
 			escClose: true,
 			buttons: [
 				{
-					text: 'Ok',
+					text: i18n.ok(),
 					click: (event) => this.onOkButtonClicked(event)
 				},
 				{
-					text: 'Cancel',
+					text: i18n.cancel(),
 					click: (event) => this.onCancelButtonClicked(event)
 				}
 			]
@@ -31,7 +32,7 @@ export class MonitorConnectionDialog extends MonitorDialog {
 
 		this.monitorServerItem = monitorServerItem;
 
-		this.title = 'Iniciar Conexão';
+		this.title = i18n.localize("START_CONNECTION", "Start Connection");
 	}
 
 	static get styles(): CSSResult {
@@ -40,7 +41,7 @@ export class MonitorConnectionDialog extends MonitorDialog {
 
 	get body() {
 		return html`
-			<monitor-text-input id="environment" tabindex="1" type="text" label="Ambiente"></monitor-text-input>
+			<monitor-text-input id="environment" tabindex="1" type="text" label="${i18n.localize("ENVIRONMENT", "Environment")}"></monitor-text-input>
 		`;
 	}
 

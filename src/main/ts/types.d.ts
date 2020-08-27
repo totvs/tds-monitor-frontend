@@ -44,6 +44,7 @@ interface MonitorSettingsConfig {
 	alwaysOnTop?: boolean;
 	generateUpdateLog?: boolean;
 	generateExecutionLog?: boolean;
+	columnsConfig?: string;
 }
 
 interface MonitorSettingsServer {

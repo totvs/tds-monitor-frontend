@@ -4,6 +4,7 @@ import { MonitorDialog } from './monitor-dialog';
 import { MonitorButton } from './monitor-button';
 import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
 import { MonitorRadio } from './monitor-radio';
+import { i18n } from './util/i18n';
 
 @customElement('monitor-kill-user-dialog')
 export class MonitorKillUserDialog extends MonitorDialog {
@@ -16,17 +17,17 @@ export class MonitorKillUserDialog extends MonitorDialog {
 			escClose: true,
 			buttons: [
 				{
-					text: 'Ok',
+					text: i18n.ok(),
 					click: (event) => this.onOkButtonClicked(event)
 				},
 				{
-					text: 'Cancel',
+					text: i18n.cancel(),
 					click: (event) => this.onCancelButtonClicked(event)
 				}
 			]
 		});
 
-		this.title = 'Desconectar Usuários';
+		this.title = i18n.localize("DISCONNECT_USERS", "Disconnect Users");
 
 		this.server = server;
 		this.users = users;
@@ -39,12 +40,12 @@ export class MonitorKillUserDialog extends MonitorDialog {
 	get body() {
 		return html`
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="killUser" checked tabindex="1" name="killUserType" title="Finalização imediata"></monitor-radio>
-				<span>Finalização imediata</span>
+				<monitor-radio id="killUser" checked tabindex="1" name="killUserType" title="${i18n.localize("IMMEDIATE_TERMINATION", "Immediate termination")}"></monitor-radio>
+				<span>${i18n.localize("IMMEDIATE_TERMINATION", "Immediate termination")}</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="appKillUser" tabindex="2" name="killUserType" title="Aguardar pela aplicação"></monitor-radio>
-				<span>Aguardar pela aplicação</span>
+				<monitor-radio id="appKillUser" tabindex="2" name="killUserType" title="${i18n.localize("WAIT_APPLICATION", "Wait for application")}"></monitor-radio>
+				<span>${i18n.localize("WAIT_APPLICATION", "Wait for application")}</span>
 			</label>
 		`;
 	}

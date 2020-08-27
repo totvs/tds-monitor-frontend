@@ -6,6 +6,7 @@ import { MonitorConnectionDialog } from './monitor-connection-dialog';
 import { MonitorAuthenticationDialog } from './monitor-authentication-dialog';
 import { MenuOptions, MonitorMenu } from './monitor-menu';
 import { MonitorOtherActionsDialog } from './monitor-other-actions-dialog';
+import { i18n } from './util/i18n';
 
 declare global {
 	interface HTMLElementTagNameMap {
@@ -151,7 +152,7 @@ export class MonitorServerItem extends LitElement {
 
 			if (dispatchEvents) {
 				this.dispatchEvent(new CustomEvent<string>('server-error', {
-					detail: 'Não foi possivel se conectar a este servidor.',
+					detail: i18n.localize("UNABLE_CONNECT", "It was not possible to connect to this server."),
 					bubbles: true,
 					composed: true
 				}));
@@ -178,7 +179,7 @@ export class MonitorServerItem extends LitElement {
 			this.status = 'error';
 
 			this.dispatchEvent(new CustomEvent<string>('server-error', {
-				detail: 'Não foi possivel se conectar a este servidor.',
+				detail: i18n.localize("UNABLE_CONNECT", "It was not possible to connect to this server."),
 				bubbles: true,
 				composed: true
 			}));
@@ -232,7 +233,7 @@ export class MonitorServerItem extends LitElement {
 				},
 				items: [
 					{
-						text: 'Excluir Servidor',
+						text: i18n.localize("DELETE_SERVER", "Delete Server"),
 						callback: () => { this.deleteServer() },
 						separator: true
 					}
@@ -241,7 +242,7 @@ export class MonitorServerItem extends LitElement {
 
 		if (this.status === 'disconnected') {
 			options.items.push({
-				text: 'Conectar',
+				text: i18n.localize("CONNECT", "Connect"),
 				separator: true,
 				callback: () => { this.connectServer(false) }
 			});
@@ -253,7 +254,7 @@ export class MonitorServerItem extends LitElement {
 		else {
 			if (this.status !== 'error') {
 				options.items.push({
-					text: 'Desconectar',
+					text: i18n.localize("DISCONNECT", "Disconnect"),
 					separator: true,
 					callback: () => { this.disconnectServer() }
 				});
@@ -261,7 +262,7 @@ export class MonitorServerItem extends LitElement {
 
 			if (this.status === 'connected') {
 				options.items.push({
-					text: 'Outras ações',
+					text: i18n.localize("OTHER_ACTIONS", "Other actions"),
 					callback: () => {
 						this.otherActions();
 					}

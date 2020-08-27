@@ -10,16 +10,18 @@ import { MonitorSendMessageDialog } from './monitor-send-message-dialog';
 import { MonitorUserListRow } from './monitor-user-list-row';
 import { HeaderClickEvent, MonitorUserListColumnHeader, SortOrder } from './monitor-user-list-column-header';
 import { sortUsers } from './util/sort-users';
+import { i18n } from './util/i18n';
+import { MonitorColumnsConfigDialog } from './monitor-columns-config-dialog';
 
 export interface MonitorUserRow extends MonitorUser {
 	checked: boolean;
     usernameDisplayed: string;
 }
 
-const columns = columnOrder.map((key: ColumnKey) => ({
-	id: key,
-	text: columnText[key]
-}));
+// const columns = columnOrder().map((key: ColumnKey) => ({
+// 	id: key,
+// 	text: columnText[key]
+// }));
 
 @customElement('monitor-user-list')
 export class MonitorUserList extends LitElement {
@@ -49,7 +51,7 @@ export class MonitorUserList extends LitElement {
 	_footerConnectedUser: string;
 	_footerUpdateInterval: string;
 	_footerLastUpdate: string;
-	_sortOrder: number = -1; // Odenação PAdrão (A-Z)
+	_sortOrder: number = -1; // Ordenação Padrão (A-Z)
 
 
 	query: RegExp = null;
@@ -101,9 +103,12 @@ export class MonitorUserList extends LitElement {
 			second: '2-digit'
 		});
 		const app = document.querySelector('monitor-app');
-		this._footerConnectedUser = (newMap.size > 0 ? newMap.size : 'Nenhum') + " usuário" + (newMap.size > 1 ? "s" : "") + " conectado" + (newMap.size > 1 ? "s" : "");
-		this._footerUpdateInterval = "Intervalo para auto atualização: " + (app.config.updateInterval > 0 ? (app.config.updateInterval + " segundos") : "Desativado");
-		this._footerLastUpdate = "Atualizado em: " + lastUpdate;
+		this._footerConnectedUser = newMap.size > 0 ? 
+			(newMap.size > 1 ? i18n.localize("FOOTER_CONNECTED_USERS_MORE", "{0} users connected", newMap.size) : 
+			i18n.localize("FOOTER_CONNECTED_USERS_ONE", "1 user connected")) :
+			i18n.localize("FOOTER_CONNECTED_USERS_NONE", "No user connected");
+		this._footerUpdateInterval = i18n.localize("FOOTER_UPDATE_INTERVAL", "Auto update interval: {0}", (app.config.updateInterval > 0 ? i18n.xSeconds(app.config.updateInterval) : i18n.disabled()));
+		this._footerLastUpdate = i18n.localize("FOOTER_UPDATED_AT", "Updated at: {0}", lastUpdate); //"Atualizado em: " + lastUpdate;
 	}
 
 	get rows(): Array<MonitorUserListRow> {
@@ -127,14 +132,18 @@ export class MonitorUserList extends LitElement {
 	}
 
 	render() {
+		let columns = columnOrder().map((key: ColumnKey) => ({
+			id: key,
+			text: columnText[key]
+		}));
 		return html`
 			<header>
 				<monitor-button small icon="${this.checkAllIcon}" @click="${this.onButtonCheckAllClick}"></monitor-button>
-				<mwc-icon-button icon="refresh" @click="${this.onRefresh}" title="Atualizar"></mwc-icon-button>
-				<mwc-icon-button icon="update" @click="${this.onSelfRefresh}" title="Auto atualizar"></mwc-icon-button>
-				<mwc-icon-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="Enviar Mensagem"></mwc-icon-button >
-				<mwc-icon-button icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="Desconectar"></mwc-icon-button >
-				<mwc-icon-button icon="more_vert" @click="${this.onButtonOtherActionsClick}" title="Outras ações"></mwc-icon-button >
+				<mwc-icon-button icon="refresh" @click="${this.onRefresh}" title="${i18n.localize("DO_UPDATE", "Update")}"></mwc-icon-button>
+				<mwc-icon-button icon="update" @click="${this.onSelfRefresh}" title="${i18n.localize("DO_AUTO_UPDATE", "Auto update")}"></mwc-icon-button>
+				<mwc-icon-button icon="chat" @click="${this.onButtonSendMessageClick}" ?disabled=${!this.userSelected} title="${i18n.localize("DO_SEND_MESSAGE", "Send Message")}"></mwc-icon-button >
+				<mwc-icon-button icon="power_off" @click="${this.onButtonKillUserDialogClick}" ?disabled=${!this.userSelected} title="${i18n.localize("DO_DISCONNECT", "Disconnect")}"></mwc-icon-button >
+				<mwc-icon-button icon="more_vert" @click="${this.onButtonOtherActionsClick}" title="${i18n.localize("DO_OTHER_ACTIONS", "Other actions")}"></mwc-icon-button >
 				<div></div>
 				<monitor-text-input outlined icon="search" @input="${this.onSearchInput}"></monitor-text-input>
 			</header>
@@ -143,14 +152,13 @@ export class MonitorUserList extends LitElement {
 				<table>
 					<thead>
 						<tr @header-click="${this.onHeaderClick}">
-							<th></th>
+							<th><mwc-icon-button icon="more_vert" @click="${this.onButtonColumnsConfigClick}" title="${i18n.localize("COLUMNS_CONFIG", "Columns Configuration")}"></mwc-icon-button ></th>
 							${columns.map(({ id, text }) => html`
 								<monitor-user-list-column-header
 									id="${id}"
 									caption="${text}"
 									order="${this.sortColumn === id ? this.sortOrder : SortOrder.Undefined}"
-								>
-								</monitor-user-list-column-header>
+								/>
 							`)}
 						</tr>
 					</thead>
@@ -161,7 +169,6 @@ export class MonitorUserList extends LitElement {
 								<monitor-user-list-row
 									@change="${this.onCheckBoxChanged}"
 									?checked=${user.checked}
-									order="${columnOrder.join(',')}"
 
 									usernameDisplayed="${user.usernameDisplayed}"
 									username="${user.username}"
@@ -189,9 +196,9 @@ export class MonitorUserList extends LitElement {
 
 			<footer>
 				<span class="footer">${this._footerConnectedUser}</span>
-				-
+				<span class="footer">-</span>
 				<span class="footer">${this._footerUpdateInterval}</span>
-				-
+				<span class="footer">-</span>
 				<span class="footer">${this._footerLastUpdate}</span>
 			</footer>
         `;
@@ -312,6 +319,11 @@ export class MonitorUserList extends LitElement {
 				let dialog = new MonitorOtherActionsDialog(this.server, this._connectionStatus);
 				dialog.show();
 			});
+	}
+
+	onButtonColumnsConfigClick(event: MouseEvent) {
+		const dialog = new MonitorColumnsConfigDialog();
+		dialog.show();
 	}
 
 	@property({ type: String })

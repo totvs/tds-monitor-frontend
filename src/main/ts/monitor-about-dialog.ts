@@ -1,6 +1,7 @@
 import { CSSResult, customElement, html } from 'lit-element';
 import { style } from '../css/monitor-about-dialog.css';
 import { MonitorDialog } from './monitor-dialog';
+import { i18n } from './util/i18n';
 
 @customElement('monitor-about-dialog')
 export class MonitorAboutDialog extends MonitorDialog {
@@ -10,13 +11,13 @@ export class MonitorAboutDialog extends MonitorDialog {
 			escClose: true,
 			buttons: [
 				{
-					text: 'Fechar',
+					text: i18n.close(),
 					click: (event) => this.onCloseButtonClicked(event)
 				}
 			]
 		});
 
-		this.title = 'Sobre o TOTVS Monitor';
+		this.title = i18n.localize("ABOUT_TOTVS_MONITOR", "About TOTVS Monitor");
 		this.progress = 'none';
 	}
 
@@ -29,7 +30,7 @@ export class MonitorAboutDialog extends MonitorDialog {
 
 		return html`
 			<img>
-			<h1>TOTVS Monitor</h1>
+			<h1>${i18n.totvsMonitor()}</h1>
 			<h4>v${app.version}</h4>
 			${Object.keys(app.dependencies).map((key: keyof Versions) => html`
 				<h4>${key}: ${app.dependencies[key]}</h4>

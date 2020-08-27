@@ -184,7 +184,7 @@ class MonitorApp extends LitElement {
 
 		serverView.setServerUpdateInterval();
 
-		console.log('onSettingsUpdate');
+		//console.log('onSettingsUpdate');
 	}
 
 }

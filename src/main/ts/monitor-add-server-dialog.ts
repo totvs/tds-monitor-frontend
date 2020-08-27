@@ -5,6 +5,7 @@ import { MonitorDialog } from './monitor-dialog';
 import { MonitorTextInput } from './monitor-text-input';
 import { MonitorWarning } from './monitor-warning';
 import { MonitorRadio } from './monitor-radio';
+import { i18n } from './util/i18n';
 
 @customElement('monitor-add-server-dialog')
 export class MonitorAddServerDialog extends MonitorDialog {
@@ -14,17 +15,17 @@ export class MonitorAddServerDialog extends MonitorDialog {
 			escClose: true,
 			buttons: [
 				{
-					text: 'Ok',
+					text: i18n.ok(),
 					click: (event) => this.onOkButtonClicked(event)
 				},
 				{
-					text: 'Cancel',
+					text: i18n.cancel(),
 					click: (event) => this.onCancelButtonClicked(event)
 				}
 			]
 		});
 
-		this.title = 'Adicionar Novo Servidor';
+		this.title = i18n.localize("ADD_NEW_SERVER", "Add New Server");
 		this.progress = 'hidden';
 	}
 
@@ -35,16 +36,16 @@ export class MonitorAddServerDialog extends MonitorDialog {
 	get body(){
 		return html`
 			<monitor-warning id='show_error' msg='' showError='no' ></monitor-warning>
-			<monitor-text-input id="name" tabindex="1" type="text" label="Nome" class="validate" ></monitor-text-input>
-			<monitor-text-input id="address" tabindex="2" type="text" label="Endereço"></monitor-text-input>
-			<monitor-text-input id="port" tabindex="3" type="number" min="1" label="Porta"></monitor-text-input>
+			<monitor-text-input id="name" tabindex="1" type="text" label="${i18n.localize("NAME", "Name")}" class="validate" ></monitor-text-input>
+			<monitor-text-input id="address" tabindex="2" type="text" label="${i18n.localize("ADDRESS", "Address")}"></monitor-text-input>
+			<monitor-text-input id="port" tabindex="3" type="number" min="1" label="${i18n.localize("PORT", "Port")}"></monitor-text-input>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="serverType" value="1" checked tabindex="4" name="serverType" title="Protheus"></monitor-radio>
-				<span>Protheus</span>
+				<monitor-radio id="serverType" value="1" checked tabindex="4" name="serverType" title="${i18n.protheus()}"></monitor-radio>
+				<span>${i18n.protheus()}</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="serverType" value="2" tabindex="5" name="serverType" title="Logix"></monitor-radio>
-				<span>Logix</span>
+				<monitor-radio id="serverType" value="2" tabindex="5" name="serverType" title="${i18n.logix()}"></monitor-radio>
+				<span>${i18n.logix()}</span>
 			</label>
 		`;
 	}
@@ -97,29 +98,29 @@ export class MonitorAddServerDialog extends MonitorDialog {
 			this.progress = 'hidden';
 			this.blockControls(false);
 			this.focus();
-			this.renderRoot.querySelector<MonitorTextInput>('monitor-text-input#name').showRedLine('Nome inválido','text');
-			show_error.showTheError("Nome de servidor inválido");
+			this.renderRoot.querySelector<MonitorTextInput>('monitor-text-input#name').showRedLine(i18n.localize("INVALID_NAME", "Invalid name"),'text');
+			show_error.showTheError(i18n.localize("INVALID_SERVER_NAME", "Invalid server name"));
 
 		}
 		else if (serverType == -1){
 			this.progress = 'hidden';
 			this.blockControls(false);
 			this.focus()
-			show_error.showTheError("Seleção de tipo de servidor inválido");
+			show_error.showTheError(i18n.localize("INVALID_SERVER_TYPE_SELECTION", "Invalid server type selection"));
 		}
 		else if (!address){
 			this.progress = 'hidden';
 			this.blockControls(false);
 			this.focus()
-			this.renderRoot.querySelector<MonitorTextInput>('monitor-text-input#address').showRedLine('Endereço inválido','text');
-			show_error.showTheError("Endereço de servidor inválido");
+			this.renderRoot.querySelector<MonitorTextInput>('monitor-text-input#address').showRedLine(i18n.localize("INVALID_ADDRESS", "Invalid address"),'text');
+			show_error.showTheError(i18n.localize("INVALID_SERVER_ADDRESS", "Invalid server address"));
 		}
 		else if(!port){
 			this.progress = 'hidden';
 			this.blockControls(false);
 			this.focus()
-			this.renderRoot.querySelector<MonitorTextInput>('monitor-text-input#port').showRedLine('Porta inválida','text');
-			show_error.showTheError("Porta de servidor inválida");
+			this.renderRoot.querySelector<MonitorTextInput>('monitor-text-input#port').showRedLine(i18n.localize("INVALID_PORT", "Invalid port"),'text');
+			show_error.showTheError(i18n.localize("INVALID_SERVER_PORT", "Invalid server port"));
 		}
 		else {
 
@@ -133,14 +134,14 @@ export class MonitorAddServerDialog extends MonitorDialog {
 				this.progress = 'hidden';
 				this.blockControls(false);
 				this.focus();
-				show_error.showTheError("Dados de servidor já cadastrados");
+				show_error.showTheError(i18n.localize("SERVER_DATA_ALREADY_REGISTERED", "Server data already registered"));
 			}
 			else {
 
 				this.blockControls(true);
 
 				newServer.serverType = serverType;
-				console.log("newServer.serverType: "+newServer.serverType);
+				//console.log("newServer.serverType: "+newServer.serverType);
 				newServer.address = address;
 				newServer.port = port;
 
