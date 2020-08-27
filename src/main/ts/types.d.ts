@@ -38,13 +38,40 @@ interface MonitorSettings {
 	config?: MonitorSettingsConfig
 }
 
+interface MonitorColumn {
+	id: ColumnKey;
+	visible: boolean;
+	align: 'left' | 'right' | 'center'
+}
+
+interface ColumnData {
+	usernameDisplayed: string;
+	environment: string;
+	computerName: string;
+	threadId: string;
+	server: string;
+	mainName: string;
+	loginTime: string;
+	elapsedTime: string;
+	totalInstrCount: string;
+	instrCountPerSec: string;
+	remark: string;
+	memUsed: string;
+	sid: string;
+	ctreeTaskId: string;
+	inactiveTime: string;
+	clientType: string;
+}
+
+type ColumnKey = keyof ColumnData;
+
 interface MonitorSettingsConfig {
 	language?: 'portuguese' | 'english' | 'spanish';
 	updateInterval?: number;
 	alwaysOnTop?: boolean;
 	generateUpdateLog?: boolean;
 	generateExecutionLog?: boolean;
-	columnsConfig?: string;
+	columns?: MonitorColumn[];
 }
 
 interface MonitorSettingsServer {

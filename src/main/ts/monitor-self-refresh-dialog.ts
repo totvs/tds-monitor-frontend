@@ -135,14 +135,10 @@ export class MonitorSelfRefreshDialog extends MonitorDialog {
 		else if (setCustomInterval.checked) {
 			newUpdateInterval = customUpdateInterval;
 		}
-		app.config = {
-			updateInterval: newUpdateInterval,
-			language: app.config.language,
-			alwaysOnTop: app.config.alwaysOnTop,
-			generateUpdateLog: app.config.generateUpdateLog,
-			generateExecutionLog: app.config.generateExecutionLog,
-			columnsConfig: app.config.columnsConfig
-		};
+
+		app.config = Object.assign<MonitorSettingsConfig, MonitorSettingsConfig>(app.config, {
+			updateInterval: newUpdateInterval
+		});
 
 		app.dispatchEvent(new CustomEvent<string>('settings-update', {
 			detail: i18n.localize("UPDATE_SETTINGS", "Update settings."),

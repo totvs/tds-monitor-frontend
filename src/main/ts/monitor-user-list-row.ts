@@ -1,7 +1,7 @@
 import { MonitorUser } from '@totvs/tds-languageclient';
 import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
 import { style } from '../css/monitor-user-list-row.css';
-import { columnOrder } from './monitor-columns';
+import { columnConfig } from './monitor-columns';
 
 @customElement('monitor-user-list-row')
 export class MonitorUserListRow extends LitElement {
@@ -99,101 +99,18 @@ export class MonitorUserListRow extends LitElement {
 		return style;
 	}
 
-	renderUserDataColumn(key: string) {
-		switch (key) {
-			case 'usernameDisplayed':
-				return html`
-						<td class="left">${this.usernameDisplayed}</td>
-						`
-				break;
-			case 'environment':
-				return html`
-						<td class="left">${this.environment}</td>
-						`
-				break;
-			case 'computerName':
-				return html`
-						<td class="left">${this.computerName}</td>
-						`
-				break;
-			case 'threadId':
-				return html`
-						<td class="right">${this.threadId}</td>
-						`
-				break;
-			case 'server':
-				return html`
-						<td class="left">${this.server}</td>
-						`
-				break;
-			case 'mainName':
-				return html`
-						<td class="left">${this.mainName}</td>
-						`
-				break;
-			case 'loginTime':
-				return html`
-						<td class="center">${this.loginTime}</td>
-						`
-				break;
-			case 'elapsedTime':
-				return html`
-						<td class="center">${this.elapsedTime}</td>
-						`
-				break;
-			case 'totalInstrCount':
-				return html`
-						<td class="right">${this.totalInstrCount}</td>
-						`
-				break;
-			case 'instrCountPerSec':
-				return html`
-						<td class="right">${this.instrCountPerSec}</td>
-						`
-				break;
-			case 'remark':
-				return html`
-						<td class="left">${this.remark}</td>
-						`
-				break;
-			case 'memUsed':
-				return html`
-						<td class="right">${this.memUsed}</td>
-						`
-				break;
-			case 'sid':
-				return html`
-						<td class="right">${this.sid}</td>
-						`
-				break;
-			case 'ctreeTaskId':
-				return html`
-						<td class="right">${this.ctreeTaskId}</td>
-						`
-				break;
-			case 'inactiveTime':
-				return html`
-						<td class="center">${this.inactiveTime}</td>
-						`
-				break;
-			case 'clientType':
-				return html`
-						<td class="left">${this.clientType}</td>
-						`
-				break;
-			default:
-				return html``
-		}
-	}
 
 	render() {
+		const columns = columnConfig()
+			.filter(column => column.visible);
+
 		return html`
 			<td>
 				<monitor-checkbox ?checked="${this.checked}" @change="${this.onCheckBoxChanged}"></monitor-checkbox>
 			</td>
-			${columnOrder().map((key: string) =>
-				this.renderUserDataColumn(key)
-			)}
+			${columns.map((column) => html`
+				<td class="${column.align}">${this[column.id]}</td>
+			`)}
         `;
 	}
 

@@ -89,14 +89,13 @@ export class MonitorSettingsDialog extends MonitorDialog {
 
 		const app = document.querySelector('monitor-app');
 
-		app.config = {
+		app.config = Object.assign<MonitorSettingsConfig, MonitorSettingsConfig>(app.config, {
 			updateInterval: parseInt(this.renderRoot.querySelector<MonitorTextInput>('#updateInterval').value, 10),
 			language: this.renderRoot.querySelector<HTMLSelectElement>('#language').value as any,
 			alwaysOnTop: this.renderRoot.querySelector<MonitorCheckbox>('#alwaysOnTop').checked,
 			generateUpdateLog: this.renderRoot.querySelector<MonitorCheckbox>('#generateUpdateLog').checked,
-			generateExecutionLog: this.renderRoot.querySelector<MonitorCheckbox>('#generateExecutionLog').checked,
-			columnsConfig: app.config.columnsConfig
-		};
+			generateExecutionLog: this.renderRoot.querySelector<MonitorCheckbox>('#generateExecutionLog').checked
+		});
 
 		if (this.currentLanguage && app.config.language !== this.currentLanguage) {
 			const dialog = new MonitorLanguageChangeDialog();

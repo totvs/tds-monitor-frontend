@@ -1,7 +1,6 @@
 //import { MonitorUser } from '@totvs/tds-languageclient';
 import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
 import { style } from '../css/monitor-user-list-column-header.css';
-import { ColumnKey } from './monitor-columns';
 
 export enum SortOrder {
 	Undefined = 'undefined',

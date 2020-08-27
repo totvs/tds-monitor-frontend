@@ -19,58 +19,31 @@ export enum Columns {
 	clientType = 'clientType',
 }
 
-export interface ColumnData {
-	usernameDisplayed: string;
-	environment: string;
-	computerName: string;
-	threadId: string;
-	server: string;
-	mainName: string;
-	loginTime: string;
-	elapsedTime: string;
-	totalInstrCount: string;
-	instrCountPerSec: string;
-	remark: string;
-	memUsed: string;
-	sid: string;
-	ctreeTaskId: string;
-	inactiveTime: string;
-	clientType: string;
-}
 
-export type ColumnKey = keyof ColumnData;
-
-export function columnOrder(): Array<string> {
+export function columnConfig(): Array<MonitorColumn> {
 	const app = document.querySelector('monitor-app');
-	let userColumnsConfig = app.config.columnsConfig;
-	if (userColumnsConfig) {
-		let userColumnsKeys: Array<string> = new Array();
-		userColumnsConfig.split(',').map((key: string) => {
-			userColumnsKeys.push(key);
-		});
-		return userColumnsKeys;
-	}
-	return defaultColumnOrder();
+
+	return app.config.columns || defaultColumnConfig();
 }
 
-export function defaultColumnOrder(): Array<string> {
+export function defaultColumnConfig(): Array<MonitorColumn> {
 	return [
-		'usernameDisplayed',
-		'environment',
-		'computerName',
-		'threadId',
-		'server',
-		'mainName',
-		'loginTime',
-		'elapsedTime',
-		'totalInstrCount',
-		'instrCountPerSec',
-		'remark',
-		'memUsed',
-		'sid',
-		'ctreeTaskId',
-		'inactiveTime',
-		'clientType'
+		{ id: 'usernameDisplayed', visible: true, align: "left"},
+		{ id: 'environment', visible: true, align: "left"},
+		{ id: 'computerName', visible: true, align: "left"},
+		{ id: 'threadId', visible: true, align: "right"},
+		{ id: 'server', visible: true, align: "left"},
+		{ id: 'mainName', visible: true, align: "left"},
+		{ id: 'loginTime', visible: true, align: "center"},
+		{ id: 'elapsedTime', visible: true, align: "center"},
+		{ id: 'totalInstrCount', visible: true, align: "right"},
+		{ id: 'instrCountPerSec', visible: true, align: "right"},
+		{ id: 'remark', visible: true, align: "left"},
+		{ id: 'memUsed', visible: true, align: "right"},
+		{ id: 'sid', visible: true, align: "right"},
+		{ id: 'ctreeTaskId', visible: true, align: "right"},
+		{ id: 'inactiveTime', visible: true, align: "center"},
+		{ id: 'clientType', visible: true, align: "left"}
 	];
 }
 

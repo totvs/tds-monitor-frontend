@@ -2,7 +2,7 @@ import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
 import { CSSResult, customElement, html, LitElement, property, query } from 'lit-element';
 import { style } from '../css/monitor-user-list.css';
 import { MonitorButton } from './monitor-button';
-import { ColumnKey, columnOrder, columnText } from './monitor-columns';
+import { columnConfig, columnText } from './monitor-columns';
 import { MonitorKillUserDialog } from './monitor-kill-user-dialog';
 import { MonitorOtherActionsDialog } from './monitor-other-actions-dialog';
 import { MonitorSelfRefreshDialog } from './monitor-self-refresh-dialog';
@@ -15,7 +15,7 @@ import { MonitorColumnsConfigDialog } from './monitor-columns-config-dialog';
 
 export interface MonitorUserRow extends MonitorUser {
 	checked: boolean;
-    usernameDisplayed: string;
+	usernameDisplayed: string;
 }
 
 // const columns = columnOrder().map((key: ColumnKey) => ({
@@ -103,9 +103,9 @@ export class MonitorUserList extends LitElement {
 			second: '2-digit'
 		});
 		const app = document.querySelector('monitor-app');
-		this._footerConnectedUser = newMap.size > 0 ? 
-			(newMap.size > 1 ? i18n.localize("FOOTER_CONNECTED_USERS_MORE", "{0} users connected", newMap.size) : 
-			i18n.localize("FOOTER_CONNECTED_USERS_ONE", "1 user connected")) :
+		this._footerConnectedUser = newMap.size > 0 ?
+			(newMap.size > 1 ? i18n.localize("FOOTER_CONNECTED_USERS_MORE", "{0} users connected", newMap.size) :
+				i18n.localize("FOOTER_CONNECTED_USERS_ONE", "1 user connected")) :
 			i18n.localize("FOOTER_CONNECTED_USERS_NONE", "No user connected");
 		this._footerUpdateInterval = i18n.localize("FOOTER_UPDATE_INTERVAL", "Auto update interval: {0}", (app.config.updateInterval > 0 ? i18n.xSeconds(app.config.updateInterval) : i18n.disabled()));
 		this._footerLastUpdate = i18n.localize("FOOTER_UPDATED_AT", "Updated at: {0}", lastUpdate); //"Atualizado em: " + lastUpdate;
@@ -132,10 +132,13 @@ export class MonitorUserList extends LitElement {
 	}
 
 	render() {
-		let columns = columnOrder().map((key: ColumnKey) => ({
-			id: key,
-			text: columnText[key]
-		}));
+		let columns = columnConfig()
+			.filter(column => column.visible)
+			.map(column => ({
+				id: column.id,
+				text: columnText[column.id]
+			}));
+
 		return html`
 			<header>
 				<monitor-button small icon="${this.checkAllIcon}" @click="${this.onButtonCheckAllClick}"></monitor-button>

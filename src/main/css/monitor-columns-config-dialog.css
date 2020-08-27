@@ -2,4 +2,44 @@
 
 dialog {
 	width: 400px;
+	max-height: 80vh;
+}
+
+main {
+	overflow: auto;
+}
+
+ul, li {
+	position: relative;
+	box-sizing: border-box;
+}
+
+ul {
+	list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+li {
+	position: relative;
+	display: flex;
+    align-items: center;
+	height: 30px;
+	cursor: grab;
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+}
+
+li::before {
+	font-family: 'Material Icons';
+	content: "drag_indicator";
+	color: gray;
+}
+
+li.drop-before {
+	border-top: 1px dashed silver;
+}
+
+li.drop-after {
+	border-bottom: 1px dashed silver;
 }
