@@ -136,7 +136,8 @@ export class MonitorUserList extends LitElement {
 			.filter(column => column.visible)
 			.map(column => ({
 				id: column.id,
-				text: columnText[column.id]
+				text: columnText[column.id],
+				width: column.width
 			}));
 
 		return html`
@@ -156,11 +157,12 @@ export class MonitorUserList extends LitElement {
 					<thead>
 						<tr @header-click="${this.onHeaderClick}">
 							<th><mwc-icon-button icon="more_vert" @click="${this.onButtonColumnsConfigClick}" title="${i18n.localize("COLUMNS_CONFIG", "Columns Configuration")}"></mwc-icon-button ></th>
-							${columns.map(({ id, text }) => html`
+							${columns.map(({ id, text, width }) => html`
 								<monitor-user-list-column-header
 									id="${id}"
 									caption="${text}"
 									order="${this.sortColumn === id ? this.sortOrder : SortOrder.Undefined}"
+									width=${width}
 								/>
 							`)}
 						</tr>

@@ -14,6 +14,11 @@
 	background-color: rgba(158,158,158,.2);
 }
 
+div {
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 td {
 	white-space: nowrap;
 	padding: 0 5px;

@@ -28,22 +28,22 @@ export function columnConfig(): Array<MonitorColumn> {
 
 export function defaultColumnConfig(): Array<MonitorColumn> {
 	return [
-		{ id: 'usernameDisplayed', visible: true, align: "left"},
-		{ id: 'environment', visible: true, align: "left"},
-		{ id: 'computerName', visible: true, align: "left"},
-		{ id: 'threadId', visible: true, align: "right"},
-		{ id: 'server', visible: true, align: "left"},
-		{ id: 'mainName', visible: true, align: "left"},
-		{ id: 'loginTime', visible: true, align: "center"},
-		{ id: 'elapsedTime', visible: true, align: "center"},
-		{ id: 'totalInstrCount', visible: true, align: "right"},
-		{ id: 'instrCountPerSec', visible: true, align: "right"},
-		{ id: 'remark', visible: true, align: "left"},
-		{ id: 'memUsed', visible: true, align: "right"},
-		{ id: 'sid', visible: true, align: "right"},
-		{ id: 'ctreeTaskId', visible: true, align: "right"},
-		{ id: 'inactiveTime', visible: true, align: "center"},
-		{ id: 'clientType', visible: true, align: "left"}
+		{ id: 'usernameDisplayed', visible: true, align: "left", width: 124 },
+		{ id: 'environment', visible: true, align: "left", width: 149 },
+		{ id: 'computerName', visible: true, align: "left", width: 154 },
+		{ id: 'threadId', visible: true, align: "right", width: 104 },
+		{ id: 'server', visible: true, align: "left", width: 149 },
+		{ id: 'mainName', visible: true, align: "left", width: 124 },
+		{ id: 'loginTime', visible: true, align: "center", width: 170 },
+		{ id: 'elapsedTime', visible: true, align: "center", width: 130 },
+		{ id: 'totalInstrCount', visible: true, align: "right", width: 99 },
+		{ id: 'instrCountPerSec', visible: true, align: "right", width: 99 },
+		{ id: 'remark', visible: true, align: "left", width: 224 },
+		{ id: 'memUsed', visible: true, align: "right", width: 99 },
+		{ id: 'sid', visible: true, align: "right", width: 99 },
+		{ id: 'ctreeTaskId', visible: true, align: "right", width: 99 },
+		{ id: 'inactiveTime', visible: true, align: "center", width: 134 },
+		{ id: 'clientType', visible: true, align: "left", width: 174 }
 	];
 }
 

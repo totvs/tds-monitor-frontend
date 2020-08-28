@@ -41,7 +41,8 @@ interface MonitorSettings {
 interface MonitorColumn {
 	id: ColumnKey;
 	visible: boolean;
-	align: 'left' | 'right' | 'center'
+	align: 'left' | 'right' | 'center';
+	width: number;
 }
 
 interface ColumnData {

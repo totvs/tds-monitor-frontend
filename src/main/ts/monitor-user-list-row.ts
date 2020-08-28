@@ -109,7 +109,7 @@ export class MonitorUserListRow extends LitElement {
 				<monitor-checkbox ?checked="${this.checked}" @change="${this.onCheckBoxChanged}"></monitor-checkbox>
 			</td>
 			${columns.map((column) => html`
-				<td class="${column.align}">${this[column.id]}</td>
+				<td class="${column.align}"><div style="width:${column.width}px" title="${this[column.id]}">${this[column.id]}</div></td>
 			`)}
         `;
 	}

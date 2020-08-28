@@ -48,6 +48,7 @@ export class MonitorColumnsConfigDialog extends MonitorDialog {
 					data-id="${column.id}"
 					data-align="${column.align}"
 					data-visible="${column.visible}"
+					data-width="${column.width}"
 				>
 					<monitor-checkbox ?checked="${column.visible}" @change="${onCheckBoxChanged}"></monitor-checkbox>
 					<span>${columnText[column.id]}</span>
@@ -124,10 +125,10 @@ export class MonitorColumnsConfigDialog extends MonitorDialog {
 				return {
 					id: dataset.id,
 					visible: JSON.parse(dataset.visible),
-					align: dataset.align
+					align: dataset.align,
+					width: Number.parseInt(dataset.width)
 				} as MonitorColumn;
 			});
-
 
 		app.config = Object.assign<MonitorSettingsConfig, MonitorSettingsConfig>(app.config, {
 			columns

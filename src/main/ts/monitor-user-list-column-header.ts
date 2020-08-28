@@ -17,6 +17,9 @@ export class MonitorUserListColumnHeader extends LitElement {
 	@property({ type: String, reflect: true, attribute: true })
 	caption: string = '';
 
+	@property({ type: Number, reflect: true, attribute: true })
+	width: number = 100;
+
 	constructor() {
 		super();
 
@@ -29,13 +32,14 @@ export class MonitorUserListColumnHeader extends LitElement {
 
 	render() {
 		//const icon = this.order == SortOrder.Descending ? 'arrow_drop_up' : 'arrow_drop_down';
-
+		let columnWidth = this.width;
+		let captionWidth = columnWidth - 24; // subtract arrow icon width
 		return html`
-			<div>
-				<label>${this.caption}</label>
+			<th style="width:${columnWidth}px;">
+				<label title="${this.caption}" style="width:${captionWidth}px;">${this.caption}</label>
 				<i>arrow_downward</i>
-			</div>
-        `;
+			</th>
+		`;
 	}
 
 	onClick(event: MouseEvent) {
