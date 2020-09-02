@@ -21,7 +21,6 @@ declare module '*.css' {
 	export const style: CSSResult;
 }
 
-
 interface JsonRpcMessage<T> {
 	jsonrpc: string;
 	method: string;
@@ -43,6 +42,11 @@ interface MonitorColumn {
 	visible: boolean;
 	align: 'left' | 'right' | 'center';
 	width: number;
+}
+
+interface SortInfo {
+	order: string;
+	column: ColumnKey;
 }
 
 interface ColumnData {
@@ -73,6 +77,7 @@ interface MonitorSettingsConfig {
 	generateUpdateLog?: boolean;
 	generateExecutionLog?: boolean;
 	columns?: MonitorColumn[];
+	sortInfo?: SortInfo;
 }
 
 interface MonitorSettingsServer {

@@ -18,11 +18,6 @@ export interface MonitorUserRow extends MonitorUser {
 	usernameDisplayed: string;
 }
 
-// const columns = columnOrder().map((key: ColumnKey) => ({
-// 	id: key,
-// 	text: columnText[key]
-// }));
-
 @customElement('monitor-user-list')
 export class MonitorUserList extends LitElement {
 
@@ -30,6 +25,22 @@ export class MonitorUserList extends LitElement {
 	sendMessageButton: MonitorButton;
 	sortOrder: SortOrder = SortOrder.Descending;
 	sortColumn: ColumnKey = 'usernameDisplayed';
+
+	constructor() {
+		super();
+		const app = document.querySelector('monitor-app');
+		if (app.config.sortInfo) {
+			let sortOrder_ = SortOrder.Undefined;
+			if (app.config.sortInfo.order === 'ascending') {
+				sortOrder_ = SortOrder.Ascending;
+			}
+			else if (app.config.sortInfo.order === 'descending') {
+				sortOrder_ = SortOrder.Descending;
+			}
+			this.sortOrder = sortOrder_;
+			this.sortColumn = app.config.sortInfo.column;
+		}
+	}
 
 	@property({ type: Object })
 	set server(value: TdsMonitorServer) {
@@ -219,6 +230,21 @@ export class MonitorUserList extends LitElement {
 
 		this.sortColumn = id;
 		this.sortOrder = order;
+
+		const app = document.querySelector('monitor-app');
+		let sortInfo: SortInfo = {
+			column: id,
+			order: order.valueOf()
+		}
+		app.config = Object.assign<MonitorSettingsConfig, MonitorSettingsConfig>(app.config, {
+			sortInfo
+		});
+
+		app.dispatchEvent(new CustomEvent<string>('settings-update', {
+			detail: i18n.localize("UPDATE_SETTINGS", "Update settings."),
+			bubbles: true,
+			composed: true
+		}));
 
 		this.requestUpdate('users');
 	}
