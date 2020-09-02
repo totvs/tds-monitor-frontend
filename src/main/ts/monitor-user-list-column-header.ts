@@ -10,6 +10,8 @@ export enum SortOrder {
 	Descending = 'descending'
 }
 
+const minColumnWidth = 50;
+
 @customElement('monitor-user-list-column-header')
 export class MonitorUserListColumnHeader extends LitElement {
 
@@ -85,6 +87,9 @@ export class MonitorUserListColumnHeader extends LitElement {
 	onResizeMove(event: MouseEvent) {
 		let newWidth = this.initialWidth + (event.clientX - this.initialX) - 10;
 		this.width = newWidth;
+		if (this.width < minColumnWidth) {
+			this.width = minColumnWidth;
+		}
 	}
 
 	onResizeEnd(event: MouseEvent) {
