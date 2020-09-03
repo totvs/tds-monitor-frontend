@@ -7,7 +7,7 @@ import { MonitorKillUserDialog } from './monitor-kill-user-dialog';
 import { MonitorOtherActionsDialog } from './monitor-other-actions-dialog';
 import { MonitorSelfRefreshDialog } from './monitor-self-refresh-dialog';
 import { MonitorSendMessageDialog } from './monitor-send-message-dialog';
-import { MonitorUserListRow } from './monitor-user-list-row';
+import { MonitorUserListRow, UsersActionOptions } from './monitor-user-list-row';
 import { HeaderClickEvent, MonitorUserListColumnHeader, SortOrder } from './monitor-user-list-column-header';
 import { sortUsers } from './util/sort-users';
 import { i18n } from './util/i18n';
@@ -28,6 +28,9 @@ export class MonitorUserList extends LitElement {
 
 	constructor() {
 		super();
+
+		this.addEventListener('users-action', this.usersActions);
+
 		const app = document.querySelector('monitor-app');
 		if (app.config.sortInfo) {
 			let sortOrder_ = SortOrder.Undefined;
@@ -253,6 +256,19 @@ export class MonitorUserList extends LitElement {
 		return this.users.sort(sortUsers(this.sortColumn, this.sortOrder));
 	}
 
+	usersActions(event: CustomEvent<UsersActionOptions>) {
+		let users = event.detail.users;
+		if (users && users.length > 0) {
+			if (event.detail.action === 'send-message') {
+				const dialog = new MonitorSendMessageDialog(this.server, users);
+				dialog.show();
+			}
+			else if (event.detail.action === 'kill-user') {
+				const dialog = new MonitorKillUserDialog(this.server, users);
+				dialog.show();
+			}
+		}
+	}
 
 	/**
 	 * @author Bardez

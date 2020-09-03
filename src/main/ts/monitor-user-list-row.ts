@@ -2,6 +2,13 @@ import { MonitorUser } from '@totvs/tds-languageclient';
 import { CSSResult, customElement, html, LitElement, property } from 'lit-element';
 import { style } from '../css/monitor-user-list-row.css';
 import { columnConfig } from './monitor-columns';
+import { MenuOptions, MonitorMenu } from './monitor-menu';
+import { i18n } from './util/i18n';
+
+export interface UsersActionOptions {
+	action: string;
+	users: Array<MonitorUser>;
+}
 
 @customElement('monitor-user-list-row')
 export class MonitorUserListRow extends LitElement {
@@ -109,7 +116,7 @@ export class MonitorUserListRow extends LitElement {
 				<monitor-checkbox ?checked="${this.checked}" @change="${this.onCheckBoxChanged}"></monitor-checkbox>
 			</td>
 			${columns.map((column) => html`
-				<td class="${column.align}"><div style="width:${column.width}px" title="${this[column.id]}">${this[column.id]}</div></td>
+				<td class="${column.align}"><div style="width:${column.width}px" title="${this[column.id]}" @contextmenu="${this.onRightClick}">${this[column.id]}</div></td>
 			`)}
         `;
 	}
@@ -132,6 +139,73 @@ export class MonitorUserListRow extends LitElement {
 		}));
 
 		this.dispatchEvent(newEvent);
+	}
+
+	async onRightClick(event: MouseEvent) {
+		let user: MonitorUser = {
+			username: this.username,
+			computerName: this.computerName,
+			threadId: Number.parseInt(this.threadId),
+			server: this.server,
+			mainName: this.mainName,
+			environment: this.environment,
+			loginTime: this.loginTime,
+			elapsedTime: this.elapsedTime,
+			totalInstrCount: Number.parseInt(this.totalInstrCount),
+			instrCountPerSec: Number.parseInt(this.instrCountPerSec),
+			remark: this.remark,
+			memUsed: Number.parseInt(this.memUsed),
+			sid: this.sid,
+			ctreeTaskId: Number.parseInt(this.ctreeTaskId),
+			clientType: this.clientType,
+			inactiveTime: this.inactiveTime,
+			appUser: 'this.appUser'
+		}
+		let menu: MonitorMenu,
+			options: MenuOptions = {
+				parent: this,
+				position: {
+					x: event.pageX,
+					y: event.pageY,
+				},
+				items: [
+					{
+						text: i18n.localize("DO_SEND_MESSAGE", "Send Message"),
+						callback: () => { this.sendMessage(user) },
+						separator: true
+					},
+					{
+						text: i18n.localize("DO_DISCONNECT", "Disconnect"),
+						callback: () => { this.killUser(user) },
+						separator: true
+					}
+				]
+			};
+
+		menu = new MonitorMenu(options);
+		menu.open = true;
+	}
+
+	sendMessage(user: MonitorUser) {
+		this.dispatchEvent(new CustomEvent<UsersActionOptions>('users-action', {
+			detail: {
+				action: 'send-message',
+				users: [ user ]
+			},
+			bubbles: true,
+			composed: true
+		}));
+	}
+
+	killUser(user: MonitorUser) {
+		this.dispatchEvent(new CustomEvent<UsersActionOptions>('users-action', {
+			detail: {
+				action: 'kill-user',
+				users: [ user ]
+			},
+			bubbles: true,
+			composed: true
+		}));
 	}
 
 }
