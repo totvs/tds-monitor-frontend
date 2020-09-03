@@ -98,6 +98,7 @@ export class MonitorServerItem extends LitElement {
 
 			if (!result) {
 				connectionFailed = true;
+				this.server.token = null;
 			}
 		}
 		else {
@@ -105,26 +106,33 @@ export class MonitorServerItem extends LitElement {
 				connResult = await connDialog.showForResult();
 
 			if (connResult) {
-				connResult = await this.server.connect(this.name, this.server.serverType, this.server.address, this.server.port, this.server.secure, this.build, connDialog.environment);
+				let tryAgainSecure = 2;
+				while (tryAgainSecure > 0) {
+					connResult = await this.server.connect(this.name, this.server.serverType, this.server.address, this.server.port, this.server.secure, this.build, connDialog.environment);
 
-				if (connResult) {
-					let authDialog = new MonitorAuthenticationDialog(this),
-						authResult = await authDialog.showForResult();
-
-					if (authResult) {
-						// Try to authenticate using latin codepage
-						authResult = await this.server.authenticate(authDialog.username, authDialog.password, 'CP1252');
-
-						if (!authResult) {
-							// Try to authenticate using cyrillic codepage
-							await this.server.connect(this.name, this.server.serverType, this.server.address, this.server.port, this.server.secure, this.build, connDialog.environment);
-							authResult = await this.server.authenticate(authDialog.username, authDialog.password, 'CP1251');
-						}
-
+					if (connResult) {
+						tryAgainSecure = 0;
+						let authDialog = new MonitorAuthenticationDialog(this),
+							authResult = await authDialog.showForResult();
+	
 						if (authResult) {
-							if (authDialog.storeToken) {
-								const app = document.querySelector('monitor-app');
-								app.storeConnectionToken(this.name, this.server.token);
+							// Try to authenticate using latin codepage
+							authResult = await this.server.authenticate(authDialog.username, authDialog.password, 'CP1252');
+	
+							if (!authResult) {
+								// Try to authenticate using cyrillic codepage
+								await this.server.connect(this.name, this.server.serverType, this.server.address, this.server.port, this.server.secure, this.build, connDialog.environment);
+								authResult = await this.server.authenticate(authDialog.username, authDialog.password, 'CP1251');
+							}
+	
+							if (authResult) {
+								if (authDialog.storeToken) {
+									const app = document.querySelector('monitor-app');
+									app.storeConnectionToken(this.name, this.server.token);
+								}
+							}
+							else {
+								connectionFailed = true;
 							}
 						}
 						else {
@@ -132,11 +140,14 @@ export class MonitorServerItem extends LitElement {
 						}
 					}
 					else {
-						connectionFailed = true;
+						tryAgainSecure--;
+						if (tryAgainSecure > 0) {
+							this.server.secure = !this.server.secure;
+						}
+						else {
+							connectionFailed = true;
+						}
 					}
-				}
-				else {
-					connectionFailed = true;
 				}
 			}
 			else {
@@ -240,7 +251,7 @@ export class MonitorServerItem extends LitElement {
 				]
 			};
 
-		if (this.status === 'disconnected') {
+		if (this.status === 'disconnected' || this.status === 'error') {
 			options.items.push({
 				text: i18n.localize("CONNECT", "Connect"),
 				separator: true,
@@ -252,13 +263,11 @@ export class MonitorServerItem extends LitElement {
 			// });
 		}
 		else {
-			if (this.status !== 'error') {
-				options.items.push({
-					text: i18n.localize("DISCONNECT", "Disconnect"),
-					separator: true,
-					callback: () => { this.disconnectServer() }
-				});
-			}
+			options.items.push({
+				text: i18n.localize("DISCONNECT", "Disconnect"),
+				separator: true,
+				callback: () => { this.disconnectServer() }
+			});
 
 			if (this.status === 'connected') {
 				options.items.push({
