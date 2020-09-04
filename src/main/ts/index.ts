@@ -40,5 +40,17 @@ const app = document.querySelector('monitor-app'),
 	settings = window.storage.get();
 
 if (settings) {
-	app.settings = settings;
+	app.settings = checkServerIds(settings);
+}
+
+function checkServerIds(settings: MonitorSettings) {
+	let servers: Array<MonitorSettingsServer> = settings.servers.map<MonitorSettingsServer>((server) => { 
+		if (!server.serverId) {
+			server.serverId = Math.random().toString(36).substring(3);
+		}
+		return server; 
+	});
+	return Object.assign<MonitorSettings, MonitorSettings>(settings, {
+		servers
+	});
 }

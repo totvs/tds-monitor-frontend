@@ -6,6 +6,8 @@ import { MonitorConnectionDialog } from './monitor-connection-dialog';
 import { MonitorAuthenticationDialog } from './monitor-authentication-dialog';
 import { MenuOptions, MonitorMenu } from './monitor-menu';
 import { MonitorOtherActionsDialog } from './monitor-other-actions-dialog';
+import { MonitorEditServerDialog } from './monitor-edit-server-dialog';
+import { MonitorConfirmationDialog } from './monitor-confirmation-dialog';
 import { i18n } from './util/i18n';
 
 declare global {
@@ -17,6 +19,7 @@ declare global {
 declare type ConnectionStatus = 'disconnected' | 'connecting' | 'connected' | 'error';
 
 export interface MonitorServerItemOptions {
+	serverId: string;
 	name: string;
 	server: TdsMonitorServer;
 	users?: MonitorUser[];
@@ -24,6 +27,9 @@ export interface MonitorServerItemOptions {
 
 @customElement('monitor-server-item')
 export class MonitorServerItem extends LitElement {
+
+	@property({ type: String, reflect: true, attribute: true })
+	serverId: string;
 
 	@property({ type: String, reflect: true, attribute: true })
 	name: string;
@@ -53,6 +59,8 @@ export class MonitorServerItem extends LitElement {
 	constructor(options: MonitorServerItemOptions) {
 		super();
 
+		this.serverId = options.serverId;
+
 		this.server = options.server;
 
 		this.name = options.name;
@@ -80,6 +88,7 @@ export class MonitorServerItem extends LitElement {
 		if (dispatchEvents) {
 			this.dispatchEvent(new CustomEvent<MonitorServerItemOptions>('server-init', {
 				detail: {
+					serverId: this.serverId,
 					name: this.name,
 					server: this.server,
 					users: []
@@ -179,6 +188,7 @@ export class MonitorServerItem extends LitElement {
 		if (users != null) {
 			this.dispatchEvent(new CustomEvent<MonitorServerItemOptions>('server-connected', {
 				detail: {
+					serverId: this.serverId,
 					name: this.name,
 					server: this.server,
 					users: users
@@ -196,7 +206,6 @@ export class MonitorServerItem extends LitElement {
 			}));
 		}
 	}
-
 
 	render() {
 		return html`
@@ -242,13 +251,7 @@ export class MonitorServerItem extends LitElement {
 					x: event.pageX,
 					y: event.pageY,
 				},
-				items: [
-					{
-						text: i18n.localize("DELETE_SERVER", "Delete Server"),
-						callback: () => { this.deleteServer() },
-						separator: true
-					}
-				]
+				items: []
 			};
 
 		if (this.status === 'disconnected' || this.status === 'error') {
@@ -256,6 +259,16 @@ export class MonitorServerItem extends LitElement {
 				text: i18n.localize("CONNECT", "Connect"),
 				separator: true,
 				callback: () => { this.connectServer(false) }
+			});
+			options.items.push({
+				text: i18n.localize("EDIT_SERVER", "Edit Server"),
+				callback: () => { this.editServer() },
+				separator: false
+			});
+			options.items.push({
+				text: i18n.localize("DELETE_SERVER", "Delete Server"),
+				callback: () => { this.deleteServer() },
+				separator: true
 			});
 			// options.items.push({
 			// 	text: 'Habilitar novas conexões',
@@ -280,13 +293,35 @@ export class MonitorServerItem extends LitElement {
 		}
 
 		menu = new MonitorMenu(options);
+
 		menu.open = true;
 
 	}
 
-	deleteServer() {
+	editServer() {
+		let dialog = new MonitorEditServerDialog(this.serverId, this.name, this.server);
+
+		dialog.show();
+	}
+
+	deleteServerCallback(params: any) {
 		const app = document.querySelector('monitor-app');
-		app.removeServer(this.name);
+
+		app.removeServer(params.serverId);
+	}
+
+	deleteServer() {
+		let dialog = new MonitorConfirmationDialog();
+
+		dialog.title = i18n.localize("DELETE_SERVER", "Delete Server");
+		dialog.message = i18n.localize("DELETE_SERVER_CONFIRMATION", "Are you sure you want to delete this server?");
+		dialog.yesCallback = this.deleteServerCallback;
+		dialog.callbackParams = { serverId: this.serverId };
+
+		dialog.show();
+	}
+
+	onYesButtonClicked() {
 	}
 
 	async otherActions() {
@@ -294,6 +329,7 @@ export class MonitorServerItem extends LitElement {
 			.then((status) => this.enableNewConnections = status);
 
 		let dialog = new MonitorOtherActionsDialog(this.server, this.enableNewConnections);
+
 		dialog.show();
 	}
 }

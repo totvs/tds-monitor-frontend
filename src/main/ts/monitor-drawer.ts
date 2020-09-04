@@ -33,8 +33,19 @@ export class MonitorDrawer extends LitElement {
 		}
 	}
 
-	removeServer(serverName: string) {
-		this.querySelectorAll<MonitorServerItem>(`[name="${serverName}"]`).forEach(item => {
+	editServer(s: MonitorServerItemOptions) {
+		this.querySelectorAll<MonitorServerItem>(`[serverId="${s.serverId}"]`).forEach(item => {
+			item.server = s.server;
+
+			item.name = s.name;
+			item.address = s.server.address;
+			item.port = s.server.port;
+			item.build = s.server.build;
+		});
+	}
+
+	removeServer(serverId: string) {
+		this.querySelectorAll<MonitorServerItem>(`[serverId="${serverId}"]`).forEach(item => {
 			this.removeChild(item);
 		});
 	}

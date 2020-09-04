@@ -63,7 +63,7 @@ class MonitorApp extends LitElement {
 		this.settings.servers.forEach((data) => {
 			let server = this.createServer(data);
 
-			drawer.addServer({ name: data.name, server });
+			drawer.addServer({ serverId: data.serverId, name: data.name, server });
 		});
 	}
 
@@ -106,6 +106,7 @@ class MonitorApp extends LitElement {
 
 	addServer(options: MonitorServerItemOptions) {
 		this.settings.servers.push({
+			serverId: options.serverId,
 			name: options.name,
 			serverType: options.server.serverType,
 			address: options.server.address,
@@ -117,16 +118,35 @@ class MonitorApp extends LitElement {
 		window.storage.set(this.settings);
 
 		let drawer = this.querySelector('monitor-drawer');
-		drawer.addServer({ name: options.name, server: options.server });
+		drawer.addServer({ serverId: options.serverId, name: options.name, server: options.server });
 	}
 
-	removeServer(serverName: string) {
-		this.settings.servers = this.settings.servers.filter((server => server.name !== serverName));
+	editServer(options: MonitorServerItemOptions) {
+		this.settings.servers = this.settings.servers.map<MonitorSettingsServer>((server) => {
+			if (server.serverId == options.serverId) {
+				server.name = options.name;
+				server.serverType = options.server.serverType;
+				server.address = options.server.address;
+				server.port = options.server.port;
+				server.build = options.server.build;
+				server.secure = options.server.secure;
+			}
+			return server;
+		});
 
 		window.storage.set(this.settings);
 
 		let drawer = this.querySelector('monitor-drawer');
-		drawer.removeServer(serverName);
+		drawer.editServer({ serverId: options.serverId, name: options.name, server: options.server });
+	}
+
+	removeServer(serverId: string) {
+		this.settings.servers = this.settings.servers.filter((server => server.serverId !== serverId));
+
+		window.storage.set(this.settings);
+
+		let drawer = this.querySelector('monitor-drawer');
+		drawer.removeServer(serverId);
 	}
 
 	storeConnectionToken(serverName: string, token: string) {

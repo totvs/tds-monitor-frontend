@@ -81,6 +81,7 @@ interface MonitorSettingsConfig {
 }
 
 interface MonitorSettingsServer {
+	serverId: string;
 	name: string;
 	serverType: number,
 	address: string;

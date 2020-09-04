@@ -125,7 +125,8 @@ export class MonitorAddServerDialog extends MonitorDialog {
 		else {
 
 			let cantStoreValue = [];
-			const listOfServers = window.storage.get();
+			const app = document.querySelector('monitor-app');
+			const listOfServers = app.settings;
 			if (listOfServers && listOfServers.servers) {
 				cantStoreValue = listOfServers.servers.filter(item => {
 					return ((item.address == address && item.port == port) || item.name == name )});
@@ -158,7 +159,9 @@ export class MonitorAddServerDialog extends MonitorDialog {
 
 						const app = document.querySelector('monitor-app');
 
+						let serverId = Math.random().toString(36).substring(3);
 						app.addServer({
+							serverId: serverId,
 							name: name,
 							server: newServer
 						});
@@ -170,6 +173,8 @@ export class MonitorAddServerDialog extends MonitorDialog {
 
 						this.progress = 'hidden';
 						this.blockControls(false);
+						this.focus();
+						show_error.showTheError(i18n.localize("VALIDATE_ERROR", "Could not validate server"));
 					});
 			}
 
