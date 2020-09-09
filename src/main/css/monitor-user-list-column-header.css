@@ -51,17 +51,20 @@ i {
 	transition: opacity 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, transform 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
 }
 
-:host([order="ascending"]) i {
+:host([order="ascending"]) .clickable i {
 	opacity: 1;
 	transform: rotate(180deg);
 }
 
-:host([order="descending"]) i {
+:host([order="descending"]) .clickable i {
 	opacity: 1;
 	transform: rotate(0deg);
 }
 
 div.resize {
+	display: flex;
+    justify-content: center;
+    align-items: center;
 	position: absolute;
     top: 0;
     bottom: 0;
@@ -69,5 +72,12 @@ div.resize {
 	width: 5px;
     cursor: col-resize;
     background-color: transparent;
-	z-index: 1; 
+	z-index: 1;
+}
+
+div.resize i {
+	position: relative;
+	left: -6px;
+    font-size: 16px;
+    transform: rotate(90deg) scaleX(2);
 }

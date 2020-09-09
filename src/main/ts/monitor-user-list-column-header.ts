@@ -39,8 +39,9 @@ export class MonitorUserListColumnHeader extends LitElement {
 	}
 
 	render() {
-		let columnWidth = this.width;
-		let captionWidth = columnWidth - 24 - 5; // subtract arrow icon width
+		const columnWidth = this.width,
+			captionWidth = columnWidth - 24 - 5; // subtract arrow icon width
+
 		return html`
 			<div class="clickable" style="width:${columnWidth}px;" @click=${this.onClick}>
 				<div class="label" style="width:${captionWidth}px;">
@@ -48,7 +49,9 @@ export class MonitorUserListColumnHeader extends LitElement {
 				</div>
 				<i>arrow_downward</i>
 			</div>
-			<div class="resize" @mousedown="${this.onResizeStart}"></div>
+			<div class="resize" @mousedown="${this.onResizeStart}">
+				<i>drag_handle</i>
+			</div>
 		`;
 	}
 
@@ -79,7 +82,7 @@ export class MonitorUserListColumnHeader extends LitElement {
 		this.initialX = event.clientX;
 		this.initialWidth = this.clientWidth;
 
-		document.body.classList.add('resizing-ns');
+		document.body.classList.add('resizing-col');
 
 		return false;
 	}
@@ -93,7 +96,7 @@ export class MonitorUserListColumnHeader extends LitElement {
 	}
 
 	onResizeEnd(event: MouseEvent) {
-		document.body.classList.remove('resizing-ns');
+		document.body.classList.remove('resizing-col');
 
 		const app = document.querySelector('monitor-app');
 		let columns = columnConfig().map((column) => {
