@@ -99,7 +99,7 @@ export class MonitorServerView extends LitElement {
 				this.server.getUsers()
 					.then(users => this.users = users)
 					.then(() => {
-						console.log('updating');
+						//console.log('updating');
 						this._updateHandler = window.setTimeout(() => update(), interval);
 					});
 			}
