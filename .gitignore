@@ -61,3 +61,4 @@ typings/
 .next
 
 target
+electron-monitor.code-workspace
