@@ -101,7 +101,7 @@ export class MonitorUserList extends LitElement {
 
           newMap.set(key, Object.assign({}, oldUser, user));
         } else {
-          const usernameDisplayed = user.username;
+          const usernameDisplayed = user.appUser || user.username;
           newMap.set(
             key,
             Object.assign(

@@ -52,7 +52,7 @@ export const columnText: ColumnData = {
 	environment: i18n.localize("ENVIRONMENT", "Environment"),
 	computerName: i18n.localize("COMPUTER_NAME", "Computer Name"),
 	threadId: i18n.localize("THREAD_ID", "Thread ID"),
-	server: i18n.localize("SERVER", "User In Server"),
+	server: i18n.localize("SERVER", "Server"),
 	mainName: i18n.localize("MAIN_NAME", "Program"),
 	loginTime: i18n.localize("LOGIN_TIME", "Connected"),
 	elapsedTime: i18n.localize("ELAPSED_TIME", "Elapsed Time"),
