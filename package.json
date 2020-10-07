@@ -1,6 +1,6 @@
 {
   "name": "@totvs/tds-monitor-frontend",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "description": "",
   "license": "MIT",
   "main": "target/index.html",
@@ -14,8 +14,7 @@
     "prepublishOnly": "npm run clean && npm run build",
     "link": "npm link && npm link @totvs/tds-languageclient",
     "lint": "eslint ./src/**",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "publish": "npm publish"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
     "@material/mwc-button": "^0.15.0",
