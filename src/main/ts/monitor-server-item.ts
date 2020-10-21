@@ -82,6 +82,7 @@ export class MonitorServerItem extends LitElement {
 	}
 
 	async connectServer(dispatchEvents?: boolean): Promise<boolean> {
+		console.log("connectServer");
 		let connectionFailed = false;
 		this.status = 'connecting';
 
@@ -108,6 +109,7 @@ export class MonitorServerItem extends LitElement {
 			if (!result) {
 				connectionFailed = true;
 				this.server.token = null;
+				this.server.isConnected = false;
 			}
 		}
 		else {
