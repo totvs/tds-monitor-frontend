@@ -108,8 +108,6 @@ export class MonitorServerItem extends LitElement {
 
 			if (!result) {
 				connectionFailed = true;
-				this.server.token = null;
-				this.server.isConnected = false;
 			}
 		}
 		else {
@@ -171,6 +169,8 @@ export class MonitorServerItem extends LitElement {
 		}
 		else {
 			this.status = 'error';
+			this.server.token = null;
+			this.server.isConnected = false;
 
 			if (dispatchEvents) {
 				this.dispatchEvent(new CustomEvent<string>('server-error', {
@@ -260,7 +260,10 @@ export class MonitorServerItem extends LitElement {
 			options.items.push({
 				text: i18n.localize("CONNECT", "Connect"),
 				separator: true,
-				callback: () => { this.connectServer(false) }
+				callback: () => { 
+					this.server.token = null;
+					this.connectServer(false);
+				}
 			});
 			options.items.push({
 				text: i18n.localize("EDIT_SERVER", "Edit Server"),
