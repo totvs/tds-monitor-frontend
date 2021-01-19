@@ -137,11 +137,11 @@ export class MonitorUserList extends LitElement {
         ? newMap.size > 1
           ? i18n.localize(
               "FOOTER_CONNECTED_USERS_MORE",
-              "{0} users connected",
+              "{0} connections",
               newMap.size
             )
-          : i18n.localize("FOOTER_CONNECTED_USERS_ONE", "1 user connected")
-        : i18n.localize("FOOTER_CONNECTED_USERS_NONE", "No user connected");
+          : i18n.localize("FOOTER_CONNECTED_USERS_ONE", "1 connection")
+        : i18n.localize("FOOTER_CONNECTED_USERS_NONE", "No connection");
     this._footerUpdateInterval = i18n.localize(
       "FOOTER_UPDATE_INTERVAL",
       "Auto update interval: {0}",
