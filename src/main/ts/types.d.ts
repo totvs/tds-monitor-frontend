@@ -10,13 +10,13 @@ interface Window {
 }
 
 interface Versions {
-	'main': string;
-	'@totvs/tds-languageclient': string;
-	'@totvs/tds-monitor-frontend': string;
+	main: string;
+	"@totvs/tds-languageclient": string;
+	"@totvs/tds-monitor-frontend": string;
 }
 
-declare module '*.css' {
-	import { CSSResult } from 'lit-element';
+declare module "*.css" {
+	import { CSSResult } from "lit-element";
 
 	export const style: CSSResult;
 }
@@ -34,13 +34,13 @@ interface Storage {
 
 interface MonitorSettings {
 	servers?: Array<MonitorSettingsServer>;
-	config?: MonitorSettingsConfig
+	config?: MonitorSettingsConfig;
 }
 
 interface MonitorColumn {
 	id: ColumnKey;
 	visible: boolean;
-	align: 'left' | 'right' | 'center';
+	align: "left" | "right" | "center";
 	width: number;
 }
 
@@ -71,7 +71,7 @@ interface ColumnData {
 type ColumnKey = keyof ColumnData;
 
 interface MonitorSettingsConfig {
-	language?: 'portuguese' | 'english' | 'spanish';
+	language?: "portuguese" | "english" | "spanish" | "russian";
 	updateInterval?: number;
 	alwaysOnTop?: boolean;
 	generateUpdateLog?: boolean;
@@ -83,7 +83,7 @@ interface MonitorSettingsConfig {
 interface MonitorSettingsServer {
 	serverId: string;
 	name: string;
-	serverType: number,
+	serverType: number;
 	address: string;
 	port: number;
 	build: string;
