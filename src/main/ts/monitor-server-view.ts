@@ -2,8 +2,9 @@ import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
 import { CSSResult, customElement, html, LitElement, property, TemplateResult } from 'lit-element';
 import { style } from '../css/monitor-server-view.css';
 import { MessageType } from './monitor-app';
+import { i18n } from './util/i18n';
 
-export type ServerViewStatus = 'iddle' | 'connecting' | 'connected' | 'error';
+export type ServerViewStatus = 'idle' | 'connecting' | 'connected' | 'error';
 
 @customElement('monitor-server-view')
 export class MonitorServerView extends LitElement {
@@ -35,7 +36,7 @@ export class MonitorServerView extends LitElement {
 	error: string = '';
 
 	@property({ type: String, reflect: true, attribute: true })
-	status: ServerViewStatus = 'iddle';
+	status: ServerViewStatus = 'idle';
 
 	set users(value: MonitorUser[]) {
 		this.renderRoot.querySelector('monitor-user-list').users = value;
@@ -64,7 +65,7 @@ export class MonitorServerView extends LitElement {
 			<monitor-user-list></monitor-user-list>
 			<div class='messages'>
 				<span class='connecting-message'>
-					<label>Conectando ao servidor ${this.name}</label>
+					<label>${i18n.localize("CONNECTING_SERVER", "Connecting to server {0}", this.name)}</label>
 					<monitor-linear-progress indeterminate></monitor-linear-progress>
 				</span>
 				<span class='error-message'>${this.error}</span>
@@ -98,7 +99,7 @@ export class MonitorServerView extends LitElement {
 				this.server.getUsers()
 					.then(users => this.users = users)
 					.then(() => {
-						console.log('updating');
+						//console.log('updating');
 						this._updateHandler = window.setTimeout(() => update(), interval);
 					});
 			}

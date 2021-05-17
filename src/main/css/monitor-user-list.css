@@ -11,6 +11,13 @@ div {
 	overflow: auto;
 	height: 100%;
 	width: 100%;
+	flex-grow: 1;
+	display: flex;
+	flex-basis: 0;
+}
+
+footer {
+	display: flex;
 }
 
 span.footer {
@@ -27,12 +34,10 @@ thead {
 	color: rgba(0,0,0,0.6);
 }
 
-
-
-th {
-	white-space: nowrap;
-	padding: 15px 10px;
+thead tr {
+	border-bottom: 1px solid rgba(0,0,0,0.12);
 }
+
 
 
 header {
@@ -57,4 +62,12 @@ header monitor-text-input {
 
 :host(.compact) monitor-user-list-row {
 	height: 28px;
+}
+
+monitor-user-list-row:nth-child(even) {
+	background-color: rgb(245, 245, 245);
+}
+
+monitor-user-list-row:nth-child(odd) {
+	background-color: rgb(255, 255, 255);
 }

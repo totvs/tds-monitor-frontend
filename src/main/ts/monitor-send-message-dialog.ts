@@ -4,12 +4,15 @@ import { style } from '../css/monitor-send-message-dialog.css';
 import { MonitorButton } from './monitor-button';
 import { MonitorDialog, ProgressOption } from './monitor-dialog';
 import { MonitorTextInput } from './monitor-text-input';
+import { i18n } from './util/i18n';
 
 @customElement('monitor-send-message-dialog')
 export class MonitorSendMessageDialog extends MonitorDialog {
 
 	get message(): string {
-		return this.renderRoot.querySelector<MonitorTextInput>('#message').value;
+		let message = this.renderRoot.querySelector<MonitorTextInput>('#message').value;
+
+		return message;
 	}
 
 	@property({ type: String, reflect: true, attribute: true })
@@ -28,17 +31,17 @@ export class MonitorSendMessageDialog extends MonitorDialog {
 			escClose: true,
 			buttons: [
 				{
-					text: 'Enviar',
+					text: i18n.localize("SEND", "Send"),
 					click: (event) => this.onOkButtonClicked(event)
 				},
 				{
-					text: 'Cancelar',
+					text: i18n.cancel(),
 					click: (event) => this.onCancelButtonClicked(event)
 				}
 			]
 		});
 
-		this.title = 'Enviar Mensagem';
+		this.title = i18n.localize("SEND_MESSAGE", "Send Message");
 		this.progress = 'hidden';
 		this.server = server;
 		this.users = users;
@@ -85,7 +88,13 @@ export class MonitorSendMessageDialog extends MonitorDialog {
 
 		this.users.forEach((user) => {
 			//console.log(user.username + " :: " + user.computerName + " :: " + user.threadId + " :: " + user.server + " :: " + this.message);
-			this.server.sendUserMessage(user.username, user.computerName, user.threadId, user.server, this.message);
+			this.server.sendUserMessage(
+				user.username,
+				user.computerName,
+				user.threadId,
+				user.server,
+				this.message,
+				user.environment);
 
 			progressbar.progress += step;
 		})

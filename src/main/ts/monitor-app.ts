@@ -14,28 +14,6 @@ const DEFAULT_SETTINGS: MonitorSettings = {
 	}
 };
 
-export interface MonitorSettings {
-	servers?: Array<Server>;
-	config?: MonitorSettingsConfig
-}
-
-export interface MonitorSettingsConfig {
-	language?: 'portuguese' | 'english' | 'spanish';
-	updateInterval?: number;
-	alwaysOnTop?: boolean;
-	generateUpdateLog?: boolean;
-	generateExecutionLog?: boolean;
-}
-
-interface Server {
-	name: string;
-	address: string;
-	port: number;
-	build: BuildVersion;
-	token?: string;
-}
-
-
 export enum MessageType {
 	ERROR = 1,
 	WARNING = 2,
@@ -77,10 +55,15 @@ class MonitorApp extends LitElement {
 
 		let drawer = this.querySelector('monitor-drawer');
 
+		// Ordena por nome
+		this.settings.servers.sort(function(a, b){
+			return a.name.localeCompare(b.name);
+		});
+
 		this.settings.servers.forEach((data) => {
 			let server = this.createServer(data);
 
-			drawer.addServer({ name: data.name, server });
+			drawer.addServer({ serverId: data.serverId, name: data.name, server });
 		});
 	}
 
@@ -105,42 +88,65 @@ class MonitorApp extends LitElement {
     	`;
 	}
 
-	private createServer(data: Server) {
+	private createServer(data: MonitorSettingsServer) {
 		let server = languageClient.createMonitorServer();
 		server.id = data.name;
+		server.serverType = data.serverType;
 		server.address = data.address;
 		server.port = data.port;
-
 		if (data.build) {
-			server.build = data.build;
+			server.build = data.build as BuildVersion;
 		}
-
+		server.secure = data.secure;
 		if (data.token) {
 			server.token = data.token;
 		}
-
 		return server;
 	}
 
 	addServer(options: MonitorServerItemOptions) {
 		this.settings.servers.push({
+			serverId: options.serverId,
 			name: options.name,
+			serverType: options.server.serverType,
 			address: options.server.address,
 			port: options.server.port,
-			build: options.server.build
+			build: options.server.build,
+			secure: options.server.secure
 		});
-		window.localStorage.setItem('settings', JSON.stringify(this.settings));
+
+		window.storage.set(this.settings);
 
 		let drawer = this.querySelector('monitor-drawer');
-		drawer.addServer(options);
+		drawer.addServer({ serverId: options.serverId, name: options.name, server: options.server });
 	}
 
-	removeServer(serverName: string) {
-		this.settings.servers = this.settings.servers.filter((server => server.name !== serverName));
-		window.localStorage.setItem('settings', JSON.stringify(this.settings));
+	editServer(options: MonitorServerItemOptions) {
+		this.settings.servers = this.settings.servers.map<MonitorSettingsServer>((server) => {
+			if (server.serverId == options.serverId) {
+				server.name = options.name;
+				server.serverType = options.server.serverType;
+				server.address = options.server.address;
+				server.port = options.server.port;
+				server.build = options.server.build;
+				server.secure = options.server.secure;
+			}
+			return server;
+		});
+
+		window.storage.set(this.settings);
 
 		let drawer = this.querySelector('monitor-drawer');
-		drawer.removeServer(serverName);
+		drawer.editServer({ serverId: options.serverId, name: options.name, server: options.server });
+	}
+
+	removeServer(serverId: string) {
+		this.settings.servers = this.settings.servers.filter((server => server.serverId !== serverId));
+
+		window.storage.set(this.settings);
+
+		let drawer = this.querySelector('monitor-drawer');
+		drawer.removeServer(serverId);
 	}
 
 	storeConnectionToken(serverName: string, token: string) {
@@ -149,7 +155,7 @@ class MonitorApp extends LitElement {
 		if (server) {
 			server.token = token;
 
-			window.localStorage.setItem('settings', JSON.stringify(this.settings));
+			window.storage.set(this.settings);
 		}
 	}
 
@@ -160,7 +166,7 @@ class MonitorApp extends LitElement {
 	set config(value: MonitorSettingsConfig) {
 		this.settings.config = value;
 
-		window.localStorage.setItem('settings', JSON.stringify(this.settings));
+		window.storage.set(this.settings);
 	}
 
 	onBeginServerConnection(event: CustomEvent<MonitorServerItemOptions>): boolean | void {
@@ -198,7 +204,7 @@ class MonitorApp extends LitElement {
 
 		serverView.setServerUpdateInterval();
 
-		console.log('onSettingsUpdate');
+		//console.log('onSettingsUpdate');
 	}
 
 }

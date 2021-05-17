@@ -1,16 +1,21 @@
 import { CSSResult, customElement, html } from 'lit-element';
-import { style } from '../css/monitor-add-server-dialog.css';
+import { style } from '../css/monitor-edit-server-dialog.css';
 import { MonitorButton } from './monitor-button';
 import { MonitorDialog } from './monitor-dialog';
 import { MonitorTextInput } from './monitor-text-input';
 import { MonitorWarning } from './monitor-warning';
 import { MonitorRadio } from './monitor-radio';
+import { TdsMonitorServer } from '@totvs/tds-languageclient';
 import { i18n } from './util/i18n';
 
-@customElement('monitor-add-server-dialog')
-export class MonitorAddServerDialog extends MonitorDialog {
+@customElement('monitor-edit-server-dialog')
+export class MonitorEditServerDialog extends MonitorDialog {
 
-	constructor() {
+	serverId: string = null;
+	name: string = null;
+	server: TdsMonitorServer = null;
+	
+	constructor(serverId: string, name: string, server: TdsMonitorServer) {
 		super({
 			escClose: true,
 			buttons: [
@@ -25,7 +30,11 @@ export class MonitorAddServerDialog extends MonitorDialog {
 			]
 		});
 
-		this.title = i18n.localize("ADD_NEW_SERVER", "Add New Server");
+		this.serverId = serverId;
+		this.name = name;
+		this.server = server;
+
+		this.title = i18n.localize("EDIT_SERVER", "Edit Server");
 		this.progress = 'hidden';
 	}
 
@@ -34,17 +43,18 @@ export class MonitorAddServerDialog extends MonitorDialog {
 	}
 
 	get body(){
+		console.log(this.server.serverType.valueOf())
 		return html`
 			<monitor-warning id='show_error' msg='' showError='no' ></monitor-warning>
-			<monitor-text-input id="name" tabindex="1" type="text" label="${i18n.localize("NAME", "Name")}" class="validate" ></monitor-text-input>
-			<monitor-text-input id="address" tabindex="2" type="text" label="${i18n.localize("ADDRESS", "Address")}"></monitor-text-input>
-			<monitor-text-input id="port" tabindex="3" type="number" min="1" label="${i18n.localize("PORT", "Port")}"></monitor-text-input>
+			<monitor-text-input id="name" value="${this.name}" tabindex="1" type="text" label="${i18n.localize("NAME", "Name")}" class="validate" ></monitor-text-input>
+			<monitor-text-input id="address" value="${this.server.address}" tabindex="2" type="text" label="${i18n.localize("ADDRESS", "Address")}"></monitor-text-input>
+			<monitor-text-input id="port" value="${this.server.port}" tabindex="3" type="number" min="1" label="${i18n.localize("PORT", "Port")}"></monitor-text-input>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="serverType" value="1" checked tabindex="4" name="serverType" title="${i18n.protheus()}"></monitor-radio>
+				<monitor-radio id="serverType" value="1" ?checked="${this.server.serverType == 1}" tabindex="4" name="serverType" title="${i18n.protheus()}"></monitor-radio>
 				<span>${i18n.protheus()}</span>
 			</label>
 			<label @click="${this.onLabelClick}">
-				<monitor-radio id="serverType" value="2" tabindex="5" name="serverType" title="${i18n.logix()}"></monitor-radio>
+				<monitor-radio id="serverType" value="2" ?checked="${this.server.serverType == 2}" tabindex="5" name="serverType" title="${i18n.logix()}"></monitor-radio>
 				<span>${i18n.logix()}</span>
 			</label>
 		`;
@@ -83,8 +93,7 @@ export class MonitorAddServerDialog extends MonitorDialog {
 		const name = this.renderRoot.querySelector<MonitorTextInput>('#name').value,
 			address = this.renderRoot.querySelector<MonitorTextInput>('#address').value,
 			port = Number(this.renderRoot.querySelector<MonitorTextInput>('#port').value),
-			show_error = this.renderRoot.querySelector<MonitorWarning>('monitor-warning#show_error'),
-			newServer = languageClient.createMonitorServer();
+			show_error = this.renderRoot.querySelector<MonitorWarning>('monitor-warning#show_error');
 
 		let serverType = -1;
 		this.renderRoot.querySelectorAll<MonitorRadio>('#serverType')
@@ -129,7 +138,7 @@ export class MonitorAddServerDialog extends MonitorDialog {
 			const listOfServers = app.settings;
 			if (listOfServers && listOfServers.servers) {
 				cantStoreValue = listOfServers.servers.filter(item => {
-					return ((item.address == address && item.port == port) || item.name == name )});
+					return (item.serverId !== this.serverId && ((item.address == address && item.port == port) || item.name == name ))});
 			}
 			if(cantStoreValue.length > 0) {
 				this.progress = 'hidden';
@@ -141,14 +150,14 @@ export class MonitorAddServerDialog extends MonitorDialog {
 
 				this.blockControls(true);
 
-				newServer.serverType = serverType;
-				//console.log("newServer.serverType: "+newServer.serverType);
-				newServer.address = address;
-				newServer.port = port;
+				this.server.serverType = serverType;
+				//console.log("this.server.serverType: "+this.server.serverType);
+				this.server.address = address;
+				this.server.port = port;
 
 				this.progress = 'visible';
 
-				newServer.validate()
+				this.server.validate()
 					.then((valid: boolean) => {
 						this.progress = 'hidden';
 						this.blockControls(false);
@@ -159,11 +168,10 @@ export class MonitorAddServerDialog extends MonitorDialog {
 
 						const app = document.querySelector('monitor-app');
 
-						let serverId = Math.random().toString(36).substring(3);
-						app.addServer({
-							serverId: serverId,
+						app.editServer({
+							serverId: this.serverId,
 							name: name,
-							server: newServer
+							server: this.server
 						});
 
 						this.close();
@@ -173,8 +181,6 @@ export class MonitorAddServerDialog extends MonitorDialog {
 
 						this.progress = 'hidden';
 						this.blockControls(false);
-						this.focus();
-						show_error.showTheError(i18n.localize("VALIDATE_ERROR", "Could not validate server"));
 					});
 			}
 

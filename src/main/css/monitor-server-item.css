@@ -49,6 +49,7 @@ section:hover {
 }
 
 svg {
+	min-width: 30px;
 	vertical-align: middle;
 	margin: 8px;
 }

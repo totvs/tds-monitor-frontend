@@ -26,7 +26,9 @@ import './monitor-server-view';
 import './monitor-text-input';
 import './monitor-user-list';
 import './monitor-user-list-row';
+import './monitor-user-list-column-header';
 import './monitor-warning';
+
 
 import { TdsLanguageClient } from '@totvs/tds-languageclient';
 
@@ -35,8 +37,20 @@ declare global {
 }
 
 const app = document.querySelector('monitor-app'),
-	settings = window.localStorage.getItem('settings');
+	settings = window.storage.get();
 
 if (settings) {
-	app.settings = JSON.parse(settings);
+	app.settings = checkServerIds(settings);
+}
+
+function checkServerIds(settings: MonitorSettings) {
+	let servers: Array<MonitorSettingsServer> = settings.servers.map<MonitorSettingsServer>((server) => { 
+		if (!server.serverId) {
+			server.serverId = Math.random().toString(36).substring(3);
+		}
+		return server; 
+	});
+	return Object.assign<MonitorSettings, MonitorSettings>(settings, {
+		servers
+	});
 }

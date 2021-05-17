@@ -1,0 +1,5 @@
+@import './monitor-dialog.css';
+
+dialog {
+	width: 400px;
+}

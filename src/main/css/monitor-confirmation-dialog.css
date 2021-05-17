@@ -1,0 +1,26 @@
+@import './monitor-dialog.css';
+
+dialog {
+	width: 500px;
+}
+
+main {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+monitor-text-input {
+	display: flex;
+	margin: 10px;
+	flex: 1 100%;
+}
+
+label {
+	white-space: nowrap;
+	box-sizing: border-box;
+	display: flex;
+	margin: 10px;
+	align-items: center;
+	flex: 1 1 100%;
+    height: 60px;
+}
