@@ -1,0 +1,19 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [0.1.27](https://github.com/totvs/tds-monitor-frontend/compare/v0.1.26...v0.1.27) (2021-06-17)
+
+### [0.1.26](https://github.com/totvs/tds-monitor-frontend/compare/v0.1.25...v0.1.26) (2021-06-17)
+
+### 0.1.25 (2021-06-16)
+
+
+### Features
+
+* Supports multi instance ([#7](https://github.com/totvs/tds-monitor-frontend/issues/7)) ([e737278](https://github.com/totvs/tds-monitor-frontend/commit/e737278495a4504114b72c95b329bd7c6aeb66f7))
+
+
+### Bug Fixes
+
+* Send message and disconnect buttons not enabling when check user ([2533cd3](https://github.com/totvs/tds-monitor-frontend/commit/2533cd30e4fb3aff0857bb50eee5335fb3f6acbb))

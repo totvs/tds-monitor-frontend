@@ -1,12 +1,12 @@
-import { CSSResult, customElement, html } from 'lit-element';
-import { style } from '../css/monitor-settings-dialog.css';
-import { MonitorCheckbox } from './monitor-checkbox';
-import { MonitorDialog } from './monitor-dialog';
-import { MonitorTextInput } from './monitor-text-input';
-import { i18n } from './util/i18n';
-import { MonitorLanguageChangeDialog } from './monitor-language-change-dialog';
+import { CSSResult, customElement, html } from "lit-element";
+import { style } from "../css/monitor-settings-dialog.css";
+import { MonitorCheckbox } from "./monitor-checkbox";
+import { MonitorDialog } from "./monitor-dialog";
+import { MonitorTextInput } from "./monitor-text-input";
+import { i18n } from "./util/i18n";
+import { MonitorLanguageChangeDialog } from "./monitor-language-change-dialog";
 
-@customElement('monitor-settings-dialog')
+@customElement("monitor-settings-dialog")
 export class MonitorSettingsDialog extends MonitorDialog {
 	private currentLanguage: any = undefined;
 
@@ -69,18 +69,18 @@ export class MonitorSettingsDialog extends MonitorDialog {
 
 			<!--[TODO: Falta implementar]-->
 			<strike>
-			<section>
+				<section>
 				<label for="alwaysOnTop">${i18n.localize("KEEP_ON_TOP", "Keep this on top")}</label>
 				<mwc-switch disabled id="alwaysOnTop" ?checked=${alwaysOnTop}></mwc-switch>
-			</section>
-			<section>
+				</section>
+				<section>
 				<label for="generateUpdateLog">${i18n.localize("GENERATE_LOG", "Generate log files on every update")}</label>
 				<mwc-switch disabled id="generateUpdateLog" ?checked=${generateUpdateLog}></mwc-switch>
-			</section>
-			<section>
+				</section>
+				<section>
 				<label for="generateExecutionLog">${i18n.localize("GENERATE_EXEC_LOG", "Generate execution log")}</label>
 				<mwc-switch disabled id="generateExecutionLog" ?checked=${generateExecutionLog}></mwc-switch>
-			</section>
+				</section>
 			</strike>`;
 	}
 
@@ -103,8 +103,8 @@ export class MonitorSettingsDialog extends MonitorDialog {
 		}
 
 		app.dispatchEvent(new CustomEvent<string>('settings-update', {
-			detail: i18n.localize("UPDATE_SETTINGS", "Update settings."),
-			bubbles: true,
+				detail: i18n.localize("UPDATE_SETTINGS", "Update settings."),
+				bubbles: true,
 			composed: true
 		}));
 
@@ -114,5 +114,4 @@ export class MonitorSettingsDialog extends MonitorDialog {
 	onCancelButtonClicked(event: Event) {
 		this.cancel();
 	}
-
 }
