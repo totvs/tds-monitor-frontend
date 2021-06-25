@@ -82,14 +82,19 @@ export class MonitorUserList extends LitElement {
 
   @property({ type: Array })
   get users(): MonitorUser[] {
+	  const now: number = Date.now();
     const users = Array.from(this._users.values());
 
-    if (this.query !== null)
-      return users.filter((user) => findInSearch(user, this.query));
+    if (this.query !== null) {
+		console.log("getUsers(filter)="+(Date.now()-now));
+		return users.filter((user) => findInSearch(user, this.query));
+	}
+	console.log("getUsers="+(Date.now()-now));
 
     return users;
   }
   set users(newValue: MonitorUser[]) {
+	const now: number = Date.now();
     const newMap = new Map<string, MonitorUserRow>();
 
     if (newValue !== null) {
@@ -154,6 +159,9 @@ export class MonitorUserList extends LitElement {
       "Updated at: {0}",
       lastUpdate
     ); //"Atualizado em: " + lastUpdate;
+
+	console.log("setUsers="+(Date.now()-now));
+
   }
 
   get rows(): Array<MonitorUserListRow> {
@@ -341,7 +349,10 @@ export class MonitorUserList extends LitElement {
   }
 
   get sortedUsers() {
-    return this.users.sort(sortUsers(this.sortColumn, this.sortOrder));
+	const now: number = Date.now();
+    const result =  this.users.sort(sortUsers(this.sortColumn, this.sortOrder));
+	console.log("sortedUsers="+(Date.now()-now));
+	return result;
   }
 
   usersActions(event: CustomEvent<UsersActionOptions>) {
