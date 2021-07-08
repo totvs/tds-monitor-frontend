@@ -82,10 +82,15 @@ export class MonitorUserList extends LitElement {
 
   @property({ type: Array })
   get users(): MonitorUser[] {
+    console.log("...[JS] GetUsersCalled");
     const users = Array.from(this._users.values());
 
-    if (this.query !== null)
+    if (this.query !== null) {
+      console.log("...[JS] GetUsersRetFilter");
       return users.filter((user) => findInSearch(user, this.query));
+    }
+
+    console.log("...[JS] GetUsersRet");
 
     return users;
   }
@@ -184,6 +189,8 @@ export class MonitorUserList extends LitElement {
   }
 
   render() {
+    const startInMs = Date.now();
+    console.log("...Render called");
     let columns = columnConfig()
       .filter((column) => column.visible)
       .map((column) => ({
@@ -290,6 +297,7 @@ export class MonitorUserList extends LitElement {
                 </monitor-user-list-row>
               `;
             })}
+            ${console.log("...Render Users: "+(Date.now()-startInMs)+" ms")}
           </tbody>
         </table>
       </div>
