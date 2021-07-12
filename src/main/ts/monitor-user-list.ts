@@ -82,19 +82,19 @@ export class MonitorUserList extends LitElement {
 
   @property({ type: Array })
   get users(): MonitorUser[] {
-	  const now: number = Date.now();
+    console.log("...[JS] GetUsersCalled");
     const users = Array.from(this._users.values());
 
     if (this.query !== null) {
-		console.log("getUsers(filter)="+(Date.now()-now));
-		return users.filter((user) => findInSearch(user, this.query));
-	}
-	console.log("getUsers="+(Date.now()-now));
+      console.log("...[JS] GetUsersRetFilter");
+      return users.filter((user) => findInSearch(user, this.query));
+    }
+
+    console.log("...[JS] GetUsersRet");
 
     return users;
   }
   set users(newValue: MonitorUser[]) {
-	const now: number = Date.now();
     const newMap = new Map<string, MonitorUserRow>();
 
     if (newValue !== null) {
@@ -159,9 +159,6 @@ export class MonitorUserList extends LitElement {
       "Updated at: {0}",
       lastUpdate
     ); //"Atualizado em: " + lastUpdate;
-
-	console.log("setUsers="+(Date.now()-now));
-
   }
 
   get rows(): Array<MonitorUserListRow> {
@@ -192,6 +189,8 @@ export class MonitorUserList extends LitElement {
   }
 
   render() {
+    const startInMs = Date.now();
+    console.log("...Render called");
     let columns = columnConfig()
       .filter((column) => column.visible)
       .map((column) => ({
@@ -298,6 +297,7 @@ export class MonitorUserList extends LitElement {
                 </monitor-user-list-row>
               `;
             })}
+            ${console.log("...Render Users: "+(Date.now()-startInMs)+" ms")}
           </tbody>
         </table>
       </div>
@@ -349,10 +349,7 @@ export class MonitorUserList extends LitElement {
   }
 
   get sortedUsers() {
-	const now: number = Date.now();
-    const result =  this.users.sort(sortUsers(this.sortColumn, this.sortOrder));
-	console.log("sortedUsers="+(Date.now()-now));
-	return result;
+    return this.users.sort(sortUsers(this.sortColumn, this.sortOrder));
   }
 
   usersActions(event: CustomEvent<UsersActionOptions>) {

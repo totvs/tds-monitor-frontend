@@ -185,6 +185,8 @@ export class MonitorServerItem extends LitElement {
 	}
 
 	async getUsers() {
+		
+		console.log("teste1");
 		let users = await this.server.getUsers();
 
 		if (users != null) {

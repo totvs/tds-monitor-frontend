@@ -40,7 +40,7 @@ export class MonitorServerView extends LitElement {
 
 	set users(value: MonitorUser[]) {
 		this.renderRoot.querySelector('monitor-user-list').users = value;
-
+			
 		this.requestUpdate('users');
 	};
 	get users() {
