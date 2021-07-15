@@ -1,8 +1,17 @@
 export class I18n {
 	private _translations: any = window.storage.translations();
+	private _company: any = window.storage.company();
 
 	public get translations(): any {
 		return this._translations;
+	}
+
+	public set company(value: string) {
+		this._company = value || "********";
+	}
+
+	public get company(): any {
+		return this._company;
 	}
 
 	public set translations(value: any) {
@@ -30,6 +39,10 @@ export class I18n {
 		}
 
 		return result;
+	}
+
+	public totvsMonitorIcon(): string {
+		return "./" + this._company + "/app_logo_neg_pb.svg";
 	}
 
 	public totvsMonitor(): string {

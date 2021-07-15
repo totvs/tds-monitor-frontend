@@ -1,6 +1,6 @@
 {
   "name": "@totvs/tds-monitor-frontend",
-  "version": "0.1.29",
+  "version": "0.1.30rc",
   "description": "",
   "license": "Apache-2.0",
   "main": "target/index.html",
@@ -8,7 +8,7 @@
     "target"
   ],
   "scripts": {
-    "build": "gulp build",
+    "build": "npm run clean && gulp build",
     "watch": "gulp build --watch",
     "clean": "gulp clean",
     "---RELEASE---": "",
@@ -17,7 +17,6 @@
     "to_publish": "npm publish",
     "prepublishOnly": "npm run clean && npm run build",
     "---MISC---": "",
-    "link": "npm link && npm link @totvs/tds-languageclient",
     "lint": "eslint ./src/**",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
