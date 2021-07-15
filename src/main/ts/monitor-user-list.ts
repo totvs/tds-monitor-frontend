@@ -82,20 +82,24 @@ export class MonitorUserList extends LitElement {
 
   @property({ type: Array })
   get users(): MonitorUser[] {
-    console.log("...[JS] GetUsersCalled");
+    //console.log("...[JS] GetUsersCalled");
     const users = Array.from(this._users.values());
 
+    //console.log("...[JS] USERS LENGTH: " + users.length);
+
     if (this.query !== null) {
-      console.log("...[JS] GetUsersRetFilter");
+      //console.log("...[JS] GetUsersRetFilter");
       return users.filter((user) => findInSearch(user, this.query));
     }
 
-    console.log("...[JS] GetUsersRet");
+    //console.log("...[JS] GetUsersRet");
 
     return users;
   }
   set users(newValue: MonitorUser[]) {
     const newMap = new Map<string, MonitorUserRow>();
+
+    //console.log("...[JS] SetUsers");
 
     if (newValue !== null) {
       newValue.forEach((user: MonitorUser) => {
@@ -121,7 +125,7 @@ export class MonitorUserList extends LitElement {
     this._users.clear();
     this._users = newMap;
 
-    this.requestUpdate("users");
+    //this.requestUpdate("users");
 
     this.updateComplete.then(() => {
       this.requestUpdate("checkAllIcon");
@@ -189,8 +193,8 @@ export class MonitorUserList extends LitElement {
   }
 
   render() {
-    const startInMs = Date.now();
-    console.log("...Render called");
+    //const startInMs = Date.now();
+    //console.log("...Render called");
     let columns = columnConfig()
       .filter((column) => column.visible)
       .map((column) => ({
@@ -297,7 +301,7 @@ export class MonitorUserList extends LitElement {
                 </monitor-user-list-row>
               `;
             })}
-            ${console.log("...Render Users: "+(Date.now()-startInMs)+" ms")}
+            
           </tbody>
         </table>
       </div>
@@ -349,7 +353,10 @@ export class MonitorUserList extends LitElement {
   }
 
   get sortedUsers() {
-    return this.users.sort(sortUsers(this.sortColumn, this.sortOrder));
+    //console.log("... [JS] sortedUsersCalled");
+    const sortedUsers = this.users.sort(sortUsers(this.sortColumn, this.sortOrder));
+    //console.log("... [JS] SORTED LENGTH: "+sortedUsers.length);
+    return sortedUsers;
   }
 
   usersActions(event: CustomEvent<UsersActionOptions>) {
