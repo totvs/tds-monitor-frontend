@@ -206,7 +206,9 @@ class MonitorApp extends LitElement {
 		serverView.users = event.detail.users;
 		serverView.name = event.detail.name;
 		serverView.server = event.detail.server;
-		serverView.status = "connected";
+		serverView.status = event.detail.server.isConnected
+			? "connected"
+			: "idle";
 
 		console.log("onConnected", event.detail);
 	}
