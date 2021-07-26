@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.34](https://github.com/totvs/tds-monitor-frontend/compare/v0.1.32...v0.1.34) (2021-07-26)
+
 ### [0.1.32](https://github.com/totvs/tds-monitor-frontend/compare/v0.1.29...v0.1.32) (2021-07-20)
 
 ### [0.1.29](https://github.com/totvs/tds-monitor-frontend/compare/v0.1.28...v0.1.29) (2021-06-18)
