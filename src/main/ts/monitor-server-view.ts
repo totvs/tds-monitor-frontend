@@ -1,16 +1,22 @@
-import { MonitorUser, TdsMonitorServer } from '@totvs/tds-languageclient';
-import { CSSResult, customElement, html, LitElement, property, TemplateResult } from 'lit-element';
-import { style } from '../css/monitor-server-view.css';
-import { MessageType } from './monitor-app';
-import { i18n } from './util/i18n';
+import { MonitorUser, TdsMonitorServer } from "@totvs/tds-languageclient";
+import {
+	CSSResult,
+	customElement,
+	html,
+	LitElement,
+	property,
+	TemplateResult,
+} from "lit-element";
+import { style } from "../css/monitor-server-view.css";
+import { MessageType } from "./monitor-app";
+import { i18n } from "./util/i18n";
 
-export type ServerViewStatus = 'idle' | 'connecting' | 'connected' | 'error';
+export type ServerViewStatus = "idle" | "connecting" | "connected" | "error";
 
-@customElement('monitor-server-view')
+@customElement("monitor-server-view")
 export class MonitorServerView extends LitElement {
-
 	@property({ type: String })
-	name: string = '';
+	name: string = "";
 
 	@property({ type: Boolean, reflect: true, attribute: true })
 	showlog: boolean = false;
@@ -22,8 +28,8 @@ export class MonitorServerView extends LitElement {
 
 		this.setServerUpdateInterval();
 
-		this.renderRoot.querySelector('monitor-user-list').server = value;
-		this.requestUpdate('server', oldValue);
+		this.renderRoot.querySelector("monitor-user-list").server = value;
+		this.requestUpdate("server", oldValue);
 	}
 	get server(): TdsMonitorServer {
 		return this._server;
@@ -33,18 +39,32 @@ export class MonitorServerView extends LitElement {
 	_server: TdsMonitorServer = null;
 
 	@property({ type: String })
-	error: string = '';
+	error: string = "";
 
 	@property({ type: String, reflect: true, attribute: true })
-	status: ServerViewStatus = 'idle';
+	status: ServerViewStatus = "idle";
 
 	set users(value: MonitorUser[]) {
-		this.renderRoot.querySelector('monitor-user-list').users = value;
+		try {
+			this.renderRoot.querySelector("monitor-user-list").users = value;
+			this.requestUpdate("users");
+		} catch (error) {
+			this.status = "error";
 
-		this.requestUpdate('users');
-	};
+			this.dispatchEvent(
+				new CustomEvent<string>("server-error", {
+					detail: i18n.localize(
+						"UNABLE_CONNECT",
+						"It was not possible to connect to this server."
+					),
+					bubbles: true,
+					composed: true,
+				})
+			);
+		}
+	}
 	get users() {
-		return this.renderRoot.querySelector('monitor-user-list').users;
+		return this.renderRoot.querySelector("monitor-user-list").users;
 	}
 
 	constructor() {
@@ -57,31 +77,43 @@ export class MonitorServerView extends LitElement {
 
 	render(): TemplateResult {
 		return html`
-			${this.server ? html`
-			<header>
-				<h2>${this.name} (${this.server.address}:${this.server.port})</h2>
-			</header>
-			` : ''}
+			${this.server
+				? html`
+						<header>
+							<h2>
+								${this.name}
+								(${this.server.address}:${this.server.port})
+							</h2>
+						</header>
+				  `
+				: ""}
 			<monitor-user-list></monitor-user-list>
-			<div class='messages'>
-				<span class='connecting-message'>
-					<label>${i18n.localize("CONNECTING_SERVER", "Connecting to server {0}", this.name)}</label>
-					<monitor-linear-progress indeterminate></monitor-linear-progress>
+			<div class="messages">
+				<span class="connecting-message">
+					<label
+						>${i18n.localize(
+							"CONNECTING_SERVER",
+							"Connecting to server {0}",
+							this.name
+						)}</label
+					>
+					<monitor-linear-progress
+						indeterminate
+					></monitor-linear-progress>
 				</span>
-				<span class='error-message'>${this.error}</span>
+				<span class="error-message">${this.error}</span>
 			</div>
 			<monitor-log-view></monitor-log-view>
 		`;
 	}
 
 	setServerUpdateInterval() {
-		const app = document.querySelector('monitor-app');
+		const app = document.querySelector("monitor-app");
 
 		this.setUpdateInterval(app.config.updateInterval * 1000);
 
 		if (this.server) {
-			this.server.getUsers()
-				.then(users => this.users = users);
+			this.server.getUsers().then((users) => (this.users = users));
 		}
 	}
 
@@ -91,25 +123,41 @@ export class MonitorServerView extends LitElement {
 			this._updateHandler = null;
 		}
 
-		if (interval === 0)
-			return;
+		if (interval === 0) return;
 
 		const update = () => {
-			if (this.server) {
-				this.server.getUsers()
-					.then(users => this.users = users)
+			if (this.server && this.server.isConnected) {
+				this.server
+					.getUsers()
+					.then((users) => (this.users = users))
 					.then(() => {
 						//console.log('updating');
-						this._updateHandler = window.setTimeout(() => update(), interval);
+						this._updateHandler = window.setTimeout(
+							() => update(),
+							interval
+						);
 					});
+			} else {
+				this.status = "error";
+
+				this.dispatchEvent(
+					new CustomEvent<string>("server-error", {
+						detail: i18n.localize(
+							"UNABLE_CONNECT",
+							"It was not possible to connect to this server."
+						),
+						bubbles: true,
+						composed: true,
+					})
+				);
 			}
-		}
+		};
 
 		this._updateHandler = window.setTimeout(() => update(), interval);
 	}
 
 	log(message: string, type: MessageType) {
-		const logViewer = this.renderRoot.querySelector('monitor-log-view');
+		const logViewer = this.renderRoot.querySelector("monitor-log-view");
 
 		logViewer.add(message, type);
 	}
@@ -117,6 +165,6 @@ export class MonitorServerView extends LitElement {
 
 declare global {
 	interface HTMLElementTagNameMap {
-		'monitor-server-view': MonitorServerView;
+		"monitor-server-view": MonitorServerView;
 	}
 }

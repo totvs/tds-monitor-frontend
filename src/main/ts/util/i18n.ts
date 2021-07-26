@@ -1,89 +1,101 @@
 export class I18n {
-  private _translations: any = window.storage.translations();
+	private _translations: any = window.storage.translations();
+	private _company: any = window.storage.company();
 
-  public get translations(): any {
-    return this._translations;
-  }
+	public get translations(): any {
+		return this._translations;
+	}
 
-  public set translations(value: any) {
-    this._translations = value || {};
-  }
+	public set company(value: string) {
+		this._company = value || "********";
+	}
 
-  public localize(
-    key: string,
-    message: string,
-    ...args: (string | number | boolean | undefined | null)[]
-  ): string {
-    let result = message;
+	public get company(): any {
+		return this._company;
+	}
 
-    if (this._translations.hasOwnProperty(key)) {
-      result = this._translations[key];
-    }
+	public set translations(value: any) {
+		this._translations = value || {};
+	}
 
-    if (args && args.length > 0) {
-      args.forEach((arg: any, index: number) => {
-        result = result.replace(
-          "{" + index + "}",
-          "" + (args[index] || "null")
-        );
-      });
-    }
+	public localize(
+		key: string,
+		message: string,
+		...args: (string | number | boolean | undefined | null)[]
+	): string {
+		let result = message;
 
-    return result;
-  }
+		if (this._translations.hasOwnProperty(key)) {
+			result = this._translations[key];
+		}
 
-  public totvsMonitor(): string {
-    return this.localize("TOTVS_MONITOR", "TOTVS Monitor");
-  }
+		if (args && args.length > 0) {
+			args.forEach((arg: any, index: number) => {
+				result = result.replace(
+					"{" + index + "}",
+					"" + (args[index] || "null")
+				);
+			});
+		}
 
-  public ok(): string {
-    return this.localize("OK", "Ok");
-  }
+		return result;
+	}
 
-  public confirm(): string {
-    return this.localize("CONFIRM", "Confirm");
-  }
+	public totvsMonitorIcon(): string {
+		return "./" + this._company + "/app_logo_neg_pb.svg";
+	}
 
-  public cancel(): string {
-    return this.localize("CANCEL", "Cancel");
-  }
+	public totvsMonitor(): string {
+		return this.localize("TOTVS_MONITOR", "TOTVS Monitor");
+	}
 
-  public yes(): string {
-    return this.localize("YES", "Yes");
-  }
+	public ok(): string {
+		return this.localize("OK", "Ok");
+	}
 
-  public no(): string {
-    return this.localize("NO", "No");
-  }
+	public confirm(): string {
+		return this.localize("CONFIRM", "Confirm");
+	}
 
-  public enable(): string {
-    return this.localize("ENABLE", "Enable");
-  }
+	public cancel(): string {
+		return this.localize("CANCEL", "Cancel");
+	}
 
-  public disable(): string {
-    return this.localize("DISABLE", "Disable");
-  }
+	public yes(): string {
+		return this.localize("YES", "Yes");
+	}
 
-  public disabled(): string {
-    return this.localize("DISABLED", "Disabled");
-  }
+	public no(): string {
+		return this.localize("NO", "No");
+	}
 
-  public xSeconds(seconds: number): string {
-    return this.localize("X_SECONDS", "{0} seconds", seconds);
-  }
+	public enable(): string {
+		return this.localize("ENABLE", "Enable");
+	}
 
-  public close(): string {
-    return this.localize("CLOSE", "Close");
-  }
+	public disable(): string {
+		return this.localize("DISABLE", "Disable");
+	}
 
-  public protheus(): string {
-    return this.localize("PROTHEUS", "Protheus");
-  }
+	public disabled(): string {
+		return this.localize("DISABLED", "Disabled");
+	}
 
-  public logix(): string {
-    return this.localize("LOGIX", "Logix");
-  }
+	public xSeconds(seconds: number): string {
+		return this.localize("X_SECONDS", "{0} seconds", seconds);
+	}
 
+	public close(): string {
+		return this.localize("CLOSE", "Close");
+	}
+
+	public protheus(): string {
+		return this.localize("PROTHEUS", "Protheus");
+	}
+
+	public logix(): string {
+		return this.localize("LOGIX", "Logix");
+	}
 }
 
 export const i18n = new I18n();
