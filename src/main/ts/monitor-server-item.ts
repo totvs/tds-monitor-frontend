@@ -123,8 +123,11 @@ export class MonitorServerItem extends LitElement {
 
 			if (!result) {
 				connectionFailed = true;
+				this.server.token = null;
 			}
-		} else {
+		}
+
+		if (this.server.token == null) {
 			let connDialog = new MonitorConnectionDialog(this),
 				connResult = await connDialog.showForResult();
 
@@ -389,7 +392,7 @@ export class MonitorServerItem extends LitElement {
 		dialog.show();
 	}
 
-	onYesButtonClicked() {}
+	onYesButtonClicked() { }
 
 	async otherActions() {
 		await this.server
