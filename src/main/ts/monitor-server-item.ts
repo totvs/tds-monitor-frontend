@@ -73,6 +73,8 @@ export class MonitorServerItem extends LitElement {
 		super();
 
 		this.serverId = options.serverId;
+		console.log("options.0");
+		console.log(options.server);
 
 		this.server = options.server;
 
@@ -123,8 +125,11 @@ export class MonitorServerItem extends LitElement {
 
 			if (!result) {
 				connectionFailed = true;
+				this.server.token = null;
 			}
-		} else {
+		}
+
+		if (this.server.token == null) {
 			let connDialog = new MonitorConnectionDialog(this),
 				connResult = await connDialog.showForResult();
 
@@ -173,13 +178,15 @@ export class MonitorServerItem extends LitElement {
 							}
 
 							if (authResult) {
+								const app =
+									document.querySelector("monitor-app");
 								if (authDialog.storeToken) {
-									const app =
-										document.querySelector("monitor-app");
 									app.storeConnectionToken(
 										this.name,
 										this.server.token
 									);
+								} else {
+									app.storeConnectionToken(this.name, null);
 								}
 							} else {
 								connectionFailed = true;
@@ -313,7 +320,6 @@ export class MonitorServerItem extends LitElement {
 				text: i18n.localize("CONNECT", "Connect"),
 				separator: true,
 				callback: () => {
-					this.server.token = null;
 					this.connectServer(false);
 				},
 			});

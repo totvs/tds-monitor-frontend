@@ -49,7 +49,7 @@ class MonitorApp extends LitElement {
 		return this._settings;
 	}
 
-	set settings(settings: MonitorSettings) {
+	set __settings(settings: MonitorSettings) {
 		this._settings = Object.assign({}, DEFAULT_SETTINGS, settings);
 
 		let drawer = this.querySelector("monitor-drawer");
@@ -93,6 +93,7 @@ class MonitorApp extends LitElement {
 
 	private createServer(data: MonitorSettingsServer) {
 		let server = languageClient.createMonitorServer();
+
 		server.id = data.name;
 		server.serverType = data.serverType;
 		server.address = data.address;
@@ -104,6 +105,7 @@ class MonitorApp extends LitElement {
 		if (data.token) {
 			server.token = data.token;
 		}
+
 		return server;
 	}
 
@@ -138,6 +140,8 @@ class MonitorApp extends LitElement {
 					server.port = options.server.port;
 					server.build = options.server.build;
 					server.secure = options.server.secure;
+					server.token = null;
+					options.server.token = null;
 				}
 				return server;
 			});
