@@ -49,7 +49,7 @@ class MonitorApp extends LitElement {
 		return this._settings;
 	}
 
-	set __settings(settings: MonitorSettings) {
+	set settings(settings: MonitorSettings) {
 		this._settings = Object.assign({}, DEFAULT_SETTINGS, settings);
 
 		let drawer = this.querySelector("monitor-drawer");
