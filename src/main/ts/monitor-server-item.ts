@@ -73,9 +73,6 @@ export class MonitorServerItem extends LitElement {
 		super();
 
 		this.serverId = options.serverId;
-		console.log("options.0");
-		console.log(options.server);
-
 		this.server = options.server;
 
 		this.name = options.name;
@@ -97,8 +94,8 @@ export class MonitorServerItem extends LitElement {
 	}
 
 	async connectServer(dispatchEvents?: boolean): Promise<boolean> {
-		console.log("connectServer");
-		let connectionFailed = false;
+		let connectOk: boolean = false;
+
 		this.status = "connecting";
 
 		if (dispatchEvents) {
@@ -116,120 +113,117 @@ export class MonitorServerItem extends LitElement {
 			);
 		}
 
-		if (this.server.token !== null) {
-			let result = await this.server.reconnect({ encoding: "CP1252" });
-
-			if (!result) {
-				result = await this.server.reconnect({ encoding: "CP1251" });
-			}
-
-			if (!result) {
-				connectionFailed = true;
-				this.server.token = null;
-			}
-		}
-
 		if (this.server.token == null) {
-			let connDialog = new MonitorConnectionDialog(this),
-				connResult = await connDialog.showForResult();
+			const result: { ok: boolean; storeToken: boolean } =
+				await this.doConnect(this.server);
 
-			if (connResult) {
-				let tryAgainSecure = 2;
-				while (tryAgainSecure > 0) {
-					connResult = await this.server.connect(
-						this.name,
-						this.server.serverType,
-						this.server.address,
-						this.server.port,
-						this.server.secure,
-						this.build,
-						connDialog.environment
-					);
-
-					if (connResult) {
-						tryAgainSecure = 0;
-						let authDialog = new MonitorAuthenticationDialog(this),
-							authResult = await authDialog.showForResult();
-
-						if (authResult) {
-							// Try to authenticate using latin codepage
-							authResult = await this.server.authenticate(
-								authDialog.username,
-								authDialog.password,
-								"CP1252"
-							);
-
-							if (!authResult) {
-								// Try to authenticate using cyrillic codepage
-								await this.server.connect(
-									this.name,
-									this.server.serverType,
-									this.server.address,
-									this.server.port,
-									this.server.secure,
-									this.build,
-									connDialog.environment
-								);
-								authResult = await this.server.authenticate(
-									authDialog.username,
-									authDialog.password,
-									"CP1251"
-								);
-							}
-
-							if (authResult) {
-								const app =
-									document.querySelector("monitor-app");
-								if (authDialog.storeToken) {
-									app.storeConnectionToken(
-										this.name,
-										this.server.token
-									);
-								} else {
-									app.storeConnectionToken(this.name, null);
-								}
-							} else {
-								connectionFailed = true;
-							}
-						} else {
-							connectionFailed = true;
-						}
-					} else {
-						tryAgainSecure--;
-						if (tryAgainSecure > 0) {
-							this.server.secure = !this.server.secure;
-						} else {
-							connectionFailed = true;
-						}
-					}
+			if (result.ok) {
+				const app = document.querySelector("monitor-app");
+				if (result.storeToken) {
+					app.storeConnectionToken(this.name, this.server.token);
+				} else {
+					app.storeConnectionToken(this.name, null);
 				}
-			} else {
-				connectionFailed = true;
+
+				connectOk = true;
 			}
+		} else {
+			connectOk = await this.doReconnect(this.server, 3);
 		}
 
-		if (!connectionFailed) {
+		if (connectOk) {
+			connectOk = await this.doReconnect(this.server, 13);
+		}
+
+		if (connectOk) {
 			this.status = "connected";
 		} else {
 			this.status = "error";
 			this.server.token = null;
 			this.server.isConnected = false;
+		}
 
-			if (dispatchEvents) {
-				this.dispatchEvent(
-					new CustomEvent<string>("server-error", {
-						detail: i18n.localize(
-							"UNABLE_CONNECT",
-							"It was not possible to connect to this server."
-						),
-						bubbles: true,
-						composed: true,
-					})
-				);
-			}
+		if (!connectOk && dispatchEvents) {
+			this.dispatchEvent(
+				new CustomEvent<string>("server-error", {
+					detail: i18n.localize(
+						"UNABLE_CONNECT",
+						"It was not possible to connect to this server."
+					),
+					bubbles: true,
+					composed: true,
+				})
+			);
 		}
 
 		return this.status === "connected";
+	}
+
+	async doReconnect(
+		server: TdsMonitorServer,
+		connType: number
+	): Promise<boolean> {
+		const result: boolean = await this.server.reconnect({
+			connType: connType,
+		});
+
+		return result;
+	}
+
+	async doConnect(
+		server: TdsMonitorServer
+	): Promise<{ ok: boolean; storeToken: boolean }> {
+		let connDialog: MonitorConnectionDialog = new MonitorConnectionDialog(
+			this
+		);
+		const result: { ok: boolean; storeToken: boolean } = {
+			ok: false,
+			storeToken: false,
+		};
+
+		result.ok = await connDialog.showForResult();
+
+		if (result.ok) {
+			result.ok = await this.server.connect(
+				this.name,
+				this.server.serverType,
+				3,
+				this.server.address,
+				this.server.port,
+				this.server.secure,
+				this.build,
+				connDialog.environment
+			);
+		}
+
+		if (result.ok) {
+			let authDialog = new MonitorAuthenticationDialog(this);
+			result.ok = await authDialog.showForResult();
+
+			if (result.ok) {
+				// Try to authenticate using latin codepage
+				result.ok = await this.server.authenticate(
+					authDialog.username,
+					authDialog.password,
+					"CP1252"
+				);
+
+				if (!result.ok) {
+					// Try to authenticate using cyrillic codepage
+					result.ok = await this.server.authenticate(
+						authDialog.username,
+						authDialog.password,
+						"CP1251"
+					);
+				}
+			}
+
+			if (result.ok) {
+				result.storeToken = authDialog.storeToken;
+			}
+		}
+
+		return result;
 	}
 
 	async getUsers() {

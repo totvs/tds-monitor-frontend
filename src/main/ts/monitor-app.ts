@@ -199,7 +199,7 @@ class MonitorApp extends LitElement {
 		serverView.server = event.detail.server;
 		serverView.status = "connecting";
 
-		console.log("begin connnection to server " + event.detail);
+		//console.warn("begin connnection to server " + event.detail);
 	}
 
 	onServerConnected(
@@ -214,7 +214,7 @@ class MonitorApp extends LitElement {
 			? "connected"
 			: "idle";
 
-		console.log("onConnected", event.detail);
+		//console.warn("onConnected", event.detail);
 	}
 
 	onServerError(event: CustomEvent<string>): boolean | void {

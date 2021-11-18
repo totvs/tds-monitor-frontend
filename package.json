@@ -1,6 +1,6 @@
 {
   "name": "@totvs/tds-monitor-frontend",
-  "version": "0.1.40",
+  "version": "0.1.41",
   "description": "",
   "license": "Apache-2.0",
   "main": "target/index.html",
@@ -18,7 +18,9 @@
     "prepublishOnly": "npm run clean && npm run build",
     "---MISC---": "",
     "lint": "eslint ./src/**",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "--LINK--": "",
+    "link:tds-languageclient": "npm link W:\\ws_tds_vscode\\tds-languageclient"
   },
   "dependencies": {
     "@material/mwc-button": "^0.15.0",
@@ -29,7 +31,7 @@
     "@material/mwc-radio": "^0.15.0",
     "@material/mwc-ripple": "^0.15.0",
     "@material/mwc-switch": "^0.15.0",
-    "@totvs/tds-languageclient": "0.0.39",
+    "@totvs/tds-languageclient": "0.0.41",
     "@webcomponents/webcomponentsjs": "^2.4.4",
     "core-js": "^3.6.5",
     "lit-element": "^2.3.1",
