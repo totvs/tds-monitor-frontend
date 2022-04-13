@@ -43,8 +43,9 @@ if (settings) {
 }
 
 function checkServerIds(settings: MonitorSettings) {
+	let settingsServers = settings ? (settings.servers ? settings.servers : []) : [];
 	let servers: Array<MonitorSettingsServer> =
-		settings.servers.map<MonitorSettingsServer>((server) => {
+		settingsServers.map<MonitorSettingsServer>((server) => {
 			if (!server.serverId) {
 				server.serverId = Math.random().toString(36).substring(3);
 			}
