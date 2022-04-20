@@ -128,10 +128,6 @@ export class MonitorServerItem extends LitElement {
 				connectOk = true;
 			}
 		} else {
-			connectOk = await this.doReconnect(this.server, 3);
-		}
-
-		if (connectOk) {
 			connectOk = await this.doReconnect(this.server, 13);
 		}
 
@@ -187,7 +183,7 @@ export class MonitorServerItem extends LitElement {
 			result.ok = await this.server.connect(
 				this.name,
 				this.server.serverType,
-				3,
+				13,
 				this.server.address,
 				this.server.port,
 				this.server.secure,
