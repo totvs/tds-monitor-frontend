@@ -133,15 +133,7 @@ export class MonitorChangeEncodingDialog extends MonitorDialog {
 
 		if (envEncode != this.currentEncoding) {
 			const app = document.querySelector("monitor-app");
-			app.onEnvironmentEncodingUpdate(app.currentServerId(), this.environment, envEncode);
-			this.server.environmentEncoding.map((obj) => {
-				if (obj.environment === this.environment) {
-					obj.encoding = envEncode;
-				}
-				return obj;
-			});
-			let envEncodes: Array<EnvEncode> = this.server.environmentEncoding;
-			this.server.setEnvEncodes(envEncodes);
+			app.onEnvironmentEncodingUpdate(this.server, app.currentServerId(), this.environment, envEncode);
 		}
 
 		this.close();

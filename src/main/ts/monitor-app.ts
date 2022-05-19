@@ -1,4 +1,4 @@
-import { BuildVersion } from "@totvs/tds-languageclient";
+import { BuildVersion, TdsMonitorServer } from "@totvs/tds-languageclient";
 import { customElement, html, LitElement } from "lit-element";
 import { style } from "../css/monitor-app.css";
 import { MonitorServerItemOptions } from "./monitor-server-item";
@@ -239,8 +239,10 @@ class MonitorApp extends LitElement {
 		//console.log('onSettingsUpdate');
 	}
 
-	onEnvironmentEncodingUpdate(serverId: string, environment: string, codePage: number) {
+	onEnvironmentEncodingUpdate(server: TdsMonitorServer, serverId: string, environment: string, codePage: number) {
 		// console.log('onEnvironmentEncodingUpdate: ');
+		let envEncodes: Array<EnvEncode> = [];
+		
 		this.settings.servers =
 			this.settings.servers.map<MonitorSettingsServer>((server) => {
 				if (server.serverId == serverId) {
@@ -257,11 +259,14 @@ class MonitorApp extends LitElement {
 					} else {
 						server.environmentEncoding.push(envEncode);
 					}
+					envEncodes = server.environmentEncoding;
 				}
 				return server;
 			});
 
 		window.storage.set(this.settings);
+
+		server.setEnvEncodes(envEncodes);
 	}
 }
 
