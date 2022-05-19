@@ -178,6 +178,11 @@ export class MonitorUserListRow extends LitElement {
 						text: i18n.localize("DO_DISCONNECT", "Disconnect"),
 						callback: () => { this.killUser(user) },
 						separator: true
+					},
+					{
+						text: i18n.localize("DO_CHANGE_ENCODING", "Change Encoding"),
+						callback: () => { this.changeEncoding(user) },
+						separator: true
 					}
 				]
 			};
@@ -201,6 +206,17 @@ export class MonitorUserListRow extends LitElement {
 		this.dispatchEvent(new CustomEvent<UsersActionOptions>('users-action', {
 			detail: {
 				action: 'kill-user',
+				users: [ user ]
+			},
+			bubbles: true,
+			composed: true
+		}));
+	}
+
+	changeEncoding(user: MonitorUser) {
+		this.dispatchEvent(new CustomEvent<UsersActionOptions>('users-action', {
+			detail: {
+				action: 'change-encoding',
 				users: [ user ]
 			},
 			bubbles: true,

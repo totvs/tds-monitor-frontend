@@ -88,6 +88,7 @@ export class MonitorServerItem extends LitElement {
 	async disconnectServer(): Promise<boolean> {
 		this.server.disconnect();
 
+		this.server.token = null;
 		this.status = "disconnected";
 
 		return true;
@@ -163,6 +164,13 @@ export class MonitorServerItem extends LitElement {
 			connType: connType,
 		});
 
+		if (result) {
+			this.loadEnvEncodes(this.server);
+			let envEncodes: Array<EnvEncode> = this.server.environmentEncoding;
+			let message = await this.server.setEnvEncodes(envEncodes);
+			console.log(message);
+		}
+
 		return result;
 	}
 
@@ -219,6 +227,13 @@ export class MonitorServerItem extends LitElement {
 			}
 		}
 
+		if (result.ok) {
+			this.loadEnvEncodes(this.server);
+			let envEncodes: Array<EnvEncode> = this.server.environmentEncoding;
+			let message = await this.server.setEnvEncodes(envEncodes);
+			console.log(message);
+		}
+
 		return result;
 	}
 
@@ -252,6 +267,19 @@ export class MonitorServerItem extends LitElement {
 					composed: true,
 				})
 			);
+		}
+	}
+
+	loadEnvEncodes(server: TdsMonitorServer) {
+		const app = document.querySelector("monitor-app");
+		const listOfServers = app.settings;
+		if (listOfServers && listOfServers.servers) {
+			let currentServer = listOfServers.servers.filter((server) => {
+				return (server.serverId === this.serverId);
+			});
+			if (currentServer && currentServer.length == 1 && currentServer[0].environmentEncoding) {
+				server.environmentEncoding = currentServer[0].environmentEncoding;
+			}
 		}
 	}
 

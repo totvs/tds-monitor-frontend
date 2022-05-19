@@ -1,6 +1,6 @@
 {
   "name": "@totvs/tds-monitor-frontend",
-  "version": "0.1.45",
+  "version": "0.1.46",
   "description": "",
   "license": "Apache-2.0",
   "main": "target/index.html",
@@ -31,7 +31,7 @@
     "@material/mwc-radio": "^0.15.0",
     "@material/mwc-ripple": "^0.15.0",
     "@material/mwc-switch": "^0.15.0",
-    "@totvs/tds-languageclient": "0.0.44",
+    "@totvs/tds-languageclient": "0.0.45",
     "@webcomponents/webcomponentsjs": "^2.4.4",
     "core-js": "^3.6.5",
     "lit-element": "^2.3.1",

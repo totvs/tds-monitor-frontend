@@ -96,6 +96,19 @@ export class I18n {
 	public logix(): string {
 		return this.localize("LOGIX", "Logix");
 	}
+
+	// Apenas para manter a consistencia nas labels de encoding
+	public CP1252(): string {
+		return "CP1252";
+	}
+
+	public CP1251(): string {
+		return "CP1251";
+	}
+
+	public UTF8(): string {
+		return "UTF-8";
+	}
 }
 
 export const i18n = new I18n();

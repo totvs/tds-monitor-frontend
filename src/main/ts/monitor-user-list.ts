@@ -26,6 +26,7 @@ import {
 import { sortUsers } from "./util/sort-users";
 import { i18n } from "./util/i18n";
 import { MonitorColumnsConfigDialog } from "./monitor-columns-config-dialog";
+import { MonitorChangeEncodingDialog } from "./monitor-encoding-change-dialog";
 
 export interface MonitorUserRow extends MonitorUser {
 	checked: boolean;
@@ -379,6 +380,9 @@ export class MonitorUserList extends LitElement {
 				dialog.show();
 			} else if (event.detail.action === "kill-user") {
 				const dialog = new MonitorKillUserDialog(this.server, users);
+				dialog.show();
+			} else if (users.length == 1 && event.detail.action === "change-encoding") {
+				const dialog = new MonitorChangeEncodingDialog(this.server, users[0].environment);
 				dialog.show();
 			}
 		}

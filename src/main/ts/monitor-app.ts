@@ -167,6 +167,11 @@ class MonitorApp extends LitElement {
 		drawer.removeServer(serverId);
 	}
 
+	currentServerId(): string {
+		let serverView = document.querySelector("monitor-server-view");
+		return serverView ? serverView.serverId : "";
+	}
+
 	storeConnectionToken(serverName: string, token: string) {
 		let server = this.settings.servers.find(
 			(server) => server.name === serverName
@@ -210,6 +215,7 @@ class MonitorApp extends LitElement {
 		serverView.users = event.detail.users;
 		serverView.name = event.detail.name;
 		serverView.server = event.detail.server;
+		serverView.serverId = event.detail.serverId;
 		serverView.status = event.detail.server.isConnected
 			? "connected"
 			: "idle";
@@ -231,6 +237,31 @@ class MonitorApp extends LitElement {
 		serverView.setServerUpdateInterval();
 
 		//console.log('onSettingsUpdate');
+	}
+
+	onEnvironmentEncodingUpdate(serverId: string, environment: string, codePage: number) {
+		// console.log('onEnvironmentEncodingUpdate: ');
+		this.settings.servers =
+			this.settings.servers.map<MonitorSettingsServer>((server) => {
+				if (server.serverId == serverId) {
+					if (!server.environmentEncoding) {
+						server.environmentEncoding = [];
+					}
+					let envEncode: EnvEncode = {
+						environment: environment,
+						encoding: codePage,
+					};
+					let find = server.environmentEncoding.findIndex((obj => obj.environment === environment));
+					if (find != -1) {
+						server.environmentEncoding[find] = envEncode;
+					} else {
+						server.environmentEncoding.push(envEncode);
+					}
+				}
+				return server;
+			});
+
+		window.storage.set(this.settings);
 	}
 }
 

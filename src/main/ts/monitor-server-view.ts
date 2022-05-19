@@ -18,6 +18,9 @@ export class MonitorServerView extends LitElement {
 	@property({ type: String })
 	name: string = "";
 
+	@property({ type: String })
+	serverId: string = "";
+
 	@property({ type: Boolean, reflect: true, attribute: true })
 	showlog: boolean = false;
 

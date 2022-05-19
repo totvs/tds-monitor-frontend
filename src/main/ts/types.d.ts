@@ -80,6 +80,11 @@ interface MonitorSettingsConfig {
 	sortInfo?: SortInfo;
 }
 
+interface EnvEncode {
+    environment: string;
+    encoding: number;
+}
+
 interface MonitorSettingsServer {
 	serverId: string;
 	name: string;
@@ -89,4 +94,5 @@ interface MonitorSettingsServer {
 	build: string;
 	secure: boolean;
 	token?: string;
+	environmentEncoding?: EnvEncode[];
 }
