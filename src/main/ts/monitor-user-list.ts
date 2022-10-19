@@ -104,7 +104,7 @@ export class MonitorUserList extends LitElement {
 
 		if (newValue !== null) {
 			newValue.forEach((user: MonitorUser) => {
-				const key = `${user.username}${user.computerName}${user.threadId}${user.server}`;
+				const key = `${user.username}${user.computerName}${user.threadId}${user.server}${user.mainName}`;
 
 				if (this._users.has(key)) {
 					const oldUser = this._users.get(key);
