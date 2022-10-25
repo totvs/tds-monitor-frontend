@@ -1,6 +1,5 @@
 import { SortOrder } from "../monitor-user-list-column-header";
 import { MonitorUserRow } from "../monitor-user-list";
-import { ColumnKey } from "../monitor-columns";
 
 const sortNumber = (a: number, b: number) => a - b;
 const sortString = (a: string, b: string) => {

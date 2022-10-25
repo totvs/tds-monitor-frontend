@@ -33,6 +33,17 @@ export interface MonitorUserRow extends MonitorUser {
 	usernameDisplayed: string;
 }
 
+function buildUserKey(user: any): string {
+	if (user === undefined
+		|| user.username === undefined
+		|| user.computerName === undefined
+		|| user.threadId === undefined
+		|| user.server === undefined
+		|| user.mainName === undefined
+		) throw new Error("Cannot build user key.");
+	return `${user.username}${user.computerName}${user.threadId}${user.server}${user.mainName}`;
+}
+
 @customElement("monitor-user-list")
 export class MonitorUserList extends LitElement {
 	@query('monitor-button[icon="chat"]')
@@ -104,7 +115,7 @@ export class MonitorUserList extends LitElement {
 
 		if (newValue !== null) {
 			newValue.forEach((user: MonitorUser) => {
-				const key = `${user.username}${user.computerName}${user.threadId}${user.server}${user.mainName}`;
+				const key = buildUserKey(user);
 
 				if (this._users.has(key)) {
 					const oldUser = this._users.get(key);
@@ -436,7 +447,7 @@ export class MonitorUserList extends LitElement {
 
 	onCheckBoxChanged(event: Event) {
 		const row = event.target as MonitorUserListRow,
-			key = `${row.username}${row.computerName}${row.threadId}${row.server}`;
+			key = buildUserKey(row);
 
 		this._users.get(key).checked = row.checked;
 
