@@ -55,7 +55,7 @@
     "browserify": "^16.5.2",
     "browserify-css": "^0.15.0",
     "eslint-plugin-lit": "^1.2.2",
-    "exorcist": "^1.0.1",
+    "exorcist": "^2.0.0",
     "gulp": "^4.0.2",
     "pump-promise": "^1.0.0",
     "q": "^1.5.1",
