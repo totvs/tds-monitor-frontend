@@ -119,10 +119,12 @@ export class MonitorUserList extends LitElement {
 
 				if (this._users.has(key)) {
 					const oldUser = this._users.get(key);
+					// apenas atualiza o usernameDisplayed de oldUser, pois o appUser pode ter mudado
+					oldUser.usernameDisplayed = user.appUser; //|| user.username;
 
 					newMap.set(key, Object.assign({}, oldUser, user));
 				} else {
-					const usernameDisplayed = user.appUser || user.username;
+					const usernameDisplayed = user.appUser; //|| user.username;
 					newMap.set(
 						key,
 						Object.assign(
