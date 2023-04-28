@@ -1,6 +1,6 @@
 {
   "name": "@totvs/tds-monitor-frontend",
-  "version": "0.1.53",
+  "version": "0.1.54",
   "description": "",
   "license": "Apache-2.0",
   "main": "target/index.html",
@@ -20,7 +20,8 @@
     "lint": "eslint ./src/**",
     "test": "echo \"Error: no test specified\" && exit 1",
     "--LINK--": "",
-    "link:tds-languageclient": "npm link W:\\ws_tds_vscode\\tds-languageclient"
+    "link:tds-languageclient": "npm link W:\\ws_tds_vscode\\tds-languageclient",
+    "updProcess": "npm run release & npm run tag & npm run to_publish"
   },
   "dependencies": {
     "@material/mwc-button": "^0.15.0",
