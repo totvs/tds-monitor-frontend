@@ -32,7 +32,7 @@
     "@material/mwc-radio": "^0.15.0",
     "@material/mwc-ripple": "^0.15.0",
     "@material/mwc-switch": "^0.15.0",
-    "@totvs/tds-languageclient": "0.0.50",
+    "@totvs/tds-languageclient": "0.0.52",
     "@webcomponents/webcomponentsjs": "^2.4.4",
     "core-js": "^3.6.5",
     "lit-element": "^2.3.1",
